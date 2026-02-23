@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Mapster" Version="7.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.19.0.132793">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Hiscox.RaterApiWrapper.Application\Hiscox.RaterApiWrapper.Application.csproj" />
+        <ProjectReference Include="..\Hiscox.RaterApiWrapper.Aspire.ServiceDefaults\Hiscox.RaterApiWrapper.Aspire.ServiceDefaults.csproj" />
+        <ProjectReference Include="..\Hiscox.RaterApiWrapper.Domain\Hiscox.RaterApiWrapper.Domain.csproj" />
+        <ProjectReference Include="..\Hiscox.RaterApiWrapper.Infrastructure\Hiscox.RaterApiWrapper.Infrastructure.csproj" />
+        <PackageReference Include="Serilog" Version="4.3.1" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="8.0.0-dev-02318" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="SampleResponses\rs-e1.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="SampleResponses\rs.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

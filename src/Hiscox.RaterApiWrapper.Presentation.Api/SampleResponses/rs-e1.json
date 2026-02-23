@@ -1,0 +1,6 @@
+{
+  "Status": {
+    "Code": "0001",
+    "Description": "The sum of all exposure percentages must be 1."
+  }
+}

@@ -1,0 +1,8 @@
+
+//Set startup project = Hiscox.RaterApiWrapper.Infrastructure
+//Set Default project = Hiscox.RaterApiWrapper.Infrastructure
+//Change current folder to Hiscox.RaterApiWrapper.Infrastructure
+
+Add-Migration Create_Database
+dotnet ef database update --project Hiscox.RaterApiWrapper.Infrastructure.csproj --connection "Data Source=(local);Initial Catalog=RaterApiWrapper;Integrated Security=True;Trust Server Certificate=True"
+(after running the command above, the default project will be set to Hiscox.RaterApiWrapper.Infrastructure, but it is good to double check.

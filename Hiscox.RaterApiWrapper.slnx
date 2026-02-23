@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Folder Name="/Source/" />
+  <Folder Name="/Source/0_Aspire/">
+    <Project Path="src/Hiscox.RaterApiWrapper.Aspire.AppHost/Hiscox.RaterApiWrapper.Aspire.AppHost.csproj" Id="3f937481-d2dd-4f3f-9cd0-b80c13969701" />
+    <Project Path="src/Hiscox.RaterApiWrapper.Aspire.ServiceDefaults/Hiscox.RaterApiWrapper.Aspire.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/Source/1_Domain/">
+    <Project Path="src/Hiscox.RaterApiWrapper.Domain/Hiscox.RaterApiWrapper.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Source/2_Application/">
+    <Project Path="src/Hiscox.RaterApiWrapper.Application/Hiscox.RaterApiWrapper.Application.csproj" />
+  </Folder>
+  <Folder Name="/Source/3_Presentation/">
+    <Project Path="src/Hiscox.RaterApiWrapper.Presentation.Api/Hiscox.RaterApiWrapper.Presentation.Api.csproj" />
+  </Folder>
+  <Folder Name="/Source/4_Infrastructure/">
+    <Project Path="src/Hiscox.RaterApiWrapper.Infrastructure/Hiscox.RaterApiWrapper.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Tests/" />
+  <Folder Name="/_misc/">
+    <File Path="_misc/Notes.txt" />
+    <File Path="_misc/rq.json" />
+    <File Path="_misc/rs-e1.json" />
+    <File Path="_misc/rs.json" />
+  </Folder>
+</Solution>

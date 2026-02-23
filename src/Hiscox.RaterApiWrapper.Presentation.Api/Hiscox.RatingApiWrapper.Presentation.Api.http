@@ -1,0 +1,6 @@
+@Hiscox.RaterApiWrapper.Presentation.Api_HostAddress = https://localhost:7293
+
+GET {{Hiscox.RaterApiWrapper.Presentation.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

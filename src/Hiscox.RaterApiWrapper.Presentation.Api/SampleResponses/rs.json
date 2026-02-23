@@ -1,0 +1,10 @@
+{
+  "OccuranceLimit": 1000000,
+  "AggregateLimit": 2000000,
+  "Retention": 2500,
+  "ExpiringPremium": 2046,
+  "RenewalPremium": 1963,
+  "RevenueChange": 0.5,
+  "PremiumChange": -0.04,
+  "RateChange": -0.21
+}
