@@ -4,6 +4,7 @@ using Hiscox.RaterApiWrapper.Application.Abstractions;
 using Hiscox.RaterApiWrapper.Domain.Abstractions;
 using Hiscox.RaterApiWrapper.Domain.Configuration;
 using Hiscox.RaterApiWrapper.Domain.Entities;
+using Hiscox.RaterApiWrapper.Domain.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -57,15 +58,17 @@ public class RaterService : IRaterService
             return new RaterFailureDetails("InvalidExposurePercentages", "Exposures must sum to 100%.");
         }
 
+        var coverage = GetPrimaryCoverage(raterInputs.Coverages!);
+
         //Entering mock values for now
 
         return new RaterResult()
         {
             RaterVersion = _raterOptions.Version,
             RaterVersionDate = _raterOptions.VersionDate,
-            OccuranceLimit = 1000000m,
-            AggregateLimit = 2000000m,
-            Retention = 2500m,
+            OccuranceLimit = coverage?.OccuranceLimit ?? 0m,
+            AggregateLimit = coverage?.AggregateLimit ?? 0m,
+            Retention = coverage?.Retention ?? 0m,
             ExpiringPremium = 2046m,
             RenewalPremium = 1963m,
             RevenueChange = 0.5m,
@@ -127,6 +130,11 @@ public class RaterService : IRaterService
     private static bool ValidateTotalExposure(RaterWorksheet worksheet)
     {
         return worksheet.IndustryClassifications!.Sum(_ => _.PercentageExposure) == 1m;
+    }
+
+    private static Coverage? GetPrimaryCoverage(List<Coverage> coverages)
+    {
+        return coverages.FirstOrDefault(c => c.CoverageType == CoverageType.EAndOPrimary);
     }
 
 }

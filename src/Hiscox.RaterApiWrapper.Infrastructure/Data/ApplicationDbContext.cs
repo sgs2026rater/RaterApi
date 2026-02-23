@@ -31,5 +31,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<IndustrySubSector>? IndustrySubSectors { get; set; } = null;
     public DbSet<IndustrySpecialty>? IndustrySpecialties { get; set; } = null;
     public DbSet<GeographicMod>? GeographicMods { get; set; } = null;
+    public DbSet<PolicyDetails>? MagicPolicy { get; set; } = null;
+    public DbSet<FormInfoLookup>? FormInfoLookups { get; set; } = null;
 
 }
