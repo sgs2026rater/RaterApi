@@ -1,15 +1,33 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "FormInfoLookup",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FormName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    LineOfBusiness = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LineOfBusinessShort = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    DefaultClaimBasis = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CoverageEnhancements = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FormInfoLookup", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "GeographicMod",
                 columns: table => new
@@ -48,6 +66,41 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_IndustrySector", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PolicyDetails",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    PUID = table.Column<string>(type: "varchar(50)", nullable: true),
+                    PolicyNo = table.Column<string>(type: "varchar(50)", nullable: true),
+                    NameDescr = table.Column<string>(type: "varchar(200)", nullable: true),
+                    TimestampEffectivePolicy = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimestampExpirationPolicy = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Zip = table.Column<string>(type: "varchar(5)", nullable: true),
+                    Revenue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_GWP = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_Retention = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_OccLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_AggLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_2_GWP = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_2_Retention = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_2_OccLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EO_2_AggLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Cyb_GWP = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Cyb_Retention = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Cyb_OccLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Cyb_AggLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    GL_GWP = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    GL_Retention = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    GL_OccLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    GL_AggLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PolicyDetails", x => new { x.Version, x.Id });
                 });
 
             migrationBuilder.CreateTable(
@@ -105,10 +158,16 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "FormInfoLookup");
+
+            migrationBuilder.DropTable(
                 name: "GeographicMod");
 
             migrationBuilder.DropTable(
                 name: "IndustrySpecialty");
+
+            migrationBuilder.DropTable(
+                name: "PolicyDetails");
 
             migrationBuilder.DropTable(
                 name: "IndustrySubSector");
