@@ -62,12 +62,6 @@ public class RaterService : IRaterService
             return new RaterFailureDetails("InvalidZipCode", "Zip Code is invalid.");
         }
 
-        //_logger.LogInformation("Validate if valid Revenue is provided.");
-        //if (!await ValidateRevenue(raterInputs.Revenue))
-        //{
-        //    return new RaterFailureDetails("InvalidRevenue", "Revenue is invalid.");
-        //}
-
         _logger.LogInformation("Loading data.");
         await LoadData();
 
@@ -148,21 +142,6 @@ public class RaterService : IRaterService
         _raterWorksheet.Profile?.MetroArea = await _geographicModRepository.GetMetroArea(_raterOptions.Version, zipCode);
 
         if (_raterWorksheet.Profile?.MetroArea == null) return false;
-
-        return true;
-    }
-
-    /// <summary>
-    /// Validates Revenue provided in the rating inputs has value more than 0. 
-    /// If Revenue is invalid, it returns false. If it is valid, it populates field and returns true.
-    /// </summary>
-    /// <param name="revenue"></param>
-    /// <returns>A flag indicating whether Revenue is provided invalid.</returns>
-    private async Task<bool> ValidateRevenue(decimal revenue)
-    {
-        if (revenue <= 0) return false;
-
-        _raterWorksheet.Profile?.Revenue = revenue;
 
         return true;
     }
