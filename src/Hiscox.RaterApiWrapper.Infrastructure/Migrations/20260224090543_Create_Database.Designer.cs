@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260224031238_Initial")]
-    partial class Initial
+    [Migration("20260224090543_Create_Database")]
+    partial class Create_Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,6 +232,9 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.Property<decimal>("EO_Retention")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<decimal>("ExposureBase")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<decimal>("GL_AggLimit")
                         .HasColumnType("decimal(18, 2)");
 
@@ -252,9 +255,6 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 
                     b.Property<string>("PolicyNo")
                         .HasColumnType("varchar(50)");
-
-                    b.Property<decimal>("Revenue")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("TimestampEffectivePolicy")
                         .HasColumnType("datetime2");

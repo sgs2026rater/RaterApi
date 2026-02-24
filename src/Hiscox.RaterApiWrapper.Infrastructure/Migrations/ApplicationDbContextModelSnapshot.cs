@@ -229,6 +229,9 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.Property<decimal>("EO_Retention")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<decimal>("ExposureBase")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<decimal>("GL_AggLimit")
                         .HasColumnType("decimal(18, 2)");
 
@@ -249,9 +252,6 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 
                     b.Property<string>("PolicyNo")
                         .HasColumnType("varchar(50)");
-
-                    b.Property<decimal>("Revenue")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("TimestampEffectivePolicy")
                         .HasColumnType("datetime2");

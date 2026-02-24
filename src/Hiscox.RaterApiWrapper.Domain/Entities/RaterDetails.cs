@@ -2,9 +2,8 @@
 
 namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
-public record RaterWorksheet
+public record RaterDetails
 {
-
+    public PolicyDetails? Profile { get; set; }
     public List<IndustryClassification>? IndustryClassifications { get; set; }
-
 }

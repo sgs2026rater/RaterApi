@@ -14,15 +14,15 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Data.Repositories;
 
 public class MagicPolicyRepository : RepositoryBase, IMagicPolicyRepository
 {
-    public MagicPolicyRepository(ApplicationDbContext context, IMemoryCache memoryCache, ILogger logger) : base(context, memoryCache, logger)
+    public MagicPolicyRepository(ApplicationDbContext context, IMemoryCache memoryCache, ILogger<MagicPolicyRepository> logger) : base(context, memoryCache, logger)
     {
     }
 
-    public async Task<PolicyDetails> GetByPolicyNumber(string version, string PolicyNumber)
+    public async Task<PolicyDetails?> GetByPolicyNumber(string version, string PolicyNumber)
     {
         return await _context.MagicPolicy!
             .Where(_ => _.Version == version && _.PolicyNo == PolicyNumber)
             .OrderBy(_ => _.Id)
-            .FirstAsync();
+            .FirstOrDefaultAsync();
     }
 }

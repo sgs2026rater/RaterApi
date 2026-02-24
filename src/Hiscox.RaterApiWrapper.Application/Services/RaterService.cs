@@ -13,11 +13,14 @@ namespace Hiscox.RaterApiWrapper.Application.Services;
 
 public class RaterService : IRaterService
 {
+    private readonly IMagicPolicyRepository _magicPolicyRepository;
+    private readonly IGeographicModRepository _geographicModRepository;
+    
     private readonly IIndustrySectorRepository _industrySectorRepository;
     private readonly IIndustrySubSectorRepository _industrySubSectorRepository;
     private readonly IIndustrySpecialtyRepository _industrySpecialtyRepository;
 
-    private readonly RaterWorksheet _raterWorksheet = new();
+    private readonly RaterDetails _raterWorksheet = new();
     private readonly ILogger _logger;
     private List<IndustrySector>? _industrySectors;
     private List<IndustrySubSector>? _industrySubSectors;
@@ -28,12 +31,16 @@ public class RaterService : IRaterService
     public RaterService(
         IMemoryCache memoryCache,
         ILogger<RaterService> logger,
+        IMagicPolicyRepository magicPolicyRepository,
+        IGeographicModRepository geographicModRepository,
         IIndustrySectorRepository industrySectorRepository,
         IIndustrySubSectorRepository industrySubSectorRepository,
         IIndustrySpecialtyRepository industrySpecialtyRepository,
         IOptionsMonitor<RaterOptions> raterOptions)
     {
         _logger = logger;
+        _magicPolicyRepository = magicPolicyRepository;
+        _geographicModRepository= geographicModRepository;
         _industrySectorRepository = industrySectorRepository;
         _industrySubSectorRepository = industrySubSectorRepository;
         _industrySpecialtyRepository = industrySpecialtyRepository;
@@ -43,6 +50,24 @@ public class RaterService : IRaterService
 
     public async Task<Result<RaterResult, RaterFailureDetails>> GetRateInformation(RaterInputs raterInputs)
     {
+        _logger.LogInformation("Validate if Policy number is provided and does exist.");
+        if (!await ValidatePolicyNumber(raterInputs))
+        {
+            return new RaterFailureDetails("InvalidPolicyNumber", "Policy Number is invalid.");
+        }
+
+        _logger.LogInformation("Validate if Zip Code is provided and does exist.");
+        if (!await ValidateZipCode(_raterWorksheet.Profile!.Zip))
+        {
+            return new RaterFailureDetails("InvalidZipCode", "Zip Code is invalid.");
+        }
+
+        //_logger.LogInformation("Validate if valid Revenue is provided.");
+        //if (!await ValidateRevenue(raterInputs.Revenue))
+        //{
+        //    return new RaterFailureDetails("InvalidRevenue", "Revenue is invalid.");
+        //}
+
         _logger.LogInformation("Loading data.");
         await LoadData();
 
@@ -90,13 +115,66 @@ public class RaterService : IRaterService
 
 
     /// <summary>
+    /// Validates Policy Number provided in the rating inputs for availability and also against the available magic policy data loaded from the repositories. 
+    /// If Policy Number is invalid, it returns false. If it is valid, it populates field and returns true.
+    /// </summary>
+    /// <param name="policyNumber"></param>
+    /// <returns>A flag indicating whether Policy Number is provided and exists.</returns>
+    private async Task<bool> ValidatePolicyNumber(RaterInputs raterInputs)
+    {
+        if(string.IsNullOrEmpty(raterInputs.PolicyNumber)) return false;
+
+        _raterWorksheet.Profile = await _magicPolicyRepository.GetByPolicyNumber(_raterOptions.Version, raterInputs.PolicyNumber);
+
+        if (_raterWorksheet.Profile == null) return false;
+        _raterWorksheet.Profile!.Revenue = raterInputs.Revenue;
+        _raterWorksheet.Profile.EO = true;
+        _raterWorksheet.Profile.GL = _raterWorksheet.Profile.GL_GWP > 0;
+        _raterWorksheet.Profile.Cyber = _raterWorksheet.Profile.Cyb_GWP > 0;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates Zip Code provided in the rating inputs for availability and also against the available Zip Code data loaded from the repositories. 
+    /// If Zip Code is invalid, it returns false. If it is valid, it populates field and returns true.
+    /// </summary>
+    /// <param name="zipCode"></param>
+    /// <returns>A flag indicating whether Zip Code is provided and exists.</returns>
+    private async Task<bool> ValidateZipCode(string? zipCode)
+    {
+        if (string.IsNullOrEmpty(zipCode)) return false;
+
+        _raterWorksheet.Profile?.MetroArea = await _geographicModRepository.GetMetroArea(_raterOptions.Version, zipCode);
+
+        if (_raterWorksheet.Profile?.MetroArea == null) return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates Revenue provided in the rating inputs has value more than 0. 
+    /// If Revenue is invalid, it returns false. If it is valid, it populates field and returns true.
+    /// </summary>
+    /// <param name="revenue"></param>
+    /// <returns>A flag indicating whether Revenue is provided invalid.</returns>
+    private async Task<bool> ValidateRevenue(decimal revenue)
+    {
+        if (revenue <= 0) return false;
+
+        _raterWorksheet.Profile?.Revenue = revenue;
+
+        return true;
+    }
+
+    /// <summary>
     /// Validates the industry classifications provided in the rating inputs against the reference data loaded from the repositories. 
     /// If any classification is invalid, it returns false. If all classifications are valid, it populates the corresponding IDs in the industry classifications and returns true.
     /// </summary>
     /// <param name="industryClassifications"></param>
     /// <param name="worksheet"></param>
     /// <returns>A flag indicating whether the industry classifications are valid.</returns>
-    private bool ValidateIndustryClassifications(IEnumerable<IndustryClassification> industryClassifications, RaterWorksheet worksheet)
+    private bool ValidateIndustryClassifications(IEnumerable<IndustryClassification> industryClassifications, RaterDetails worksheet)
     {
         foreach (var industryClassification in industryClassifications)
         {
@@ -118,6 +196,11 @@ public class RaterService : IRaterService
                 return false;
             }
 
+            if (matchingIndustrySubSector.IndustrySectorId != matchingIndustrySector.Id)
+                return false;
+            if (matchingIndustrySpecialty.IndustrySubSectorId != matchingIndustrySubSector.Id)
+                return false;
+
             industryClassification.SectorId = matchingIndustrySector.Id;
             industryClassification.SubSectorId = matchingIndustrySubSector.Id;
             industryClassification.SpecialtyId = matchingIndustrySpecialty.Id;
@@ -127,7 +210,7 @@ public class RaterService : IRaterService
         return true;
     }
 
-    private static bool ValidateTotalExposure(RaterWorksheet worksheet)
+    private static bool ValidateTotalExposure(RaterDetails worksheet)
     {
         return worksheet.IndustryClassifications!.Sum(_ => _.PercentageExposure) == 1m;
     }

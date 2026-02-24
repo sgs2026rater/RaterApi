@@ -9,5 +9,5 @@ namespace Hiscox.RaterApiWrapper.Application.Abstractions;
 
 public interface IMagicPolicyRepository
 {
-    Task<PolicyDetails> GetByPolicyNumber(string version, string PolicyNumber);
+    Task<PolicyDetails?> GetByPolicyNumber(string version, string PolicyNumber);
 }

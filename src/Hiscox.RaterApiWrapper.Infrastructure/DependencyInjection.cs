@@ -11,6 +11,8 @@ public static class DependencyInjection
 {
     public static void AddInfrastructureServices(this IServiceCollection services)
     {
+        services.AddScoped<IMagicPolicyRepository, MagicPolicyRepository>();
+        services.AddScoped<IGeographicModRepository, GeographicModRepository>();        
         services.AddScoped<IIndustrySectorRepository, IndustrySectorRepository>();
         services.AddScoped<IIndustrySubSectorRepository, IndustrySubSectorRepository>();
         services.AddScoped<IIndustrySpecialtyRepository, IndustrySpecialtyRepository>();

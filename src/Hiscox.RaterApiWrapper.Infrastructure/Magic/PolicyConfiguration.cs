@@ -43,7 +43,7 @@ public class PolicyDetailsConfiguration : IEntityTypeConfiguration<PolicyDetails
             .HasColumnType("varchar(5)")
             .IsRequired(false);
 
-        builder.Property(_ => _.Revenue)
+        builder.Property(_ => _.ExposureBase)
             .HasColumnType("decimal(18, 2)")
             .IsRequired(true);
 

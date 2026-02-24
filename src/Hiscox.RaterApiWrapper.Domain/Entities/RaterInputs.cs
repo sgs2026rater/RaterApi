@@ -6,8 +6,14 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
 public record RaterInputs
 {
-    public string? Product { get; set; }
-    public ProductName? PolicyNumber { get; set; }
+    public ProductName? Product { get; set; }
+    public string? PolicyNumber { get; set; }
+    public decimal Revenue { get; set; }
+    public bool AlternativeExposureBase { get; set; }
+    public bool EO { get; set; }
+    public bool GL { get; set; }
+    public bool Cyber { get; set; }
+    public bool Crime { get; set; }
     public BusinessType? BusinessType { get; set; }
     public List<Coverage>? Coverages { get; set; }
     public List<IndustryClassification>? IndustryClassifications { get; set; }
