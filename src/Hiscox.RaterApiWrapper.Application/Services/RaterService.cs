@@ -77,17 +77,15 @@ public class RaterService : IRaterService
             return new RaterFailureDetails("InvalidExposurePercentages", "Exposures must sum to 100%.");
         }
 
-        var coverage = GetPrimaryCoverage(raterInputs.Coverages!);
-
         //Entering mock values for now
 
         return new RaterResult()
         {
             RaterVersion = _raterOptions.Version,
             RaterVersionDate = _raterOptions.VersionDate,
-            OccuranceLimit = coverage?.OccuranceLimit ?? 0m,
-            AggregateLimit = coverage?.AggregateLimit ?? 0m,
-            Retention = coverage?.Retention ?? 0m,
+            OccuranceLimit = decimal.Truncate(_raterWorksheet?.Profile.EO_OccLimit ?? 0m),
+            AggregateLimit = decimal.Truncate(_raterWorksheet?.Profile.EO_AggLimit ?? 0m),
+            Retention = decimal.Truncate(_raterWorksheet?.Profile.EO_Retention ?? 0m),
             ExpiringPremium = 2046m,
             RenewalPremium = 1963m,
             RevenueChange = 0.5m,
@@ -192,11 +190,6 @@ public class RaterService : IRaterService
     private static bool ValidateTotalExposure(RaterDetails worksheet)
     {
         return worksheet.IndustryClassifications!.Sum(_ => _.PercentageExposure) == 1m;
-    }
-
-    private static Coverage? GetPrimaryCoverage(List<Coverage> coverages)
-    {
-        return coverages.FirstOrDefault(c => c.CoverageType == CoverageType.EAndOPrimary);
     }
 
 }
