@@ -4,6 +4,7 @@ POST {{Hiscox.RaterApiWrapper.Presentation.Api_HostAddress}}/api/rater/
 Accept: application/json
 Content-Type: application/json
 {
+
   "Product": "ArchitectureAndEngineering",
   "PolicyNumber": "5064044",
   "BusinessType": "Renewal",
