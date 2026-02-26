@@ -7,21 +7,10 @@ Content-Type: application/json
   "Product": "ArchitectureAndEngineering",
   "PolicyNumber": "5064044",
   "BusinessType": "Renewal",
+  "Revenue": 80000,
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
-      "OccuranceLimit": 1000000,
-      "AggregateLimit": 2000000,
-      "Retention": 2500
-    },
-    {
-      "CoverageType": "EAndOSecondary",
-      "OccuranceLimit": 1000000,
-      "AggregateLimit": 2000000,
-      "Retention": 2500
-    },
-    {
-      "CoverageType": "GL",
       "OccuranceLimit": 1000000,
       "AggregateLimit": 2000000,
       "Retention": 2500
@@ -75,6 +64,5 @@ Content-Type: application/json
     "PersonalAndAdvertisingInjury": 1000
   }
 }
-
 
 ###

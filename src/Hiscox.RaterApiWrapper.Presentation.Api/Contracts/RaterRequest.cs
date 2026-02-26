@@ -15,6 +15,8 @@ public class RaterRequest
 
     [Required]
     public string? PolicyNumber { get; set; }
+    [Required]
+    public decimal? Revenue { get; set; }
 
     [Required]
     [EnumDataType(typeof(BusinessType))]

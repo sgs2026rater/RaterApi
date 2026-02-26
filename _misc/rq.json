@@ -2,21 +2,10 @@
   "Product": "ArchitectureAndEngineering",
   "PolicyNumber": "540673",
   "BusinessType": "Renewal",
+  "Revenue": 80000,
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
-      "OccuranceLimit": 1000000,
-      "AggregateLimit": 2000000,
-      "Retention": 2500
-    },
-    {
-      "CoverageType": "EAndOSecondary",
-      "OccuranceLimit": 1000000,
-      "AggregateLimit": 2000000,
-      "Retention": 2500
-    },
-    {
-      "CoverageType": "GL",
       "OccuranceLimit": 1000000,
       "AggregateLimit": 2000000,
       "Retention": 2500

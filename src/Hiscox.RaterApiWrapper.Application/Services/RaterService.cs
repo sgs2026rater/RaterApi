@@ -20,7 +20,7 @@ public class RaterService : IRaterService
     private readonly IIndustrySubSectorRepository _industrySubSectorRepository;
     private readonly IIndustrySpecialtyRepository _industrySpecialtyRepository;
 
-    private readonly RaterDetails _raterWorksheet = new();
+    private readonly RaterDetails _raterDetails = new();
     private readonly ILogger _logger;
     private List<IndustrySector>? _industrySectors;
     private List<IndustrySubSector>? _industrySubSectors;
@@ -51,36 +51,48 @@ public class RaterService : IRaterService
     public async Task<Result<RaterResult, RaterFailureDetails>> GetRateInformation(RaterInputs raterInputs)
     {
         _logger.LogInformation("Validate if Policy number is provided and does exist.");
-        if (!await ValidatePolicyNumber(raterInputs))
+        if (!await ValidatePolicyNumberAndLoad(raterInputs))
         {
             return new RaterFailureDetails("InvalidPolicyNumber", "Policy Number is invalid.");
         }
 
         _logger.LogInformation("Validate if Zip Code is provided and does exist.");
-        if (!await ValidateZipCode(_raterWorksheet.Profile!.Zip))
+        if (!await ValidateZipCode(_raterDetails.Profile!.Zip))
         {
             return new RaterFailureDetails("InvalidZipCode", "Zip Code is invalid.");
         }
-
-        //_logger.LogInformation("Validate if valid Revenue is provided.");
-        //if (!await ValidateRevenue(raterInputs.Revenue))
-        //{
-        //    return new RaterFailureDetails("InvalidRevenue", "Revenue is invalid.");
-        //}
 
         _logger.LogInformation("Loading data.");
         await LoadData();
 
         _logger.LogInformation("Validate industry classifications.");
-        if (!ValidateIndustryClassifications(raterInputs.IndustryClassifications!, _raterWorksheet))
+        if (!ValidateIndustryClassifications(raterInputs.IndustryClassifications!, _raterDetails))
         {
             return new RaterFailureDetails("InvalidIndustryClassification", "One or more industry classifications are invalid.");
         }
 
         //Validate sum of exposure percentages
-        if (!ValidateTotalExposure(_raterWorksheet))
+        if (!ValidateTotalExposure(_raterDetails))
         {
             return new RaterFailureDetails("InvalidExposurePercentages", "Exposures must sum to 100%.");
+        }
+
+        var coverage = GetPrimaryCoverage(raterInputs.Coverages!);
+
+        if ((coverage?.OccuranceLimit ?? 0m) != (_raterDetails?.Profile.EO_OccLimit ?? 0m))
+        {
+            _logger.LogWarning("OccuranceLimit ({0}) of Coverages in the request does not match with the Magic database ({1}).",
+                                            coverage?.OccuranceLimit ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_OccLimit ?? 0m));
+        }
+        if ((coverage?.AggregateLimit ?? 0m) != (_raterDetails?.Profile.EO_AggLimit ?? 0m))
+        {
+            _logger.LogWarning("AggregateLimit ({0}) of Coverages in the request does not match with the Magic database ({1}).",
+                                            coverage?.AggregateLimit ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_AggLimit ?? 0m));
+        }
+        if ((coverage?.Retention ?? 0m) != (_raterDetails?.Profile.EO_Retention ?? 0m))
+        {
+            _logger.LogWarning("Retention ({0}) of Coverages in the request does not match with the Magic database ({1}).",
+                                            coverage?.Retention ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_Retention ?? 0m));
         }
 
         //Entering mock values for now
@@ -89,9 +101,9 @@ public class RaterService : IRaterService
         {
             RaterVersion = _raterOptions.Version,
             RaterVersionDate = _raterOptions.VersionDate,
-            OccuranceLimit = decimal.Truncate(_raterWorksheet?.Profile.EO_OccLimit ?? 0m),
-            AggregateLimit = decimal.Truncate(_raterWorksheet?.Profile.EO_AggLimit ?? 0m),
-            Retention = decimal.Truncate(_raterWorksheet?.Profile.EO_Retention ?? 0m),
+            OccuranceLimit = coverage?.OccuranceLimit ?? 0m,
+            AggregateLimit = coverage?.AggregateLimit ?? 0m,
+            Retention = coverage?.Retention ?? 0m,
             ExpiringPremium = 2046m,
             RenewalPremium = 1963m,
             RevenueChange = 0.5m,
@@ -118,17 +130,16 @@ public class RaterService : IRaterService
     /// </summary>
     /// <param name="policyNumber"></param>
     /// <returns>A flag indicating whether Policy Number is provided and exists.</returns>
-    private async Task<bool> ValidatePolicyNumber(RaterInputs raterInputs)
+    private async Task<bool> ValidatePolicyNumberAndLoad(RaterInputs raterInputs)
     {
-        if(string.IsNullOrEmpty(raterInputs.PolicyNumber)) return false;
+        if (string.IsNullOrEmpty(raterInputs.PolicyNumber)) return false;
 
-        _raterWorksheet.Profile = await _magicPolicyRepository.GetByPolicyNumber(_raterOptions.Version, raterInputs.PolicyNumber);
+        _raterDetails.Profile = await _magicPolicyRepository.GetByPolicyNumber(_raterOptions.Version, raterInputs.PolicyNumber);
 
-        if (_raterWorksheet.Profile == null) return false;
-        _raterWorksheet.Profile!.Revenue = raterInputs.Revenue;
-        _raterWorksheet.Profile.EO = true;
-        _raterWorksheet.Profile.GL = _raterWorksheet.Profile.GL_GWP > 0;
-        _raterWorksheet.Profile.Cyber = _raterWorksheet.Profile.Cyb_GWP > 0;
+        if (_raterDetails.Profile == null) return false;
+
+        _raterDetails.Profile!.Revenue = raterInputs.Revenue;
+        _raterDetails.Profile.EO = true;
 
         return true;
     }
@@ -143,24 +154,9 @@ public class RaterService : IRaterService
     {
         if (string.IsNullOrEmpty(zipCode)) return false;
 
-        _raterWorksheet.Profile?.MetroArea = await _geographicModRepository.GetMetroArea(_raterOptions.Version, zipCode);
+        _raterDetails.Profile?.MetroArea = await _geographicModRepository.GetMetroArea(_raterOptions.Version, zipCode);
 
-        if (_raterWorksheet.Profile?.MetroArea == null) return false;
-
-        return true;
-    }
-
-    /// <summary>
-    /// Validates Revenue provided in the rating inputs has value more than 0. 
-    /// If Revenue is invalid, it returns false. If it is valid, it populates field and returns true.
-    /// </summary>
-    /// <param name="revenue"></param>
-    /// <returns>A flag indicating whether Revenue is provided invalid.</returns>
-    private async Task<bool> ValidateRevenue(decimal revenue)
-    {
-        if (revenue <= 0) return false;
-
-        _raterWorksheet.Profile?.Revenue = revenue;
+        if (_raterDetails.Profile?.MetroArea == null) return false;
 
         return true;
     }
@@ -211,6 +207,11 @@ public class RaterService : IRaterService
     private static bool ValidateTotalExposure(RaterDetails worksheet)
     {
         return worksheet.IndustryClassifications!.Sum(_ => _.PercentageExposure) == 1m;
+    }
+
+    private static Coverage? GetPrimaryCoverage(List<Coverage> coverages)
+    {
+        return coverages.FirstOrDefault(c => c.CoverageType == CoverageType.EAndOPrimary);
     }
 
 }
