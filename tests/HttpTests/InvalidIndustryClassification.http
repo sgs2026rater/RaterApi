@@ -1,0 +1,80 @@
+@Hiscox.RaterApiWrapper.Presentation.Api_HostAddress = https://localhost:7293
+
+POST {{Hiscox.RaterApiWrapper.Presentation.Api_HostAddress}}/api/rater/
+Accept: application/json
+Content-Type: application/json
+{
+  "Product": "ArchitectureAndEngineering",
+  "PolicyNumber": "5064044",
+  "BusinessType": "Renewal",
+  "Coverages": [
+    {
+      "CoverageType": "EAndOPrimary",
+      "OccuranceLimit": 1000000,
+      "AggregateLimit": 2000000,
+      "Retention": 2500
+    },
+    {
+      "CoverageType": "EAndOSecondary",
+      "OccuranceLimit": 1000000,
+      "AggregateLimit": 2000000,
+      "Retention": 2500
+    },
+    {
+      "CoverageType": "GL",
+      "OccuranceLimit": 1000000,
+      "AggregateLimit": 2000000,
+      "Retention": 2500
+    }
+  ],
+  "IndustryClassifications": [
+    {
+      "Sector": "Contractors",
+      "SubSector": "Manufacturing",
+      "Specialty": "Manufacturer",
+      "PercentageExposure": 0.7
+    },
+    {
+      "Sector": "Design Professionals",
+      "SubSector": "Agency Construction Management",
+      "Specialty": "Agency Construction Management",
+      "PercentageExposure": 0.3
+    }
+  ],
+  "AdditionalRiskProfile": {
+    "EnvironmentalRemediation": false,
+    "UndergroundUtilityLocators": true,
+    "Nuclear": false,
+    "Offshore": false,
+    "Superfund": false,
+    "UndergroundStorage": false,
+    "ZipLines": false,
+    "AmusementParks": false,
+    "Prototypes": false,
+    "TangibleGoodsOrProduct": false,
+    "ProjectTypes": [
+      "Commercial",
+      "ResidentialAndApartments"
+    ]
+  },
+  "ClaimsHistory": [
+    {
+      "DateOfClaim": "2024-04-13T00:00:00Z",
+      "PartiesToClaim": "?",
+      "StatusOfClaim": "?"
+    },
+    {
+      "DateOfClaim": "2025-04-13T00:00:00Z",
+      "PartiesToClaim": "?",
+      "StatusOfClaim": "?"
+    }
+  ],
+  "OptionalEnhancements": {
+    "DamagesToPremises": 100000,
+    "MedicalPayments": 1000,
+    "PersonalAndAdvertisingInjury": 1000
+  }
+}
+
+
+###

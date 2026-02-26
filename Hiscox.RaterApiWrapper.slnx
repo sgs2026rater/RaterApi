@@ -20,6 +20,11 @@
     <Project Path="src/Hiscox.RaterApiWrapper.Infrastructure/Hiscox.RaterApiWrapper.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Tests/" />
+  <Folder Name="/Tests/HttpTests/">
+    <File Path="tests/HttpTests/InvalidIndustryClassification.http" />
+    <File Path="tests/HttpTests/InvalidPolicyNumber.http" />
+    <File Path="tests/HttpTests/StandardSuccessful.http" />
+  </Folder>
   <Folder Name="/_misc/">
     <File Path="_misc/Notes.txt" />
     <File Path="_misc/rq.json" />
