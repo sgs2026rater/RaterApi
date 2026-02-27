@@ -7,7 +7,6 @@ Content-Type: application/json
   "Product": "ArchitectureAndEngineering",
   "PolicyNumber": "5064044",
   "BusinessType": "Renewal",
-  "Revenue": 80000,
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
