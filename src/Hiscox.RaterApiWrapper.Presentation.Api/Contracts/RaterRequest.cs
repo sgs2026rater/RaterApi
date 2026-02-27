@@ -15,7 +15,7 @@ public class RaterRequest
 
     [Required]
     public string? PolicyNumber { get; set; }
-    [Required]
+    //[Required]
     public decimal? Revenue { get; set; }
 
     [Required]
@@ -29,7 +29,7 @@ public class RaterRequest
     public required List<IndustryClassificationRq> IndustryClassifications { get; set; }
 
     [Required]
-    public required AdditionalRiskProfileRq AdditionalRiskProfile { get; set; }
+    public AdditionalRiskProfileRq? AdditionalRiskProfile { get; set; }
 
     public List<ClaimRq>? ClaimsHistory { get; set; }
     
@@ -48,7 +48,23 @@ public class AdditionalRiskProfileRq
     public bool AmusementParks { get; set; }
     public bool Prototypes { get; set; }
     public bool TangibleGoodsOrProduct { get; set; }
+    public bool? TangibleGoodsOrProductOwner { get; set; }
+    //[EnumDataType(typeof(ProjectType))]
+    //public List<ProjectType>? ProjectTypes { get; set; }
     public List<string>? ProjectTypes { get; set; }
+    public bool HighValueHomes { get; set; }
+    public bool SeniorHousingAssistedLiving { get; set; }
+    public bool LowIncomeHousing { get; set; }
+    public bool DataCenters { get; set; }
+    public bool MajorStadiumArena { get; set; }
+    public bool StandAlongParking { get; set; }
+    public bool TractHomes { get; set; }
+    public bool OfficeHighRiseSkyscrapers { get; set; }
+    public bool? ExperienceMoreThan5YearsQuestion { get; set; }
+    [EnumDataType(typeof(WorkUndertakenFrequency))]
+    public WorkUndertakenFrequency WorkUndertakenFrequencyQuestion { get; set; }
+    public bool? LimitationOfLiabilityQuestion { get; set; }
+
 }
 
 public class OptionalEnhancementsRq
