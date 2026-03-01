@@ -8,6 +8,7 @@ using Hiscox.RaterApiWrapper.Domain.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Runtime.CompilerServices;
 
 namespace Hiscox.RaterApiWrapper.Application.Services;
 
@@ -15,16 +16,20 @@ public class RaterService : IRaterService
 {
     private readonly IMagicPolicyRepository _magicPolicyRepository;
     private readonly IGeographicModRepository _geographicModRepository;
-    
+
     private readonly IIndustrySectorRepository _industrySectorRepository;
     private readonly IIndustrySubSectorRepository _industrySubSectorRepository;
     private readonly IIndustrySpecialtyRepository _industrySpecialtyRepository;
+
+    private readonly IFormRepository _formRepository;
+    private readonly IFormEligibilityRepository _formEligibilityRepository;
 
     private readonly RaterDetails _raterDetails = new();
     private readonly ILogger _logger;
     private List<IndustrySector>? _industrySectors;
     private List<IndustrySubSector>? _industrySubSectors;
     private List<IndustrySpecialty>? _industrySpecialties;
+    private List<Form>? _forms;
     private readonly RaterOptions _raterOptions;
 
 
@@ -36,15 +41,19 @@ public class RaterService : IRaterService
         IIndustrySectorRepository industrySectorRepository,
         IIndustrySubSectorRepository industrySubSectorRepository,
         IIndustrySpecialtyRepository industrySpecialtyRepository,
-        IOptionsMonitor<RaterOptions> raterOptions)
+        IOptionsMonitor<RaterOptions> raterOptions,
+        IFormRepository formRepository,
+        IFormEligibilityRepository formEligibilityRepository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
-        _geographicModRepository= geographicModRepository;
+        _geographicModRepository = geographicModRepository;
         _industrySectorRepository = industrySectorRepository;
         _industrySubSectorRepository = industrySubSectorRepository;
         _industrySpecialtyRepository = industrySpecialtyRepository;
         _raterOptions = raterOptions.CurrentValue;
+        _formRepository = formRepository;
+        _formEligibilityRepository = formEligibilityRepository;
     }
 
 
@@ -71,11 +80,14 @@ public class RaterService : IRaterService
             return new RaterFailureDetails("InvalidIndustryClassification", "One or more industry classifications are invalid.");
         }
 
+        //var eligibleForms = await GetEligibileForms(_raterDetails.PrimaryIndustryClassification!.SpecialtyId!.Value);
+
         //Validate sum of exposure percentages
         if (!ValidateTotalExposure(_raterDetails))
         {
             return new RaterFailureDetails("InvalidExposurePercentages", "Exposures must sum to 100%.");
         }
+
         _raterDetails.Revenue = raterInputs.Revenue;
         AdditionalUWCalculation(raterInputs.AdditionalRiskProfile);
 
@@ -110,7 +122,7 @@ public class RaterService : IRaterService
             RenewalPremium = 1963m,
             RevenueChange = 0.5m,
             PremiumChange = -0.04m,
-            RateChange =  -0.21m
+            RateChange = -0.21m
         };
     }
 
@@ -127,13 +139,13 @@ public class RaterService : IRaterService
         }
         else
         {
-            if(_raterDetails.PrimaryIndustryClassification?.SectorName == "Property Management - Standalone")
+            if (_raterDetails.PrimaryIndustryClassification?.SectorName == "Property Management - Standalone")
             {
                 //TODO: There is a formula to calculate this.It is not part of Design Professional workflow.
             }
             else
             {
-                if(_raterDetails.PrimaryIndustryClassification?.SubSectorName == "Real Estate Developers")
+                if (_raterDetails.PrimaryIndustryClassification?.SubSectorName == "Real Estate Developers")
                 {
                     //TODO: There is a formula to calculate this.It is not part of Design Professional workflow.
                 }
@@ -238,7 +250,7 @@ public class RaterService : IRaterService
                     //Similar logic as the If block except the properties it considers are filtered for Revenue>5M.(Not Applicable for Design Professional Workflow)
                     //TODO:
                 }
-                
+
             }
 
         }
@@ -258,7 +270,9 @@ public class RaterService : IRaterService
         _industrySectors = (await _industrySectorRepository.GetAll(_raterOptions.Version)).ToList();
         _industrySubSectors = (await _industrySubSectorRepository.GetAll(_raterOptions.Version)).ToList();
         _industrySpecialties = (await _industrySpecialtyRepository.GetAll(_raterOptions.Version)).ToList();
+        _forms = (await _formRepository.GetAll(_raterOptions.Version)).ToList();
     }
+
 
 
     /// <summary>
@@ -345,6 +359,19 @@ public class RaterService : IRaterService
         worksheet.PrimaryIndustryClassification = worksheet.IndustryClassifications[0];//Assuming the first value as Primary Industry info
         return true;
     }
+
+    private async Task<IEnumerable<Form>?> GetEligibileForms(int industrySpecialtyId)
+    {
+        var eligibileFormIds = (await _formEligibilityRepository.GetForIndustrySpeciality(_raterOptions.Version, industrySpecialtyId))
+            .Select(_ => _.FormId);
+        if (eligibileFormIds.Any())
+        {
+            return _forms!.Where(_ => eligibileFormIds.Contains(_.Id));
+        }
+
+        return null;
+    }
+
 
     private static bool ValidateTotalExposure(RaterDetails worksheet)
     {

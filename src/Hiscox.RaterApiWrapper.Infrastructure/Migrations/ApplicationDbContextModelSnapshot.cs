@@ -22,6 +22,41 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.Form", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("Form", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.FormEligibility", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("IndustrySpecialtyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Version", "IndustrySpecialtyId", "FormId");
+
+                    b.HasIndex("Version", "FormId");
+
+                    b.ToTable("FormEligibility", (string)null);
+                });
+
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.FormInfoLookup", b =>
                 {
                     b.Property<int>("Id")
@@ -265,6 +300,21 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.HasKey("Version", "Id");
 
                     b.ToTable("PolicyDetails", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.FormEligibility", b =>
+                {
+                    b.HasOne("Hiscox.RaterApiWrapper.Domain.Entities.Form", null)
+                        .WithMany()
+                        .HasForeignKey("Version", "FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hiscox.RaterApiWrapper.Domain.Entities.IndustrySpecialty", null)
+                        .WithMany()
+                        .HasForeignKey("Version", "IndustrySpecialtyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.IndustrySpecialty", b =>

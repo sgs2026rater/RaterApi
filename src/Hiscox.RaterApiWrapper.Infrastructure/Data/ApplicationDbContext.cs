@@ -33,5 +33,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<GeographicMod>? GeographicMods { get; set; } = null;
     public DbSet<PolicyDetails>? MagicPolicy { get; set; } = null;
     public DbSet<FormInfoLookup>? FormInfoLookups { get; set; } = null;
+    public DbSet<Form>? Forms { get; set; } = null;
+    public DbSet<FormEligibility>? FormEligibilities { get; set; } = null;
 
 }

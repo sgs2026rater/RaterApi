@@ -12,6 +12,19 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Form",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "varchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Form", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FormInfoLookup",
                 columns: table => new
                 {
@@ -143,6 +156,36 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FormEligibility",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    IndustrySpecialtyId = table.Column<int>(type: "int", nullable: false),
+                    FormId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FormEligibility", x => new { x.Version, x.IndustrySpecialtyId, x.FormId });
+                    table.ForeignKey(
+                        name: "FK_FormEligibility_Form_Version_FormId",
+                        columns: x => new { x.Version, x.FormId },
+                        principalTable: "Form",
+                        principalColumns: new[] { "Version", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FormEligibility_IndustrySpecialty_Version_IndustrySpecialtyId",
+                        columns: x => new { x.Version, x.IndustrySpecialtyId },
+                        principalTable: "IndustrySpecialty",
+                        principalColumns: new[] { "Version", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FormEligibility_Version_FormId",
+                table: "FormEligibility",
+                columns: new[] { "Version", "FormId" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_IndustrySpecialty_Version_IndustrySubSectorId",
                 table: "IndustrySpecialty",
@@ -158,16 +201,22 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "FormEligibility");
+
+            migrationBuilder.DropTable(
                 name: "FormInfoLookup");
 
             migrationBuilder.DropTable(
                 name: "GeographicMod");
 
             migrationBuilder.DropTable(
-                name: "IndustrySpecialty");
+                name: "PolicyDetails");
 
             migrationBuilder.DropTable(
-                name: "PolicyDetails");
+                name: "Form");
+
+            migrationBuilder.DropTable(
+                name: "IndustrySpecialty");
 
             migrationBuilder.DropTable(
                 name: "IndustrySubSector");

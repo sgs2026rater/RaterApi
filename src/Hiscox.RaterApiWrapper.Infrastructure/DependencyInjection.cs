@@ -16,5 +16,7 @@ public static class DependencyInjection
         services.AddScoped<IIndustrySectorRepository, IndustrySectorRepository>();
         services.AddScoped<IIndustrySubSectorRepository, IndustrySubSectorRepository>();
         services.AddScoped<IIndustrySpecialtyRepository, IndustrySpecialtyRepository>();
+        services.AddScoped<IFormRepository, FormRepository>();
+        services.AddScoped<IFormEligibilityRepository, FormEligibilityRepository>();
     }
 }
