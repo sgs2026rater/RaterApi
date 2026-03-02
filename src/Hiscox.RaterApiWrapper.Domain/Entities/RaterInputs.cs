@@ -18,6 +18,7 @@ public record RaterInputs
     public List<Coverage>? Coverages { get; set; }
     public List<IndustryClassification>? IndustryClassifications { get; set; }
     public AdditionalRiskProfile? AdditionalRiskProfile { get; set; }
+    public RatingFactor? RatingFactorStep { get; set; }
     public List<Claim>? ClaimsHistory { get; set; }
     public OptionalEnhancements? OptionalEnhancements { get; set; }
 }

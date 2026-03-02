@@ -9,7 +9,6 @@ public record RaterDetails
     public decimal RevenueAdjusted { get; set; }
     public List<IndustryClassification>? IndustryClassifications { get; set; }
     public IndustryClassification? PrimaryIndustryClassification { get; set; }
-    public RatingFactor? RatingFactorStep { get; set; }
 
     #region Additional UW(Tab4)
 
