@@ -9,9 +9,8 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 public class RatingFactorSectionDetails
 {
     public int SectionId { get; set; }
-    public bool Answer { get; set; } = true;
-    public decimal Factor { get; set; }
-    public decimal Low { get; set; }
-    public decimal High { get; set; }
     public string DegreeOfConcern { get; set; } = string.Empty;
+    public decimal Factor { get; set; }
+    public string Range { get; set; } = string.Empty;
+    public string FurtherClaimInformation { get; set; } = string.Empty;
 }
