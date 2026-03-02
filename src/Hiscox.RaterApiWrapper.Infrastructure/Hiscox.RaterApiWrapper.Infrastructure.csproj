@@ -22,5 +22,9 @@
     <ProjectReference Include="..\Hiscox.RaterApiWrapper.Application\Hiscox.RaterApiWrapper.Application.csproj" />
     <ProjectReference Include="..\Hiscox.RaterApiWrapper.Domain\Hiscox.RaterApiWrapper.Domain.csproj" />
   </ItemGroup>
+    
+  <ItemGroup>
+    <Folder Include="Magic\" />
+  </ItemGroup>
 
 </Project>

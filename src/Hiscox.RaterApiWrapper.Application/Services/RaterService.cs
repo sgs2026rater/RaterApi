@@ -20,6 +20,7 @@ public class RaterService : IRaterService
     private readonly IIndustrySectorRepository _industrySectorRepository;
     private readonly IIndustrySubSectorRepository _industrySubSectorRepository;
     private readonly IIndustrySpecialtyRepository _industrySpecialtyRepository;
+    private readonly IRatingFactorsRepository _iRatingFactorsRepository;
 
     private readonly IFormRepository _formRepository;
     private readonly IFormEligibilityRepository _formEligibilityRepository;
@@ -42,6 +43,7 @@ public class RaterService : IRaterService
         IIndustrySubSectorRepository industrySubSectorRepository,
         IIndustrySpecialtyRepository industrySpecialtyRepository,
         IOptionsMonitor<RaterOptions> raterOptions,
+        IRatingFactorsRepository iRatingFactorsRepository,
         IFormRepository formRepository,
         IFormEligibilityRepository formEligibilityRepository)
     {
@@ -53,6 +55,7 @@ public class RaterService : IRaterService
         _industrySpecialtyRepository = industrySpecialtyRepository;
         _raterOptions = raterOptions.CurrentValue;
         _formRepository = formRepository;
+        _iRatingFactorsRepository = iRatingFactorsRepository;
         _formEligibilityRepository = formEligibilityRepository;
     }
 
@@ -108,6 +111,8 @@ public class RaterService : IRaterService
             _logger.LogWarning("Retention ({0}) of Coverages in the request does not match with the Magic database ({1}).",
                                             coverage?.Retention ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_Retention ?? 0m));
         }
+
+        //GetRatingFactor(_raterOptions.Version, )
 
         //Entering mock values for now
 
@@ -381,6 +386,14 @@ public class RaterService : IRaterService
     private static Coverage? GetPrimaryCoverage(List<Coverage> coverages)
     {
         return coverages.FirstOrDefault(c => c.CoverageType == CoverageType.EAndOPrimary);
+    }
+    private async Task<RatingFactor?> GetRatingFactor(string version, int questionId)
+    {
+        var ratingFactorMaster= await _iRatingFactorsRepository.GetRatingFactor(version, questionId);
+
+        RatingFactor ratingFactor = new RatingFactor();
+
+        return ratingFactor;
     }
 
 }

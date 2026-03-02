@@ -7,6 +7,7 @@ drop TABLE IndustrySubSector;
 drop TABLE IndustrySector;
 
 drop TABLE GeographicMod;
+drop TABLE RatingFactorMaster;
 drop TABLE FormInfoLookup;
 
 drop TABLE __EFMigrationsHistory;
