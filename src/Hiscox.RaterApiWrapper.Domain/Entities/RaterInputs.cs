@@ -20,5 +20,5 @@ public record RaterInputs
     public AdditionalRiskProfile? AdditionalRiskProfile { get; set; }
     public RatingFactor? RatingFactorStep { get; set; }
     public List<Claim>? ClaimsHistory { get; set; }
-    public OptionalEnhancements? OptionalEnhancements { get; set; }
+    public List<OptionalEnhancement>? OptionalEnhancements { get; set; }
 }

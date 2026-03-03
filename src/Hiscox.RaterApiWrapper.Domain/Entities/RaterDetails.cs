@@ -4,11 +4,14 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
 public record RaterDetails
 {
+    public RaterInputs? RaterInputs { get; set; }
     public PolicyDetails? Profile { get; set; }
     public decimal Revenue {  get; set; }
     public decimal RevenueAdjusted { get; set; }
     public List<IndustryClassification>? IndustryClassifications { get; set; }
     public IndustryClassification? PrimaryIndustryClassification { get; set; }
+    public string? ChosenForm {  get; set; }
+    public string? FormType { get; set; }
     public RatingFactor? RatingFactorStep { get; set; }
 
     #region Additional UW(Tab4)
@@ -21,5 +24,17 @@ public record RaterDetails
     public bool UITrigAnEFlag { get; set; }
 
     #endregion Additional UW(Tab4)
+
+    #region Coverage(Tab5)
+    public string SharedOrSeparatedEAndO { get; set; } = "N/A";
+    public List<string>? IncludedCoverageEnhancements { get; set; }
+    public List<OptionalEnhancement>? OptionalEnhancements { get; set; }
+    public List<OptCovTable1>? OptCovTable1Records {  get; set; }
+    public Dictionary<string,string>? OptionalCoverageNameToDefaultAmountMap {  get; set; }
+    public Dictionary<string,string>? OptionalCoverageNameToDataValidationMap { get; set;  }
+    public List<OptionalCoveragesTable1>? OptionalCoveragesTable1Records { get; set; }
+    public Dictionary<string,string>? OptionalCoverageToDifferentialMap {  get; set; }
+
+    #endregion Coverage(Tab5)
 
 }

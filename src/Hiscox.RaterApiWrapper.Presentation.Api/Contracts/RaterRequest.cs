@@ -34,7 +34,7 @@ public class RaterRequest
 
     public List<ClaimRq>? ClaimsHistory { get; set; }
     
-    public OptionalEnhancementsRq? OptionalEnhancements { get; set; }
+    public List<OptionalEnhancementRq>? OptionalEnhancements { get; set; }
 }
 
 public class AdditionalRiskProfileRq
@@ -68,11 +68,13 @@ public class AdditionalRiskProfileRq
 
 }
 
-public class OptionalEnhancementsRq
+public class OptionalEnhancementRq
 {
-    public decimal? DamagesToPremises { get; set; }
-    public decimal? MedicalPayments { get; set; }
-    public decimal? PersonalAndAdvertisingInjury { get; set; }
+    //[JsonConverter(typeof(JsonStringEnumConverter))]
+    //public OptionalEnhancementName? OptionalEnhancementName { get; set; }
+    public string? OptionalEnhancementName { get; set; }
+
+    public string? OptionalEnhancementValue { get; set; }
 }
 
 public class CoverageRq
@@ -83,7 +85,7 @@ public class CoverageRq
 
     public decimal OccuranceLimit { get; set; }
     public decimal AggregateLimit { get; set; }
-    public decimal Retention { get; set; }
+    public decimal Retention { get; set; } 
 }
 
 public class IndustryClassificationRq
