@@ -588,7 +588,7 @@ public class RaterService : IRaterService
     private async Task SetComplexityOfRiskRatingFactorDetails(RatingFactor ratingFactor)
     {
         _raterDetails.RatingFactorStep ??= new RatingFactor();
-        _raterDetails.RatingFactorStep = ratingFactor;
+        _raterDetails.RatingFactorStep.ComplexityOfRiskRatingFactorDetails = ratingFactor.ComplexityOfRiskRatingFactorDetails;
         _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor = ratingFactor.ComplexityOfRiskRatingFactorDetails.Factor;
         if (ratingFactor.ComplexityOfRiskRatingFactorDetails?.Factor == 1)
         {
