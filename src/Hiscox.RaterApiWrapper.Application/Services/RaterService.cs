@@ -154,8 +154,8 @@ public class RaterService : IRaterService
             OccuranceLimit = coverage?.OccuranceLimit ?? 0m,
             AggregateLimit = coverage?.AggregateLimit ?? 0m,
             Retention = coverage?.Retention ?? 0m,
-            ExpiringPremium = Math.Round(_raterDetails?.Profile.EO_GWP ?? 0m, 0, MidpointRounding.AwayFromZero),
-            RenewalPremium = Math.Round(premium, 0, MidpointRounding.AwayFromZero),
+            ExpiringPremium = _raterDetails?.Profile.EO_GWP ?? 0m,
+            RenewalPremium = premium,
             RevenueChange = Math.Round(revnueChange, 2, MidpointRounding.AwayFromZero),
             PremiumChange = Math.Round(premiumChange, 2, MidpointRounding.AwayFromZero),
             RateChange = 56.3m
