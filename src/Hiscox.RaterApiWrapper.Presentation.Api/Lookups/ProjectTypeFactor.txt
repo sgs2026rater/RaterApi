@@ -1,0 +1,9 @@
+﻿[
+  { "ProjectType": "Civil/infrastructure", "Factor": 1.05 },
+  { "ProjectType": "Commercial", "Factor": 1.00 },
+  { "ProjectType": "Industrial", "Factor": 1.03 },
+  { "ProjectType": "Institutional", "Factor": 0.95 },
+  { "ProjectType": "Power and Utilities", "Factor": 1.05 },
+  { "ProjectType": "Multi-unit Residential Communities (HOA, Condominium, Master Plan Communities)", "Factor": 1.20 },
+  { "ProjectType": "ResidentialAndApartments", "Factor": 1.15 }
+]

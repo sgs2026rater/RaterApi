@@ -1,13 +1,13 @@
 {
   "Product": "ArchitectureAndEngineering",
-  "PolicyNumber": "540673",
+  "PolicyNumber": "5064044",
   "BusinessType": "Renewal",
   "Revenue": 80000,
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
-      "OccuranceLimit": 1000000,
-      "AggregateLimit": 2000000,
+      "OccuranceLimit": 2000000,
+      "AggregateLimit": 3000000,
       "Retention": 2500
     }
   ],
@@ -53,9 +53,14 @@
       "StatusOfClaim": "?"
     }
   ],
-  "OptionalEnhancements": {
-    "DamagesToPremises": 100000,
-    "MedicalPayments": 1000,
-    "PersonalAndAdvertisingInjury": 1000
-  }
+  "OptionalEnhancements": [
+    {
+      "OptionalEnhancementName": "Crisis Management",
+      "OptionalEnhancementValue": "50000"
+    },
+    {
+      "OptionalEnhancementName": "Media activities",
+      "OptionalEnhancementValue": "Full"
+    }
+  ]
 }

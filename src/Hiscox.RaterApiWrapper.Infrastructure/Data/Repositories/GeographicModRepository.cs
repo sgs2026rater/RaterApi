@@ -26,4 +26,13 @@ public class GeographicModRepository : RepositoryBase, IGeographicModRepository
             .Select(_ => _.MsaName)
             .FirstAsync();
     }
+
+    public async Task<decimal> GetAE(string version, string zipCode)
+    {
+        return await _context.GeographicMods!
+            .Where(_ => _.Version == version && _.Zip == zipCode)
+            .OrderBy(_ => _.Id)
+            .Select(_ => _.AE)
+            .FirstAsync();
+    }
 }
