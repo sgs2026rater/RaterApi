@@ -133,7 +133,13 @@ public class RaterService : IRaterService
             await SetRatingFactor(raterInputs.RatingFactorStep, _raterOptions.Version);
         }
 
-        var premium = await CalculatePremium(coverage, raterInputs.AdditionalRiskProfile, 50000, coverage?.OccuranceLimit ?? 0m);
+        var crisisManagement = raterInputs.OptionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == "Crisis Management")?.OptionalEnhancementValue;
+        var mediaActivities = raterInputs.OptionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == "Media activities")?.OptionalEnhancementValue;
+
+        decimal crisisManagementValue = crisisManagement == "Full" ? coverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(crisisManagement);
+        decimal mediaActivitiesValue = mediaActivities == "Full" ? coverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(mediaActivities);
+
+        var premium = await CalculatePremium(coverage, raterInputs.AdditionalRiskProfile, crisisManagementValue, mediaActivitiesValue);
 
         var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
         var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
