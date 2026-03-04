@@ -1,8 +1,13 @@
+@Hiscox.RaterApiWrapper.Presentation.Api_HostAddress = https://localhost:7293
+
+POST {{Hiscox.RaterApiWrapper.Presentation.Api_HostAddress}}/api/rater/
+Accept: application/json
+Content-Type: application/json
 {
   "Product": "ArchitectureAndEngineering",
-  "PolicyNumber": "5064044",
+  "PolicyNumber": null,
   "BusinessType": "Renewal",
-  "Revenue": 80000,
+  "Revenue" : 80000,
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
@@ -13,10 +18,16 @@
   ],
   "IndustryClassifications": [
     {
+      "Sector": "Contractors",
+      "SubSector": "Manufacturing",
+      "Specialty": "Manufacturer",
+      "PercentageExposure": 0.7
+    },
+    {
       "Sector": "Design Professionals",
-      "SubSector": "Architectural Services",
-      "Specialty": "Architectural Services",
-      "PercentageExposure": 1
+      "SubSector": "Agency Construction Management",
+      "Specialty": "Agency Construction Management",
+      "PercentageExposure": 0.3
     }
   ],
   "AdditionalRiskProfile": {
@@ -48,13 +59,15 @@
     }
   ],
   "OptionalEnhancements": [
-    {
-      "OptionalEnhancementName": "Crisis Management",
-      "OptionalEnhancementValue": "50000"
+    { 
+        "OptionalEnhancementName" : "Crisis Management",
+        "OptionalEnhancementValue" :"50000"
     },
-    {
-      "OptionalEnhancementName": "Media activities",
-      "OptionalEnhancementValue": "Full"
+    { 
+        "OptionalEnhancementName" : "Media activities",
+        "OptionalEnhancementValue" :"Full"
     }
   ]
 }
+
+###

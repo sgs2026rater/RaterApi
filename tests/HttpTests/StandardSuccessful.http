@@ -7,7 +7,7 @@ Content-Type: application/json
   "Product": "ArchitectureAndEngineering",
   "PolicyNumber": "5064044",
   "BusinessType": "Renewal",
-  "Revenue" : 80000,
+  "Revenue": 80000,
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
@@ -18,16 +18,10 @@ Content-Type: application/json
   ],
   "IndustryClassifications": [
     {
-      "Sector": "Contractors",
-      "SubSector": "Manufacturing",
-      "Specialty": "Manufacturer",
-      "PercentageExposure": 0.7
-    },
-    {
       "Sector": "Design Professionals",
-      "SubSector": "Agency Construction Management",
-      "Specialty": "Agency Construction Management",
-      "PercentageExposure": 0.3
+      "SubSector": "Architectural Services",
+      "Specialty": "Architectural Services",
+      "PercentageExposure": 1
     }
   ],
   "AdditionalRiskProfile": {
@@ -59,13 +53,13 @@ Content-Type: application/json
     }
   ],
   "OptionalEnhancements": [
-    { 
-        "OptionalEnhancementName" : "Crisis Management",
-        "OptionalEnhancementValue" :"50000"
+    {
+      "OptionalEnhancementName": "Crisis Management",
+      "OptionalEnhancementValue": "50000"
     },
-    { 
-        "OptionalEnhancementName" : "Media activities",
-        "OptionalEnhancementValue" :"Full"
+    {
+      "OptionalEnhancementName": "Media activities",
+      "OptionalEnhancementValue": "Full"
     }
   ]
 }

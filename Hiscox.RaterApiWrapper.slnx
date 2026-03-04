@@ -21,6 +21,24 @@
   </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/HttpTests/">
+    <File Path="EmptyCoverageTypes.http" />
+    <File Path="EmptyIndustrySector.http" />
+    <File Path="EmptyIndustrySpecialty.http" />
+    <File Path="EmptyIndustrySubSector.http" />
+    <File Path="EmptyPolicyNumber.http" />
+    <File Path="InvalidBusinessType.http" />
+    <File Path="InvalidCoverageType.http" />
+    <File Path="InvalidExposureSum.http" />
+    <File Path="InvalidIndustrySector.http" />
+    <File Path="InvalidIndustrySpecialty.http" />
+    <File Path="InvalidIndustrySubSector.http" />
+    <File Path="InvalidPolicyNumber.http" />
+    <File Path="InvalidProduct.http" />
+    <File Path="MissingCoverageTypes.http" />
+    <File Path="NullPolicyNumber.http" />
+    <File Path="PolicyNumberWithExpression.http" />
+    <File Path="PolicyNumberWithLongNumber.http" />
+    <File Path="PolicyNumberWithSpecialChars.http" />
     <File Path="tests/HttpTests/InvalidIndustryClassification.http" />
     <File Path="tests/HttpTests/InvalidPolicyNumber.http" />
     <File Path="tests/HttpTests/StandardSuccessful.http" />

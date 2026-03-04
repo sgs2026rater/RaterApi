@@ -1,3 +1,8 @@
+@Hiscox.RaterApiWrapper.Presentation.Api_HostAddress = https://localhost:7293
+
+POST {{Hiscox.RaterApiWrapper.Presentation.Api_HostAddress}}/api/rater/
+Accept: application/json
+Content-Type: application/json
 {
   "Product": "ArchitectureAndEngineering",
   "PolicyNumber": "5064044",
@@ -14,8 +19,8 @@
   "IndustryClassifications": [
     {
       "Sector": "Design Professionals",
-      "SubSector": "Architectural Services",
-      "Specialty": "Architectural Services",
+      "SubSector": "",
+      "Specialty": "Agency Construction Management",
       "PercentageExposure": 1
     }
   ],
@@ -58,3 +63,5 @@
     }
   ]
 }
+
+###

@@ -111,7 +111,10 @@ public class RaterService : IRaterService
 
 
         var coverage = GetPrimaryCoverage(raterInputs.Coverages!);
-
+        if (coverage == null)
+        {
+            return new RaterFailureDetails("InvalidCoverage", "Coverage field cannot be empty.");
+        }
         if ((coverage?.OccuranceLimit ?? 0m) != (_raterDetails?.Profile.EO_OccLimit ?? 0m))
         {
             _logger.LogWarning("OccuranceLimit ({0}) of Coverages in the request does not match with the Magic database ({1}).",
