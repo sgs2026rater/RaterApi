@@ -583,13 +583,24 @@ public class RaterService : IRaterService
     {
         await CalculateClaimHistory(ratingFactor, version);
         await CalculateRiskProfile(ratingFactor, version);
+        await SetComplexityOfRiskRatingFactorDetails(ratingFactor);
     }
-
+    private async Task SetComplexityOfRiskRatingFactorDetails(RatingFactor ratingFactor)
+    {
+        _raterDetails.RatingFactorStep ??= new RatingFactor();
+        _raterDetails.RatingFactorStep = ratingFactor;
+        _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor = ratingFactor.ComplexityOfRiskRatingFactorDetails.Factor;
+        if (ratingFactor.ComplexityOfRiskRatingFactorDetails?.Factor == 1)
+        {
+            _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.DegreeOfConcern= "Comfortable";
+            _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Range = "0.95 - 1.05";
+        }
+    }
     private async Task CalculateClaimHistory(RatingFactor ratingFactor, string version)
     {
         RatingFactorMaster? ratingFactorMaster;
 
-        if (ratingFactor.ClaimHistoryQuestions == null || !ratingFactor.ClaimHistoryQuestions.Any())
+        if (ratingFactor.ClaimHistoryQuestions == 0)
         {
             ratingFactorMaster = new RatingFactorMaster()
             {
@@ -604,7 +615,7 @@ public class RaterService : IRaterService
         {
             ratingFactorMaster = await _iRatingFactorsRepository.GetRatingFactorByQuestion(version,
                                                                     (short)RatingFactorSectionType.ClaimHistory,
-                                                                    (short)ratingFactor.ClaimHistoryQuestions.FirstOrDefault());
+                                                                    (short)ratingFactor.ClaimHistoryQuestions);
         }
 
         _raterDetails.RatingFactorStep ??= new RatingFactor();
@@ -641,7 +652,11 @@ public class RaterService : IRaterService
                                                                         (short)RatingFactorSectionType.RiskManagement);
         }
 
-        int noAnswerOccurances = ratingFactor.RiskProfileQuestions!.Count(x => x.Value == false);
+        int noAnswerOccurances = 0;
+        if (ratingFactor.RiskProfileQuestions != null)
+        {
+            noAnswerOccurances = ratingFactor.RiskProfileQuestions.Count(x => x.Value == false);
+        }
 
         if (noAnswerOccurances > 0)
         {
@@ -652,7 +667,11 @@ public class RaterService : IRaterService
         }
         else
         {
-            int yesAnswerOccurances = ratingFactor.RiskProfileQuestions!.Count(x => x.Value == true);
+            int yesAnswerOccurances = 0;
+            if (ratingFactor.RiskProfileQuestions != null)
+            {
+                yesAnswerOccurances = ratingFactor.RiskProfileQuestions!.Count(x => x.Value == true);
+            }
 
             if (yesAnswerOccurances > 0)
             {

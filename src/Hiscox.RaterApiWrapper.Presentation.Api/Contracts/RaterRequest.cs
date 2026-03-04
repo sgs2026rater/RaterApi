@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Hiscox Insurance. All rights reserved.
 
 
+using Hiscox.RaterApiWrapper.Domain.Entities;
 using Hiscox.RaterApiWrapper.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -35,6 +36,7 @@ public class RaterRequest
     public List<ClaimRq>? ClaimsHistory { get; set; }
     
     public List<OptionalEnhancementRq>? OptionalEnhancements { get; set; }
+    public RatingFactor? RatingFactorStep { get; set; }
 }
 
 public class AdditionalRiskProfileRq

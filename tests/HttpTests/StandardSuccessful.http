@@ -11,7 +11,7 @@ Content-Type: application/json
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
-      "OccuranceLimit": 2000000,
+      "OccuranceLimit": 1000000,
       "AggregateLimit": 3000000,
       "Retention": 2500
     }
@@ -61,7 +61,18 @@ Content-Type: application/json
       "OptionalEnhancementName": "Media activities",
       "OptionalEnhancementValue": "Full"
     }
-  ]
+  ],
+  "RatingFactorStep":{
+  "ClaimHistoryQuestions": 2,
+  "RiskProfileQuestions": {
+    "1": true,
+    "2": true,
+    "3": true
+  },
+  "ComplexityOfRiskRatingFactorDetails": {
+    "Factor": 1.00
+  }
+}
 }
 
 ###

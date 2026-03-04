@@ -15,7 +15,7 @@ public class RatingFactor
     public string RiskTierCorRange { get; set; } = string.Empty;
     public decimal RecommendedCor { get; set; }
     public string RecommendedConcern { get; set; } = string.Empty;
-    public List<int>? ClaimHistoryQuestions { get; set; }
+    public int ClaimHistoryQuestions { get; set; }
     public RatingFactorSectionDetails? ClaimHistoryRatingFactorDetails { get; set; }
     public Dictionary<int, bool?>? RiskProfileQuestions { get; set; }
     public RatingFactorSectionDetails? RiskProfileRatingFactorDetails { get; set; }
