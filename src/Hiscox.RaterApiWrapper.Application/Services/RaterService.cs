@@ -154,8 +154,8 @@ public class RaterService : IRaterService
             OccuranceLimit = coverage?.OccuranceLimit ?? 0m,
             AggregateLimit = coverage?.AggregateLimit ?? 0m,
             Retention = coverage?.Retention ?? 0m,
-            ExpiringPremium = _raterDetails?.Profile.EO_GWP??0m,
-            RenewalPremium = premium,
+            ExpiringPremium = Math.Round(_raterDetails?.Profile.EO_GWP ?? 0m, 0, MidpointRounding.AwayFromZero),
+            RenewalPremium = Math.Round(premium, 0, MidpointRounding.AwayFromZero),
             RevenueChange = Math.Round(revnueChange, 2, MidpointRounding.AwayFromZero),
             PremiumChange = Math.Round(premiumChange, 2, MidpointRounding.AwayFromZero),
             RateChange = 56.3m
@@ -608,13 +608,22 @@ public class RaterService : IRaterService
         }
 
         _raterDetails.RatingFactorStep ??= new RatingFactor();
+        var range = string.Empty;
 
         if (ratingFactorMaster != null)
         {
+            if ((ratingFactorMaster?.Factor ?? _defaultRatingFactor) == 3.5m)
+            {
+                range = "3.50 - no cap";
+            }
+            else
+            {
+                range = (ratingFactorMaster?.Low == _defaultRatingFactor && ratingFactorMaster.High == _defaultRatingFactor) ? $"{_defaultRatingFactor}"
+                                                                                    : $"{ratingFactorMaster?.Low} - {ratingFactorMaster?.High}";
+            }
             _raterDetails.RatingFactorStep.ClaimHistoryRatingFactorDetails = new RatingFactorSectionDetails
             {
-                Range = (ratingFactorMaster.Low == _defaultRatingFactor && ratingFactorMaster.High == _defaultRatingFactor) ? $"{_defaultRatingFactor}"
-                                                                                    : $"{ratingFactorMaster.Low} - {ratingFactorMaster.High}",
+                Range = range,
                 Factor = ratingFactorMaster?.Factor ?? _defaultRatingFactor,
                 DegreeOfConcern = ratingFactorMaster?.DegreeOfConcern ?? string.Empty,
                 Suggested = ratingFactorMaster?.Factor ?? _defaultRatingFactor
@@ -632,7 +641,7 @@ public class RaterService : IRaterService
                                                                         (short)RatingFactorSectionType.RiskManagement);
         }
 
-        int noAnswerOccurances = ratingFactorList!.Count(x => x.Answer);
+        int noAnswerOccurances = ratingFactor.RiskProfileQuestions!.Count(x => x.Value == false);
 
         if (noAnswerOccurances > 0)
         {
@@ -643,9 +652,9 @@ public class RaterService : IRaterService
         }
         else
         {
-            int yesAnswerOccurances = ratingFactorList!.Count(x => x.Answer);
+            int yesAnswerOccurances = ratingFactor.RiskProfileQuestions!.Count(x => x.Value == true);
 
-            if (noAnswerOccurances > 0)
+            if (yesAnswerOccurances > 0)
             {
                 calculatedRatingFactor = ratingFactorList
                                             .Where(x => x.Answer)
@@ -669,7 +678,7 @@ public class RaterService : IRaterService
 
         if (calculatedRatingFactor != null)
         {
-            _raterDetails.RatingFactorStep.ClaimHistoryRatingFactorDetails = new RatingFactorSectionDetails
+            _raterDetails.RatingFactorStep.RiskProfileRatingFactorDetails = new RatingFactorSectionDetails
             {
                 Range = (calculatedRatingFactor.Low == _defaultRatingFactor
                                                     && calculatedRatingFactor.High == _defaultRatingFactor)
