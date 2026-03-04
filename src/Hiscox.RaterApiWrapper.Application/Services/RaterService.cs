@@ -585,6 +585,11 @@ public class RaterService : IRaterService
         await CalculateRiskProfile(ratingFactor, version);
         await SetComplexityOfRiskRatingFactorDetails(ratingFactor);
     }
+    /// <summary>
+    /// Calculates factor, range, degree of concern for Complexity Of Risk section
+    /// </summary>
+    /// <param name="ratingFactor"></param>
+    /// <returns></returns>
     private async Task SetComplexityOfRiskRatingFactorDetails(RatingFactor ratingFactor)
     {
         _raterDetails.RatingFactorStep ??= new RatingFactor();
@@ -596,6 +601,12 @@ public class RaterService : IRaterService
             _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Range = "0.95 - 1.05";
         }
     }
+    /// <summary>
+    /// Calculates factor, range, degree of concern for Claim History section
+    /// </summary>
+    /// <param name="ratingFactor"></param>
+    /// <param name="version"></param>
+    /// <returns></returns>
     private async Task CalculateClaimHistory(RatingFactor ratingFactor, string version)
     {
         RatingFactorMaster? ratingFactorMaster;
@@ -641,6 +652,12 @@ public class RaterService : IRaterService
             };
         }
     }
+    /// <summary>
+    /// Calculates factor, range, degree of concern for Risk profile section
+    /// </summary>
+    /// <param name="ratingFactor"></param>
+    /// <param name="version"></param>
+    /// <returns></returns>
     private async Task CalculateRiskProfile(RatingFactor ratingFactor, string version)
     {
         List<RatingFactorMaster> ratingFactorList = new List<RatingFactorMaster>();
@@ -709,7 +726,14 @@ public class RaterService : IRaterService
             };
         }
     }
-
+    /// <summary>
+    /// Calculates premium that will be sent to response
+    /// </summary>
+    /// <param name="coverage"></param>
+    /// <param name="additionalRiskProfile"></param>
+    /// <param name="crisisManagerMent"></param>
+    /// <param name="mediaActivities"></param>
+    /// <returns>Premuim</returns>
     private async Task<decimal> CalculatePremium(Coverage? coverage, AdditionalRiskProfile? additionalRiskProfile, decimal crisisManagerMent, decimal mediaActivities)
     {
         const decimal l13 = 35.5m;
