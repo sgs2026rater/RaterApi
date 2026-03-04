@@ -17,7 +17,7 @@ public class RaterRequest
     [Required]
     public string? PolicyNumber { get; set; }
 
-    //[Required]
+    [Required]
     public decimal? Revenue { get; set; }
 
     [Required]
@@ -84,7 +84,6 @@ public class CoverageRq
     [EnumDataType(typeof(CoverageType))]
     [Required]
     public required string CoverageType { get; set; }
-
     public decimal OccuranceLimit { get; set; }
     public decimal AggregateLimit { get; set; }
     public decimal Retention { get; set; } 

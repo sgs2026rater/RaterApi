@@ -110,25 +110,22 @@ public class RaterService : IRaterService
         GetOptionalEnhancements();
 
 
-        var coverage = GetPrimaryCoverage(raterInputs.Coverages!);
-        if (coverage == null)
-        {
-            return new RaterFailureDetails("InvalidCoverage", "Coverage field cannot be empty.");
-        }
-        if ((coverage?.OccuranceLimit ?? 0m) != (_raterDetails?.Profile.EO_OccLimit ?? 0m))
+        _raterDetails.PrimaryCoverage = GetPrimaryCoverage(raterInputs.Coverages!);
+
+        if ((_raterDetails.PrimaryCoverage?.OccuranceLimit ?? 0m) != (_raterDetails?.Profile.EO_OccLimit ?? 0m))
         {
             _logger.LogWarning("OccuranceLimit ({0}) of Coverages in the request does not match with the Magic database ({1}).",
-                                            coverage?.OccuranceLimit ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_OccLimit ?? 0m));
+                                            _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_OccLimit ?? 0m));
         }
-        if ((coverage?.AggregateLimit ?? 0m) != (_raterDetails?.Profile.EO_AggLimit ?? 0m))
+        if ((_raterDetails?.PrimaryCoverage?.AggregateLimit ?? 0m) != (_raterDetails?.Profile.EO_AggLimit ?? 0m))
         {
             _logger.LogWarning("AggregateLimit ({0}) of Coverages in the request does not match with the Magic database ({1}).",
-                                            coverage?.AggregateLimit ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_AggLimit ?? 0m));
+                                            _raterDetails?.PrimaryCoverage?.AggregateLimit ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_AggLimit ?? 0m));
         }
-        if ((coverage?.Retention ?? 0m) != (_raterDetails?.Profile.EO_Retention ?? 0m))
+        if ((_raterDetails?.PrimaryCoverage?.Retention ?? 0m) != (_raterDetails?.Profile.EO_Retention ?? 0m))
         {
             _logger.LogWarning("Retention ({0}) of Coverages in the request does not match with the Magic database ({1}).",
-                                            coverage?.Retention ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_Retention ?? 0m));
+                                            _raterDetails?.PrimaryCoverage?.Retention ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_Retention ?? 0m));
         }
 
         if (raterInputs.RatingFactorStep != null)
@@ -139,27 +136,298 @@ public class RaterService : IRaterService
         var crisisManagement = raterInputs.OptionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == "Crisis Management")?.OptionalEnhancementValue;
         var mediaActivities = raterInputs.OptionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == "Media activities")?.OptionalEnhancementValue;
 
-        decimal crisisManagementValue = crisisManagement == "Full" ? coverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(crisisManagement);
-        decimal mediaActivitiesValue = mediaActivities == "Full" ? coverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(mediaActivities);
+        decimal crisisManagementValue = crisisManagement == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(crisisManagement);
+        decimal mediaActivitiesValue = mediaActivities == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(mediaActivities);
 
-        var premium = await CalculatePremium(coverage, raterInputs.AdditionalRiskProfile, crisisManagementValue, mediaActivitiesValue);
+        var premium = await CalculatePremium(_raterDetails?.PrimaryCoverage, raterInputs.AdditionalRiskProfile, crisisManagementValue, mediaActivitiesValue);
 
         var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
         var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
+
+        //var rateChange = CalculateRateChange(); // TODO: some conditional logic was put to bypass divide by zero. Needs to be removed.
 
         return new RaterResult()
         {
             RaterVersion = _raterOptions.Version,
             RaterVersionDate = _raterOptions.VersionDate,
-            OccuranceLimit = coverage?.OccuranceLimit ?? 0m,
-            AggregateLimit = coverage?.AggregateLimit ?? 0m,
-            Retention = coverage?.Retention ?? 0m,
+            OccuranceLimit = _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m,
+            AggregateLimit = _raterDetails?.PrimaryCoverage?.AggregateLimit ?? 0m,
+            Retention = _raterDetails?.PrimaryCoverage?.Retention ?? 0m,
             ExpiringPremium = _raterDetails?.Profile.EO_GWP ?? 0m,
             RenewalPremium = premium,
             RevenueChange = Math.Round(revnueChange, 2, MidpointRounding.AwayFromZero),
             PremiumChange = Math.Round(premiumChange, 2, MidpointRounding.AwayFromZero),
-            RateChange = 56.3m
+            RateChange = 56.3m//rateChange
         };
+    }
+
+    private Dictionary<string, string> LoadIndustryNameToAlternativeExposureBaseMap()
+    {
+        var industryNameToAlternativeExposureBaseMap = new Dictionary<string, string>(); // { { "Architectural Services", "Not applicable"} }; This industry key is not present in the table so it should return "Not applicable".
+
+        _raterDetails.IndustryNameToAlternativeExposureBaseMap = industryNameToAlternativeExposureBaseMap;
+
+        return industryNameToAlternativeExposureBaseMap;
+    }
+
+    private List<BaseRateTablesTable1> LoadBaseRateTablesTable1Records()
+    {
+        var baseRateTablesTable1Records = new List<BaseRateTablesTable1>() { new() { Revenue = 0m, BaseRateEAndO = 350 },
+                                                                             new() { Revenue = 25000m, BaseRateEAndO = 354 },
+                                                                             new() { Revenue = 50000m, BaseRateEAndO = 388 },
+                                                                             new() { Revenue = 75000m, BaseRateEAndO = 444 } };
+
+        //baseRateTablesTable1Records.Sort();
+
+        _raterDetails.BaseRateTablesTable1Records = baseRateTablesTable1Records;
+
+        return baseRateTablesTable1Records;
+    }
+
+    private List<RatingTablesTable1> LoadRatingTablesTable1Records()
+    {
+        var ratingTablesTable1Records = new List<RatingTablesTable1>() { new() { LimitOrRetentionOption = 0m, EAndOLow = -0.1879m,  EAndOMedium = -0.1879m },
+                                                                         new() { LimitOrRetentionOption = 1000m, EAndOLow = -0.1135m,  EAndOMedium = -0.1135m },
+                                                                         new() { LimitOrRetentionOption = 2500m, EAndOLow = -0.0804m, EAndOMedium = -0.0804m },
+                                                                         new() { LimitOrRetentionOption = 5000m, EAndOLow = -0.0449m, EAndOMedium = -0.0449m },
+                                                                         new() { LimitOrRetentionOption = 10000m, EAndOLow = 0m, EAndOMedium = 0m },
+                                                                         // ...
+                                                                         new() { LimitOrRetentionOption = 1000000m, EAndOLow = 0.993256614378974m,  EAndOMedium = 0.993256614378974m },
+                                                                         new() { LimitOrRetentionOption = 1500000m, EAndOLow = 1.30858977343551m,  EAndOMedium = 1.30858977343551m }, };
+
+        //ratingTablesTable1Records.Sort();
+
+        _raterDetails.RatingTablesTable1Records = ratingTablesTable1Records;
+
+        return ratingTablesTable1Records;
+    }
+
+    private List<RatingTablesTable2> LoadRatingTablesTable2Records()
+    {
+        var ratingTablesTable2Records = new List<RatingTablesTable2>() { new() { RetainedValue = 1m, FactorEAndO = 1m },
+                                                                         new() { RetainedValue = 1.2m, FactorEAndO = 1.021m },
+                                                                         new() { RetainedValue = 1.4m, FactorEAndO = 1.044m },
+                                                                         // ...
+                                                                         new() { RetainedValue = 3m, FactorEAndO = 1.157m },        // The FactorEAndO is calculated through a formula and has more digits after decimal point in the table.
+                                                                         new() { RetainedValue = 3.2m, FactorEAndO = 1.166m }, };
+
+        //ratingTablesTable2Records.Sort();
+
+        _raterDetails.RatingTablesTable2Records = ratingTablesTable2Records;
+
+        return ratingTablesTable2Records;
+    }
+
+    private List<RatingTablesTable3> LoadRatingTablesTable3Records()
+    {
+        var ratingTablesTable3Records = new List<RatingTablesTable3>() { new() { RetainedValue = 0m, Factor = 0.9205m },
+                                                                         new() { RetainedValue = 0.05m, Factor = 0.9240m },
+                                                                         new() { RetainedValue = 0.1m, Factor = 0.9276m },
+                                                                         // ...
+                                                                         new() { RetainedValue = 0.95m, Factor = 0.9875m },
+                                                                         new() { RetainedValue = 1m, Factor = 1m }, };
+
+        //ratingTablesTable3Records.Sort();
+
+        _raterDetails.RatingTablesTable3Records = ratingTablesTable3Records;
+
+        return ratingTablesTable3Records;
+    }
+
+    private decimal CalculateRateChange()
+    {
+        LoadIndustryNameToAlternativeExposureBaseMap();
+        LoadBaseRateTablesTable1Records();
+        LoadRatingTablesTable1Records();
+        LoadRatingTablesTable2Records();
+        LoadRatingTablesTable3Records();
+
+        var priorTermTotalPremium = _raterDetails?.Profile?.EO_GWP;
+
+        var upcomingTermTotalPremium = _raterDetails?.Premium; // TODO: Assuming the UpcomingTermTotalPremium is the premium being calculated in sheet 5. If it is not it should be updated with the formula in the excel.
+
+        #region UpcomingTermBaseRates
+
+        var industry = _raterDetails?.PrimaryIndustryClassification?.SpecialtyName ?? "";
+        var alternativeExposureBase = _raterDetails?.IndustryNameToAlternativeExposureBaseMap?.ContainsKey(industry) == true ? _raterDetails?.IndustryNameToAlternativeExposureBaseMap?[industry] : "Not applicable";
+        decimal? alternativeExposureValue = null; //TODO: There is a formula for this. This is not in Design Professional Flow.
+        var constructionValueRequired = _raterDetails?.PrimaryIndustryClassification?.SubSectorName == "General Contractors" || _raterDetails?.PrimaryIndustryClassification?.SubSectorName == "Subcontractors" || _raterDetails?.PrimaryIndustryClassification?.SubSectorName == "Manufacturing";
+        decimal? upcomingTermExposure;
+
+        if (alternativeExposureBase == "Not applicable" || industry == "Property Management - Standalone" || constructionValueRequired) // TODO: Looks like industry cell reference refers to the Specialty selected but not 100% sure For now assuming it is specialty.
+        {
+            upcomingTermExposure = _raterDetails?.RevenueAdjusted;
+        }
+        else if (alternativeExposureBase == "Revenue - Creatives")
+        {
+            upcomingTermExposure = _raterDetails?.Revenue;
+        }
+        else
+        {
+            upcomingTermExposure = alternativeExposureValue;
+        }
+        
+        var upcomingTermExposureMatchingRecordLow = _raterDetails?.BaseRateTablesTable1Records?.FirstOrDefault<BaseRateTablesTable1>(brtr => brtr.Revenue <= upcomingTermExposure); // List is sorted.
+        var upcomingTermExposureMatchingRecordHigh = _raterDetails?.BaseRateTablesTable1Records?.SkipWhile<BaseRateTablesTable1>(brtr => brtr != upcomingTermExposureMatchingRecordLow).Skip(1).FirstOrDefault();
+        var upcomingTermExposureHighValue = upcomingTermExposureMatchingRecordHigh?.Revenue;
+        var upcomingTermExposureLowValue = upcomingTermExposureMatchingRecordLow?.Revenue;
+        var upcomingTermExposureHighCoefficient = upcomingTermExposureMatchingRecordHigh?.BaseRateEAndO;
+        var upcomingTermExposureLowCoefficient = upcomingTermExposureMatchingRecordLow?.BaseRateEAndO;
+        var upcomingTermBaseRates = (upcomingTermExposure - upcomingTermExposureLowValue) / ((upcomingTermExposureHighValue - upcomingTermExposureLowValue) == 0 ? 1 : (upcomingTermExposureHighValue - upcomingTermExposureLowValue)) * upcomingTermExposureHighCoefficient
+                                    + (1 - (upcomingTermExposure - upcomingTermExposureLowValue) / ((upcomingTermExposureHighValue - upcomingTermExposureLowValue) == 0 ? 1 : (upcomingTermExposureHighValue - upcomingTermExposureLowValue))) * upcomingTermExposureLowCoefficient;
+
+        #endregion UpcomingTermBaseRates
+
+        #region PriorTermBaseRates
+
+        var priorTermExposure = _raterDetails?.Profile?.ExposureBase;
+        var priorTermExposureMatchingRecordLow = _raterDetails?.BaseRateTablesTable1Records?.FirstOrDefault<BaseRateTablesTable1>(brtr => brtr.Revenue <= priorTermExposure); // List is sorted.
+        var priorTermExposureMatchingRecordHigh = _raterDetails?.BaseRateTablesTable1Records?.SkipWhile<BaseRateTablesTable1>(brtr => brtr != priorTermExposureMatchingRecordLow).Skip(1).FirstOrDefault();
+        var priorTermExposureHighValue = priorTermExposureMatchingRecordHigh?.Revenue;
+        var priorTermExposureLowValue = priorTermExposureMatchingRecordLow?.Revenue;
+        var priorTermExposureHighCoefficient = priorTermExposureMatchingRecordHigh?.BaseRateEAndO;
+        var priorTermExposureLowCoefficient = priorTermExposureMatchingRecordLow?.BaseRateEAndO;
+        var priorTermBaseRates = (priorTermExposure - priorTermExposureLowValue) / ((priorTermExposureHighValue - priorTermExposureLowValue) == 0 ? 1 : (priorTermExposureHighValue - priorTermExposureLowValue)) * priorTermExposureHighCoefficient
+                                 + (1 - (priorTermExposure - priorTermExposureLowValue) / ((priorTermExposureHighValue - priorTermExposureLowValue) == 0 ? 1 : (priorTermExposureHighValue - priorTermExposureLowValue))) * priorTermExposureLowCoefficient;
+
+        #endregion PriorTermBaseRates
+
+        var upcomingTermLimitFactor = _raterDetails?.UpcomingTermLimitFactor;
+
+
+        #region PriorTermLimitFactor
+
+        #region LimitRetentionFactor
+
+        // W21
+        var retention = _raterDetails?.PrimaryCoverage?.Retention;
+        var retentionMatchingRecordLow = _raterDetails?.RatingTablesTable1Records?.FirstOrDefault<RatingTablesTable1>(rtr => rtr.LimitOrRetentionOption <= retention); // List is sorted.
+        var retentionMatchingRecordHigh = _raterDetails?.RatingTablesTable1Records?.SkipWhile<RatingTablesTable1>(rtr => rtr != retentionMatchingRecordLow).Skip(1).FirstOrDefault();
+
+        // W324
+        var retentionLowValue = retentionMatchingRecordLow?.LimitOrRetentionOption;
+        // W325
+        var retentionHighValue = retentionMatchingRecordHigh?.LimitOrRetentionOption;
+        // W329
+        var retentionLowCoefficient = retentionMatchingRecordLow?.EAndOMedium;
+        // W330
+        var retentionHighCoefficient = retentionMatchingRecordHigh?.EAndOMedium;
+
+        //W322
+        var occuranceRetentionSum = _raterDetails?.PrimaryCoverage?.Retention + _raterDetails?.PrimaryCoverage?.OccuranceLimit;
+        var occuranceRetentionSumMatchingRecordLow = _raterDetails?.RatingTablesTable1Records?.FirstOrDefault<RatingTablesTable1>(rtr => rtr.LimitOrRetentionOption <= occuranceRetentionSum); // List is sorted.
+        var occuranceRetentionSumMatchingRecordHigh = _raterDetails?.RatingTablesTable1Records?.SkipWhile<RatingTablesTable1>(rtr => rtr != occuranceRetentionSumMatchingRecordLow).Skip(1).FirstOrDefault();
+
+        // W326
+        var occuranceRetentionSumLowValue = occuranceRetentionSumMatchingRecordLow?.LimitOrRetentionOption;
+        // W327
+        var occuranceRetentionSumHighValue = occuranceRetentionSumMatchingRecordHigh?.LimitOrRetentionOption;
+        // W331
+        var occuranceRetentionSumLowCoefficient = occuranceRetentionSumMatchingRecordLow?.EAndOMedium;
+        // W332
+        var occuranceRetentionSumHighCoefficient = occuranceRetentionSumMatchingRecordHigh?.EAndOMedium;
+
+        // W334 - = (W321 - W324) / (W325 - W324) * W330 + (1 - (W321 - W324) / (W325 - W324)) * W329
+        var retentionWeightedCoefficient = (retention - retentionLowValue) / ((retentionHighValue - retentionLowValue) == 0 ? 1 : (retentionHighValue - retentionLowValue)) * retentionHighCoefficient
+                                           + (1 - (retention - retentionLowValue) / ((retentionHighValue - retentionLowValue) == 0 ? 1 : (retentionHighValue - retentionLowValue))) * retentionLowCoefficient;
+
+        // W335 - = (W322 - W326) / (W327 - W326) * W332 + (1 - (W322 - W326) / (W327 - W326)) * W331
+        var occuranceRetentionSumWeightedCoefficient = (occuranceRetentionSum - occuranceRetentionSumLowValue) / ((occuranceRetentionSumHighValue - occuranceRetentionSumLowValue) == 0 ? 1 : (occuranceRetentionSumHighValue - occuranceRetentionSumLowValue)) * occuranceRetentionSumHighCoefficient
+                                                       + (1 - (occuranceRetentionSum - occuranceRetentionSumLowValue) / ((occuranceRetentionSumHighValue - occuranceRetentionSumLowValue) == 0 ? 1 : (occuranceRetentionSumHighValue - occuranceRetentionSumLowValue))) * occuranceRetentionSumLowCoefficient;
+
+        // Calculations!W336 - Limit Retention Factor - Formula - =W335-W334
+        var limitRetentionFactor = occuranceRetentionSumWeightedCoefficient - retentionWeightedCoefficient;
+
+        #endregion LimitRetentionFactor
+
+        #region SplitLimitFactor
+
+        var annualPremium = _raterDetails?.Profile?.EO_GWP;
+        var aggregate = _raterDetails?.PrimaryCoverage?.AggregateLimit;
+
+        //W340
+        var splitLimitFactorRetainedValue = 1 + (aggregate - annualPremium) / annualPremium;
+        var splitLimitFactorRetainedValueMatchingRecordLow = _raterDetails?.RatingTablesTable2Records?.FirstOrDefault<RatingTablesTable2>(rtr => rtr.RetainedValue <= splitLimitFactorRetainedValue); // List is sorted.
+        var splitLimitFactorRetainedValueMatchingRecordHigh = _raterDetails?.RatingTablesTable2Records?.SkipWhile<RatingTablesTable2>(rtr => rtr != splitLimitFactorRetainedValueMatchingRecordLow).Skip(1).FirstOrDefault();
+
+        // W341
+        var splitLimitFactorLowValue = splitLimitFactorRetainedValueMatchingRecordLow?.RetainedValue;
+
+        // W342
+        var splitLimitFactorHighValue = splitLimitFactorRetainedValueMatchingRecordHigh?.RetainedValue;
+
+        // W344
+        var splitLimitFactorLowCoefficient = splitLimitFactorRetainedValueMatchingRecordLow?.FactorEAndO;
+
+        // W345
+        var splitLimitFactorHighCoefficient = splitLimitFactorRetainedValueMatchingRecordHigh?.FactorEAndO;
+
+        // W347 - Split Limit Factor -Formula - = (W$340 - W341)/ (W342 - W341) * W345 + (1 - (W$340 - W341)/ (W342 - W341))*W344
+        var splitLimitFactor = (splitLimitFactorRetainedValue - splitLimitFactorLowValue) / ((splitLimitFactorHighValue - splitLimitFactorLowValue) == 0 ? 1 : (splitLimitFactorHighValue - splitLimitFactorLowValue)) * splitLimitFactorHighCoefficient
+                               + (1 - (splitLimitFactorRetainedValue - splitLimitFactorLowValue) / ((splitLimitFactorHighValue - splitLimitFactorLowValue) == 0 ? 1 : 0)) * splitLimitFactorLowCoefficient;
+
+        #endregion SplitLimitFactor
+
+        #region SharedLimit
+
+        // W349
+        var sharedLim = _raterDetails?.PrimaryCoverage?.AggregateLimit;
+
+        var aggLimit = _raterDetails?.RaterInputs?.Coverages?.Select(c => c.AggregateLimit).Max();
+
+        var coversSharing = _raterDetails?.RaterInputs?.Coverages?.Count(c => c.AggregateLimit > 0);
+
+        // W350
+        var adjustedLimit = aggLimit / coversSharing;
+
+        // W351
+        decimal? sharedLimitRetainedValue;
+
+        if (sharedLim == 0)
+        {
+            sharedLimitRetainedValue = 1;
+        }
+        else
+        {
+            sharedLimitRetainedValue = 1 + (adjustedLimit - sharedLim) / sharedLim;
+        }
+
+        var sharedLimitRetainedValueMatchingRecordLow = _raterDetails?.RatingTablesTable3Records?.FirstOrDefault<RatingTablesTable3>(rtr => rtr.RetainedValue <= splitLimitFactorRetainedValue); // List is sorted.
+        var sharedLimitRetainedValueMatchingRecordHigh = _raterDetails?.RatingTablesTable3Records?[(_raterDetails?.RatingTablesTable3Records?.IndexOf(sharedLimitRetainedValueMatchingRecordLow!) ?? 0 + 1)];
+
+        // W352
+        var sharedLimitLowValue = sharedLimitRetainedValueMatchingRecordLow?.RetainedValue;
+
+        // W353
+        var sharedLimitHighValue = sharedLimitRetainedValueMatchingRecordHigh?.RetainedValue;
+
+        // W355
+        var sharedLimitLowCoefficient = sharedLimitRetainedValueMatchingRecordLow?.Factor;
+
+        // W356
+        var sharedLimitHighCoefficient = sharedLimitRetainedValueMatchingRecordHigh?.Factor;
+
+        // W358 - Shared Limit - Formula - = (W351 - W352) / (W353 - W352) * (W356 - W355) + W355
+        var sharedLimit = (sharedLimitRetainedValue - sharedLimitLowValue) / ((sharedLimitHighValue - sharedLimitLowValue) == 0 ? 1 : (sharedLimitHighValue - sharedLimitLowValue)) * (sharedLimitHighCoefficient - sharedLimitLowCoefficient) + sharedLimitLowCoefficient;
+
+        #endregion SharedLimit
+
+        #region ProjectSpecificXSLimitFactor
+
+        // W360 - Project Specific XS Limit Factor -Formula - = Project_type!E299
+        var projectSpecificXSLimitFactor = 1m; // TODO: Calculation yet to be done from the formula. For now hardcoded to value coming for our flow.
+
+        #endregion ProjectSpecificXSLimitFactor
+
+        var priorTermLimitFactor = limitRetentionFactor * splitLimitFactor * sharedLimit * projectSpecificXSLimitFactor;
+
+        #endregion PriorTermLimitFactor
+
+        // 
+        var upcomingTermLimitAdjustedPremium = upcomingTermTotalPremium / upcomingTermBaseRates * priorTermBaseRates / upcomingTermLimitFactor * priorTermLimitFactor;
+
+        var rateChange = upcomingTermLimitAdjustedPremium / priorTermTotalPremium - 1;
+        return rateChange ?? 0m;
     }
 
     private static bool ValidateOptionalEnhancements(RaterInputs raterInputs)
@@ -828,6 +1096,7 @@ public class RaterService : IRaterService
         var f196 = 1;
 
         var f198 = f172 * f183 * f194 * f196;
+        _raterDetails.UpcomingTermLimitFactor = f198;
 
         var f245 = 3.49m;
 
@@ -857,6 +1126,7 @@ public class RaterService : IRaterService
         var f253 = (f250 + f251) / (1 - var_exp_load);
 
         var premium = f247 * (f253 * (1 + (f255/100)));
+        _raterDetails.Premium = premium;
 
         return Math.Round(premium ?? 0, 2, MidpointRounding.AwayFromZero);
     }

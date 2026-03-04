@@ -13,6 +13,7 @@ public record RaterDetails
     public string? ChosenForm {  get; set; }
     public string? FormType { get; set; }
     public RatingFactor? RatingFactorStep { get; set; }
+    public Coverage? PrimaryCoverage { get; set; }
 
     #region Additional UW(Tab4)
 
@@ -25,7 +26,7 @@ public record RaterDetails
 
     #endregion Additional UW(Tab4)
 
-    #region Coverage(Tab5)
+    #region Coverage(Tab6)
     public string SharedOrSeparatedEAndO { get; set; } = "N/A";
     public List<string>? IncludedCoverageEnhancements { get; set; }
     public List<OptionalEnhancement>? OptionalEnhancements { get; set; }
@@ -35,6 +36,22 @@ public record RaterDetails
     public List<OptionalCoveragesTable1>? OptionalCoveragesTable1Records { get; set; }
     public Dictionary<string,string>? OptionalCoverageToDifferentialMap {  get; set; }
 
-    #endregion Coverage(Tab5)
+    #endregion Coverage(Tab6)
 
+    #region RatingFactor
+
+    public decimal? Premium {  get; set; }
+
+    #endregion RatingFactor
+
+    #region Summary
+
+    public Dictionary<string, string>? IndustryNameToAlternativeExposureBaseMap { get; set; } // This comes from cell range alt_exp_master_list in Industry_lookup sheet. Table might need to be created for this.
+    public List<BaseRateTablesTable1>? BaseRateTablesTable1Records { get; set; }
+    public List<RatingTablesTable1>? RatingTablesTable1Records { get; set; }
+    public List<RatingTablesTable2>? RatingTablesTable2Records { get; set; }
+    public List<RatingTablesTable3>? RatingTablesTable3Records { get; set; }
+    public decimal? UpcomingTermLimitFactor { get; set; }
+
+    #endregion Summary
 }

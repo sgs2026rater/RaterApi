@@ -15,6 +15,8 @@ public record RaterInputs
     public bool Cyber { get; set; }
     public bool Crime { get; set; }
     public BusinessType? BusinessType { get; set; }
+
+    public decimal? ExpiringExposureBase { get; set; }
     public List<Coverage>? Coverages { get; set; }
     public List<IndustryClassification>? IndustryClassifications { get; set; }
     public AdditionalRiskProfile? AdditionalRiskProfile { get; set; }
