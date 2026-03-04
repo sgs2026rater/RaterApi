@@ -12,5 +12,6 @@ public class RatingFactorSectionDetails
     public string DegreeOfConcern { get; set; } = string.Empty;
     public decimal Factor { get; set; }
     public string Range { get; set; } = string.Empty;
+    public decimal Suggested { get; set; }
     public string FurtherClaimInformation { get; set; } = string.Empty;
 }

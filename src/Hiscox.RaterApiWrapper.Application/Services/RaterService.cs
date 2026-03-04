@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Data;
+using System.Text.Json;
 
 namespace Hiscox.RaterApiWrapper.Application.Services;
 
@@ -24,6 +25,7 @@ public class RaterService : IRaterService
 
     private readonly IFormRepository _formRepository;
     private readonly IFormEligibilityRepository _formEligibilityRepository;
+    private readonly ILookupRepository _lookupRepository;
 
     private readonly RaterDetails _raterDetails = new();
     private readonly ILogger _logger;
@@ -32,6 +34,7 @@ public class RaterService : IRaterService
     private List<IndustrySpecialty>? _industrySpecialties;
     private List<Form>? _forms;
     private readonly RaterOptions _raterOptions;
+    private readonly decimal _defaultRatingFactor = 1;
 
 
     public RaterService(
@@ -45,7 +48,8 @@ public class RaterService : IRaterService
         IOptionsMonitor<RaterOptions> raterOptions,
         IRatingFactorsRepository iRatingFactorsRepository,
         IFormRepository formRepository,
-        IFormEligibilityRepository formEligibilityRepository)
+        IFormEligibilityRepository formEligibilityRepository,
+        ILookupRepository lookupRepository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -57,12 +61,14 @@ public class RaterService : IRaterService
         _formRepository = formRepository;
         _iRatingFactorsRepository = iRatingFactorsRepository;
         _formEligibilityRepository = formEligibilityRepository;
+        _lookupRepository= lookupRepository;
     }
 
 
     public async Task<Result<RaterResult, RaterFailureDetails>> GetRateInformation(RaterInputs raterInputs)
     {
         _raterDetails.RaterInputs = raterInputs;
+
         _logger.LogInformation("Validate if Policy number is provided and does exist.");
         if (!await ValidatePolicyNumberAndLoad(raterInputs))
         {
@@ -122,9 +128,15 @@ public class RaterService : IRaterService
                                             coverage?.Retention ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_Retention ?? 0m));
         }
 
-        //GetRatingFactor(_raterOptions.Version, )
+        if (raterInputs.RatingFactorStep != null)
+        {
+            await SetRatingFactor(raterInputs.RatingFactorStep, _raterOptions.Version);
+        }
 
-        //Entering mock values for now
+        var premium = await CalculatePremium(coverage, raterInputs.AdditionalRiskProfile, 50000, coverage?.OccuranceLimit ?? 0m);
+
+        var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
+        var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
 
         return new RaterResult()
         {
@@ -133,11 +145,11 @@ public class RaterService : IRaterService
             OccuranceLimit = coverage?.OccuranceLimit ?? 0m,
             AggregateLimit = coverage?.AggregateLimit ?? 0m,
             Retention = coverage?.Retention ?? 0m,
-            ExpiringPremium = 2046m,
-            RenewalPremium = 1963m,
-            RevenueChange = 0.5m,
-            PremiumChange = -0.04m,
-            RateChange = -0.21m
+            ExpiringPremium = _raterDetails?.Profile.EO_GWP??0m,
+            RenewalPremium = premium,
+            RevenueChange = Math.Round(revnueChange, 2, MidpointRounding.AwayFromZero),
+            PremiumChange = Math.Round(premiumChange, 2, MidpointRounding.AwayFromZero),
+            RateChange = 56.3m
         };
     }
 
@@ -558,13 +570,233 @@ public class RaterService : IRaterService
     {
         return coverages.FirstOrDefault(c => c.CoverageType == CoverageType.EAndOPrimary);
     }
-    private async Task<RatingFactor?> GetRatingFactor(string version, int questionId)
+    private async Task SetRatingFactor(RatingFactor ratingFactor, string version)
     {
-        var ratingFactorMaster= await _iRatingFactorsRepository.GetRatingFactor(version, questionId);
-
-        RatingFactor ratingFactor = new RatingFactor();
-
-        return ratingFactor;
+        await CalculateClaimHistory(ratingFactor, version);
+        await CalculateRiskProfile(ratingFactor, version);
     }
 
+    private async Task CalculateClaimHistory(RatingFactor ratingFactor, string version)
+    {
+        RatingFactorMaster? ratingFactorMaster;
+
+        if (ratingFactor.ClaimHistoryQuestions == null || !ratingFactor.ClaimHistoryQuestions.Any())
+        {
+            ratingFactorMaster = new RatingFactorMaster()
+            {
+                Version = _raterOptions.Version,
+                Low = _defaultRatingFactor,
+                High = _defaultRatingFactor,
+                Factor = _defaultRatingFactor,
+                DegreeOfConcern = "Comfortable",
+            };
+        }
+        else
+        {
+            ratingFactorMaster = await _iRatingFactorsRepository.GetRatingFactorByQuestion(version,
+                                                                    (short)RatingFactorSectionType.ClaimHistory,
+                                                                    (short)ratingFactor.ClaimHistoryQuestions.FirstOrDefault());
+        }
+
+        _raterDetails.RatingFactorStep ??= new RatingFactor();
+
+        if (ratingFactorMaster != null)
+        {
+            _raterDetails.RatingFactorStep.ClaimHistoryRatingFactorDetails = new RatingFactorSectionDetails
+            {
+                Range = (ratingFactorMaster.Low == _defaultRatingFactor && ratingFactorMaster.High == _defaultRatingFactor) ? $"{_defaultRatingFactor}"
+                                                                                    : $"{ratingFactorMaster.Low} - {ratingFactorMaster.High}",
+                Factor = ratingFactorMaster?.Factor ?? _defaultRatingFactor,
+                DegreeOfConcern = ratingFactorMaster?.DegreeOfConcern ?? string.Empty,
+                Suggested = ratingFactorMaster?.Factor ?? _defaultRatingFactor
+            };
+        }
+    }
+    private async Task CalculateRiskProfile(RatingFactor ratingFactor, string version)
+    {
+        List<RatingFactorMaster> ratingFactorList = new List<RatingFactorMaster>();
+        RatingFactorMaster? calculatedRatingFactor;
+
+        if (ratingFactor.RiskProfileQuestions != null && ratingFactor.RiskProfileQuestions.Any())
+        {
+            ratingFactorList = await _iRatingFactorsRepository.GetRatingFactorBySection(version,
+                                                                        (short)RatingFactorSectionType.RiskManagement);
+        }
+
+        int noAnswerOccurances = ratingFactorList!.Count(x => x.Answer);
+
+        if (noAnswerOccurances > 0)
+        {
+            calculatedRatingFactor = ratingFactorList
+                                        .Where(x => !x.Answer)
+                                        .OrderBy(x => x.QuestionId)
+                                        .ElementAtOrDefault(noAnswerOccurances - 1);
+        }
+        else
+        {
+            int yesAnswerOccurances = ratingFactorList!.Count(x => x.Answer);
+
+            if (noAnswerOccurances > 0)
+            {
+                calculatedRatingFactor = ratingFactorList
+                                            .Where(x => x.Answer)
+                                            .OrderBy(x => x.QuestionId)
+                                            .ElementAtOrDefault(yesAnswerOccurances - 1);
+            }
+            else
+            {
+                calculatedRatingFactor = new RatingFactorMaster()
+                {
+                    Version = _raterOptions.Version,
+                    Factor = _defaultRatingFactor,
+                    Low = _defaultRatingFactor,
+                    High = _defaultRatingFactor,
+                    DegreeOfConcern = "Average",
+                };
+            }
+        }
+
+        _raterDetails.RatingFactorStep ??= new RatingFactor();
+
+        if (calculatedRatingFactor != null)
+        {
+            _raterDetails.RatingFactorStep.ClaimHistoryRatingFactorDetails = new RatingFactorSectionDetails
+            {
+                Range = (calculatedRatingFactor.Low == _defaultRatingFactor
+                                                    && calculatedRatingFactor.High == _defaultRatingFactor)
+                                                    ? $"{_defaultRatingFactor}"
+                                                    : $"{calculatedRatingFactor.Low} - {calculatedRatingFactor.High}",
+                Factor = calculatedRatingFactor?.Factor ?? _defaultRatingFactor,
+                DegreeOfConcern = calculatedRatingFactor?.DegreeOfConcern ?? string.Empty,
+                Suggested = calculatedRatingFactor?.Factor ?? _defaultRatingFactor
+            };
+        }
+    }
+
+    private async Task<decimal> CalculatePremium(Coverage? coverage, AdditionalRiskProfile? additionalRiskProfile, decimal crisisManagerMent, decimal mediaActivities)
+    {
+        const decimal l13 = 35.5m;
+        var perpcentContractorsPolution = -15.79m;
+        var occrLimit = coverage?.OccuranceLimit ?? 0m;
+        var aggrLimit = coverage?.AggregateLimit ?? 0m;
+        decimal technologyCoverage = occrLimit;
+
+        var optionalCoverages = await _lookupRepository.GetOccLimitFactor();
+
+        int percentageCrisisManagerMent = (int)Math.Round((crisisManagerMent / occrLimit * 100), MidpointRounding.AwayFromZero);
+        int percentageMediaActivities = (int)Math.Round((mediaActivities / occrLimit * 100), MidpointRounding.AwayFromZero);
+        int percentageTechnologyCoverage = (int)Math.Round((technologyCoverage / occrLimit * 100), MidpointRounding.AwayFromZero);
+
+        var forInsuranceCrisisManagerMent = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageCrisisManagerMent).OrderByDescending(x => x.PercentOfOccLimit).FirstOrDefault();
+
+        var forInsurancemediaActivities = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageMediaActivities).OrderByDescending(x => x.PercentOfOccLimit).FirstOrDefault();
+
+        var forTechnologyCoverage = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageTechnologyCoverage).OrderByDescending(x => x.TechnologyCoverageExtension).FirstOrDefault();
+
+        var f255 = l13 + forInsuranceCrisisManagerMent?.CrisisManagement + forInsurancemediaActivities?.MediaActivities + perpcentContractorsPolution + forTechnologyCoverage.TechnologyCoverageExtension;
+
+        var f102 = 0.74m;
+
+        var revenueBaseRate = await _lookupRepository.GetRevenueBaseRate();
+
+        var baseRateRevenue = revenueBaseRate.Where(x => x.Revenue <= _raterDetails.Profile?.Revenue).OrderByDescending(x => x.Revenue).FirstOrDefault();
+        var f138 = baseRateRevenue != null ? baseRateRevenue.Revenue : 0;
+        var f140 = baseRateRevenue != null ? baseRateRevenue.BaseRateEO : 0m;
+
+        var baseRateCoef = revenueBaseRate.Where(x => x.Revenue > f138).OrderBy(x => x.Revenue).FirstOrDefault();
+        var f139 = baseRateCoef != null ? baseRateCoef.Revenue : 0;
+        var f141 = baseRateCoef != null ? baseRateCoef.BaseRateEO : 0m;
+
+        var f153 = (_raterDetails.Profile?.Revenue - f138) / (f139 - f138) * f141 + (1 - (_raterDetails.Profile?.Revenue - f138) / (f139 - f138)) * f140;
+
+        var f157 = coverage?.Retention ?? 0m;
+        var f158 = (coverage?.OccuranceLimit ?? 0m) + f157;
+
+        var limitRetentionFactors = await _lookupRepository.GetLimitRetentionFactor();
+
+        var forRetention = limitRetentionFactors.Where(x => x.LimitRetentionOption <= f157).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
+        var f160 = forRetention?.LimitRetentionOption;
+
+        var forOccurance = limitRetentionFactors.Where(x => x.LimitRetentionOption > f160).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
+        var f161 = forOccurance?.LimitRetentionOption;
+
+        var forRetentionCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption <= f158).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
+        var f162 = forRetentionCoef?.LimitRetentionOption;
+
+        var forOccuranceCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption > f162).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
+        var f163 = forOccuranceCoef?.LimitRetentionOption;
+
+        var f165 = forRetention?.EoMedium;
+        var f166 = forOccurance?.EoMedium;
+        var f167 = forRetentionCoef?.EoMedium;
+        var f168 = forOccuranceCoef?.EoMedium;
+
+        var f170 = ((f157 - f160) / (f161 - f160) * f166) + (1 - (f157 - f160) / (f161 - f160)) * f165;
+        var f171 = ((f158 - f162) / (f163 - f162) * f168) + (1 - (f158 - f162) / (f163 - f162)) * f167;
+
+        var f172 = f171 - f170;
+
+        var f176 = 1 + ((aggrLimit - occrLimit) / occrLimit);
+
+        var retainedValueFactorMatrix= await _lookupRepository.GetRetainedValueFactorMatrix();
+
+        var lowRetainedFactorMatrixValue= retainedValueFactorMatrix.Where(x => x.RetainedValue <= f176).OrderByDescending(x => x.RetainedValue).FirstOrDefault();
+        var f177 = lowRetainedFactorMatrixValue?.RetainedValue;
+        var f180 = lowRetainedFactorMatrixValue?.FactorEO;
+
+        var highRetainedValue = retainedValueFactorMatrix.Where(x => x.RetainedValue > f176).OrderBy(x => x.RetainedValue).FirstOrDefault();
+        var f178 = highRetainedValue?.RetainedValue;
+        var f181 = highRetainedValue?.FactorEO;
+
+        var f183 = ((f176 - f177) / (f178 - f177) * f181) + (1 - (f176 - f177) / (f178 - f177)) * f180;
+
+        var f187 = 100;
+
+        var retainedValueFactor= await _lookupRepository.GetRetainedValueFactor();
+
+        var lowRetainedValueFactor= retainedValueFactor.Where(x => x.RetainedValuePercent <= f187).OrderByDescending(x => x.RetainedValuePercent).FirstOrDefault();
+        var f188 = lowRetainedValueFactor?.RetainedValuePercent / 100;
+        var f191 = lowRetainedValueFactor?.Factor;
+
+        var highRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent > f187).OrderBy(x => x.RetainedValuePercent).FirstOrDefault();
+        var f189 = highRetainedValueFactor?.RetainedValuePercent / 100;
+        var f192 = highRetainedValueFactor?.Factor;
+
+        var f194 = (f187 - f188) / (f189 - f188) * (f192 - f191) + f191;
+
+        var f196 = 1;
+
+        var f198 = f172 * f183 * f194 * f196;
+
+        var f245 = 3.49m;
+
+        var f246 = await _geographicModRepository.GetAE(_raterOptions.Version, _raterDetails.Profile?.Zip);
+
+        var f247 = 1;
+
+        var projectTypeFactor = await _lookupRepository.GetProjectTypeFactor();
+        decimal rscf = 0;
+
+        foreach (var factor in projectTypeFactor)
+        {
+            if (additionalRiskProfile.ProjectTypes.Contains(factor.ProjectType))
+            {
+                rscf += factor.Factor;
+            }
+        }
+
+        var f248 = rscf / additionalRiskProfile?.ProjectTypes?.Count;
+
+        var f250 = f102 * f153 * f198 * f245 * f246 * f247 * f248;
+
+        var f251 = f153 * (1 - f102) * f198;
+
+        var var_exp_load = 0.25m;
+
+        var f253 = (f250 + f251) / (1 - var_exp_load);
+
+        var premium = f247 * (f253 * (1 + (f255/100)));
+
+        return Math.Round(premium ?? 0, 2, MidpointRounding.AwayFromZero);
+    }
 }

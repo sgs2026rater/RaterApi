@@ -9,4 +9,5 @@ namespace Hiscox.RaterApiWrapper.Application.Abstractions;
 public interface IGeographicModRepository
 {
     Task<string> GetMetroArea(string version, string zipCode);
+    Task<decimal> GetAE(string version, string zipCode);
 }

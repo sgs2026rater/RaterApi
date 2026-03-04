@@ -19,5 +19,6 @@ public static class DependencyInjection
         services.AddScoped<IFormRepository, FormRepository>();
         services.AddScoped<IFormEligibilityRepository, FormEligibilityRepository>();
         services.AddScoped<IRatingFactorsRepository, RatingFactorsRepository>();
+        services.AddScoped<ILookupRepository, LookupRepository>();
     }
 }
