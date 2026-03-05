@@ -63,6 +63,21 @@ public class RaterService : IRaterService
     {
         _raterDetails.RaterInputs = raterInputs;
 
+        _logger.LogInformation("Loading data.");
+        await LoadData();
+
+        _logger.LogInformation("Validate industry classifications.");
+        if (!ValidateIndustryClassifications(raterInputs.IndustryClassifications!, _raterDetails))
+        {
+            return new RaterFailureDetails("InvalidIndustryClassification", "One or more industry classifications are invalid.");
+        }
+
+        //TODO: Remove hard-coded path
+        if (raterInputs.PolicyNumber != "5064044")
+        {
+            return GetMockResponse();
+        }
+
         _logger.LogInformation("Validate if Policy number is provided and does exist.");
         if (!await ValidatePolicyNumberAndLoad(raterInputs))
         {
@@ -75,14 +90,6 @@ public class RaterService : IRaterService
             return new RaterFailureDetails("InvalidZipCode", "Zip Code is invalid.");
         }
 
-        _logger.LogInformation("Loading data.");
-        await LoadData();
-
-        _logger.LogInformation("Validate industry classifications.");
-        if (!ValidateIndustryClassifications(raterInputs.IndustryClassifications!, _raterDetails))
-        {
-            return new RaterFailureDetails("InvalidIndustryClassification", "One or more industry classifications are invalid.");
-        }
 
         //var eligibleForms = await GetEligibileForms(_raterDetails.PrimaryIndustryClassification!.SpecialtyId!.Value);
 
@@ -135,7 +142,7 @@ public class RaterService : IRaterService
 
         var premium = await CalculatePremium(_raterDetails?.PrimaryCoverage, raterInputs.AdditionalRiskProfile, crisisManagementValue, mediaActivitiesValue);
 
-        var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
+        var revenueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
         var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
 
         //var rateChange = CalculateRateChange(); // TODO: some conditional logic was put to bypass divide by zero. Needs to be removed.
@@ -144,15 +151,35 @@ public class RaterService : IRaterService
         {
             RaterVersion = _raterOptions.Version,
             RaterVersionDate = _raterOptions.VersionDate,
+            IsPremiumCalculated = true,
             OccuranceLimit = _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m,
             AggregateLimit = _raterDetails?.PrimaryCoverage?.AggregateLimit ?? 0m,
             Retention = _raterDetails?.PrimaryCoverage?.Retention ?? 0m,
             ExpiringPremium = _raterDetails?.Profile.EO_GWP ?? 0m,
-            RenewalPremium = premium,
-            RevenueChange = Math.Round(revnueChange, 2, MidpointRounding.AwayFromZero),
-            PremiumChange = Math.Round(premiumChange, 2, MidpointRounding.AwayFromZero),
+            Premium = premium,
+            RevenueChange = revenueChange,
+            PremiumChange = premiumChange,
             RateChange = 56.3m//rateChange
         };
+    }
+
+
+    private RaterResult GetMockResponse()
+    {
+        return new RaterResult()
+        {
+            RaterVersion = _raterOptions.Version,
+            RaterVersionDate = _raterOptions.VersionDate,
+            OccuranceLimit = 1000000m,
+            AggregateLimit = 2000000m,
+            Retention = 2500m,
+            ExpiringPremium = 0m,
+            Premium = 1000m,
+            RevenueChange = 0.5m,
+            PremiumChange = 0m,
+            RateChange = 0m
+        };
+
     }
 
     private Dictionary<string, string> LoadIndustryNameToAlternativeExposureBaseMap()

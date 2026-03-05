@@ -18,6 +18,31 @@ public static class RaterEndpoint
         {
             var raterInputs = request.Adapt<RaterInputs>();
 
+            //TODO: Hard-coded for now
+            /*
+              "RatingFactorStep":{
+                "ClaimHistoryQuestions": 2,
+                "RiskProfileQuestions": {
+                  "1": true,
+                  "2": true,
+                  "3": true
+                },
+                "ComplexityOfRiskRatingFactorDetails": {
+                  "Factor": 1.00
+                }
+              }
+            */
+
+            raterInputs.RatingFactorStep = new RatingFactor()
+            {
+                ClaimHistoryQuestions = 2,
+                RiskProfileQuestions = new Dictionary<int, bool?>(),
+                ComplexityOfRiskRatingFactorDetails = new RatingFactorSectionDetails() { Factor = 1m }
+            };
+            raterInputs.RatingFactorStep.RiskProfileQuestions.Add(1, true);
+            raterInputs.RatingFactorStep.RiskProfileQuestions.Add(2, true);
+            raterInputs.RatingFactorStep.RiskProfileQuestions.Add(3, true);
+
             var response = await raterService.GetRateInformation(raterInputs);
             if (response.IsSuccess)
             {

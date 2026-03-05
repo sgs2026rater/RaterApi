@@ -18,7 +18,7 @@ public static class DependencyInjection
         services.AddScoped<IIndustrySectorRepository, StaticIndustrySectorRepository>();
         services.AddScoped<IIndustrySubSectorRepository, StaticIndustrySubSectorRepository>();
         services.AddScoped<IIndustrySpecialtyRepository, StaticIndustrySpecialtyRepository>();
-        services.AddScoped<IRatingFactorsRepository, RatingFactorsRepository>();
+        services.AddScoped<IRatingFactorsRepository, StaticRatingFactorsRepository>();
         services.AddScoped<ILookupRepository, LookupRepository>();
         services.AddSingleton<IStaticDatasets, StaticDatasets>();
     }

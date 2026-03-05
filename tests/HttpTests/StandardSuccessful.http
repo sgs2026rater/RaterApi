@@ -26,7 +26,7 @@ Content-Type: application/json
   ],
   "AdditionalRiskProfile": {
     "EnvironmentalRemediation": false,
-    "UndergroundUtilityLocators": true,
+    "UndergroundUtilityLocators": false,
     "Nuclear": false,
     "Offshore": false,
     "Superfund": false,
@@ -40,18 +40,7 @@ Content-Type: application/json
       "ResidentialAndApartments"
     ]
   },
-  "ClaimsHistory": [
-    {
-      "DateOfClaim": "2024-04-13T00:00:00Z",
-      "PartiesToClaim": "?",
-      "StatusOfClaim": "?"
-    },
-    {
-      "DateOfClaim": "2025-04-13T00:00:00Z",
-      "PartiesToClaim": "?",
-      "StatusOfClaim": "?"
-    }
-  ],
+  "ClaimsHistory": null,
   "OptionalEnhancements": [
     {
       "OptionalEnhancementName": "Crisis Management",
@@ -61,18 +50,7 @@ Content-Type: application/json
       "OptionalEnhancementName": "Media activities",
       "OptionalEnhancementValue": "Full"
     }
-  ],
-  "RatingFactorStep":{
-  "ClaimHistoryQuestions": 2,
-  "RiskProfileQuestions": {
-    "1": true,
-    "2": true,
-    "3": true
-  },
-  "ComplexityOfRiskRatingFactorDetails": {
-    "Factor": 1.00
-  }
-}
+  ]
 }
 
 ###

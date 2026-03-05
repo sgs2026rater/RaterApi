@@ -24,8 +24,8 @@ public class StaticRatingFactorsRepository : RepositoryBase, IRatingFactorsRepos
     }
     public async Task<RatingFactorMaster?> GetRatingFactorByQuestion(string version, short sectionId, short questionId)
     {
-        return await _context.RatingFactor!
+        return _staticDatasets.RatingFactorsList!
             .Where(_ => _.Version == version && _.SectionId == sectionId && _.QuestionId == questionId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefault();
     }
 }
