@@ -9,5 +9,7 @@ drop TABLE IndustrySector;
 drop TABLE GeographicMod;
 drop TABLE RatingFactorMaster;
 drop TABLE FormInfoLookup;
+drop TABLE IndustryForm;
+drop TABLE IndustryFormMaster;
 
 drop TABLE __EFMigrationsHistory;
