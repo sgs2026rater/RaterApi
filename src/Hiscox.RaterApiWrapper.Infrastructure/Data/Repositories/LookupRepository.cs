@@ -4,14 +4,11 @@ using Hiscox.RaterApiWrapper.Application.Abstractions;
 using Hiscox.RaterApiWrapper.Domain.Entities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 
 namespace Hiscox.RaterApiWrapper.Infrastructure.Data.Repositories;
 
-public class LookupRepository : RepositoryBase,  ILookupRepository
+public class LookupRepository : RepositoryBase, ILookupRepository
 {
     public LookupRepository(ApplicationDbContext context, IMemoryCache memoryCache,
             ILogger<LookupRepository> logger) : base(context, memoryCache, logger)
@@ -19,7 +16,7 @@ public class LookupRepository : RepositoryBase,  ILookupRepository
     }
     public async Task<List<LimitRetentionFactor>> GetLimitRetentionFactor()
     {
-        var json = await GetJsonFromFile(@"Lookups\LimitRetentionFactor.txt");
+        var json = await GetJsonFromFile(@$"Lookups{Path.DirectorySeparatorChar}LimitRetentionFactor.txt");
 
         var options = new JsonSerializerOptions
         {
@@ -38,7 +35,7 @@ public class LookupRepository : RepositoryBase,  ILookupRepository
     }
     public async Task<List<OccLimitFactor>> GetOccLimitFactor()
     {
-        var json = await GetJsonFromFile(@"Lookups\OccLimitFactor.txt");
+        var json = await GetJsonFromFile(@$"Lookups{Path.DirectorySeparatorChar}OccLimitFactor.txt");
 
         var options = new JsonSerializerOptions
         {
@@ -57,7 +54,7 @@ public class LookupRepository : RepositoryBase,  ILookupRepository
     }
     public async Task<List<ProjectTypeFactor>> GetProjectTypeFactor()
     {
-        var json = await GetJsonFromFile(@"Lookups\ProjectTypeFactor.txt");
+        var json = await GetJsonFromFile(@$"Lookups{Path.DirectorySeparatorChar}ProjectTypeFactor.txt");
 
         var options = new JsonSerializerOptions
         {
@@ -76,7 +73,7 @@ public class LookupRepository : RepositoryBase,  ILookupRepository
     }
     public async Task<List<RetainedValueFactor>> GetRetainedValueFactor()
     {
-        var json = await GetJsonFromFile(@"Lookups\RetainedValueFactor.txt");
+        var json = await GetJsonFromFile(@$"Lookups{Path.DirectorySeparatorChar}RetainedValueFactor.txt");
 
         var options = new JsonSerializerOptions
         {
@@ -95,7 +92,7 @@ public class LookupRepository : RepositoryBase,  ILookupRepository
     }
     public async Task<List<RetainedValueFactorMatrix>> GetRetainedValueFactorMatrix()
     {
-        var json = await GetJsonFromFile(@"Lookups\RetainedValueFactorMatrix.txt");
+        var json = await GetJsonFromFile(@$"Lookups{Path.DirectorySeparatorChar}RetainedValueFactorMatrix.txt");
 
         var options = new JsonSerializerOptions
         {
@@ -114,7 +111,7 @@ public class LookupRepository : RepositoryBase,  ILookupRepository
     }
     public async Task<List<RevenueBaseRate>> GetRevenueBaseRate()
     {
-        var json = await GetJsonFromFile(@"Lookups\RevenueBaseRate.txt");
+        var json = await GetJsonFromFile(@$"Lookups{Path.DirectorySeparatorChar}RevenueBaseRate.txt");
 
         var options = new JsonSerializerOptions
         {

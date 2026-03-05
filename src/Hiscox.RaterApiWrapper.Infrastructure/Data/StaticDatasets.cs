@@ -672,7 +672,7 @@ public class StaticDatasets : IStaticDatasets
     private async Task LoadGeographicMods()
     {
         var filePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        using (StreamReader reader = new StreamReader($"{filePath}\\datafiles\\GeographicMod.json"))
+        using (StreamReader reader = new StreamReader($"{filePath}{Path.DirectorySeparatorChar}Datafiles{Path.DirectorySeparatorChar}GeographicMod.json"))
         {
             string json = reader.ReadToEnd();
             var list = JsonSerializer.Deserialize<List<GeographicMod>>(json);
@@ -682,7 +682,7 @@ public class StaticDatasets : IStaticDatasets
     private async Task LoadRatingFactors()
     {
         var filePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        using (StreamReader reader = new StreamReader($"{filePath}\\datafiles\\RatingFactor.json"))
+        using (StreamReader reader = new StreamReader($"{filePath}{Path.DirectorySeparatorChar}Datafiles{Path.DirectorySeparatorChar}RatingFactor.json"))
         {
             string json = reader.ReadToEnd();
             this.RatingFactorsList = JsonSerializer.Deserialize<List<RatingFactorMaster>>(json);
