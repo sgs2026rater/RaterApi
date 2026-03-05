@@ -11,9 +11,9 @@ Content-Type: application/json
   "Coverages": [
     {
       "CoverageType": "EAndOPrimary",
-      "OccuranceLimit": 1000000,
-      "AggregateLimit": 3000000,
-      "Retention": 2500
+      "OccuranceLimit": 1020000,
+      "AggregateLimit": 3020000,
+      "Retention": 2600
     }
   ],
   "IndustryClassifications": [
