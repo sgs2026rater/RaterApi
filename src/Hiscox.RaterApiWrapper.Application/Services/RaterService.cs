@@ -159,7 +159,7 @@ public class RaterService : IRaterService
             Premium = premium,
             RevenueChange = revenueChange,
             PremiumChange = premiumChange,
-            RateChange = 56.3m//rateChange
+            RateChange = 0m//rateChange
         };
     }
 
