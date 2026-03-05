@@ -15,7 +15,7 @@ namespace Hiscox.RaterApiWrapper.Application.Services;
 
 public class RaterService : IRaterService
 {
-    private readonly IMagicPolicyRepository _magicPolicyRepository;
+    private readonly IPolicyRepository _magicPolicyRepository;
     private readonly IGeographicModRepository _geographicModRepository;
 
     private readonly IIndustrySectorRepository _industrySectorRepository;
@@ -23,8 +23,6 @@ public class RaterService : IRaterService
     private readonly IIndustrySpecialtyRepository _industrySpecialtyRepository;
     private readonly IRatingFactorsRepository _iRatingFactorsRepository;
 
-    private readonly IFormRepository _formRepository;
-    private readonly IFormEligibilityRepository _formEligibilityRepository;
     private readonly ILookupRepository _lookupRepository;
 
     private readonly RaterDetails _raterDetails = new();
@@ -40,15 +38,13 @@ public class RaterService : IRaterService
     public RaterService(
         IMemoryCache memoryCache,
         ILogger<RaterService> logger,
-        IMagicPolicyRepository magicPolicyRepository,
+        IPolicyRepository magicPolicyRepository,
         IGeographicModRepository geographicModRepository,
         IIndustrySectorRepository industrySectorRepository,
         IIndustrySubSectorRepository industrySubSectorRepository,
         IIndustrySpecialtyRepository industrySpecialtyRepository,
         IOptionsMonitor<RaterOptions> raterOptions,
         IRatingFactorsRepository iRatingFactorsRepository,
-        IFormRepository formRepository,
-        IFormEligibilityRepository formEligibilityRepository,
         ILookupRepository lookupRepository)
     {
         _logger = logger;
@@ -58,9 +54,7 @@ public class RaterService : IRaterService
         _industrySubSectorRepository = industrySubSectorRepository;
         _industrySpecialtyRepository = industrySpecialtyRepository;
         _raterOptions = raterOptions.CurrentValue;
-        _formRepository = formRepository;
         _iRatingFactorsRepository = iRatingFactorsRepository;
-        _formEligibilityRepository = formEligibilityRepository;
         _lookupRepository= lookupRepository;
     }
 
@@ -825,19 +819,6 @@ public class RaterService : IRaterService
         return true;
     }
 
-    private async Task<IEnumerable<Form>?> GetEligibileForms(int industrySpecialtyId)
-    {
-        var eligibileFormIds = (await _formEligibilityRepository.GetForIndustrySpeciality(_raterOptions.Version, industrySpecialtyId))
-            .Select(_ => _.FormId);
-        if (eligibileFormIds.Any())
-        {
-            return _forms!.Where(_ => eligibileFormIds.Contains(_.Id));
-        }
-
-        return null;
-    }
-
-
     private static bool ValidateTotalExposure(RaterDetails worksheet)
     {
         return worksheet.IndustryClassifications!.Sum(_ => _.PercentageExposure) == 1m;
@@ -933,8 +914,8 @@ public class RaterService : IRaterService
 
         if (ratingFactor.RiskProfileQuestions != null && ratingFactor.RiskProfileQuestions.Any())
         {
-            ratingFactorList = await _iRatingFactorsRepository.GetRatingFactorBySection(version,
-                                                                        (short)RatingFactorSectionType.RiskManagement);
+            ratingFactorList = (await _iRatingFactorsRepository.GetRatingFactorBySection(version,
+                                                                        (short)RatingFactorSectionType.RiskManagement)).ToList();
         }
 
         int noAnswerOccurances = 0;

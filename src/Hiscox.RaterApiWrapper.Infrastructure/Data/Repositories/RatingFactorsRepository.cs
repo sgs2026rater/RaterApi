@@ -17,7 +17,7 @@ public class RatingFactorsRepository : RepositoryBase, IRatingFactorsRepository
             ILogger<RatingFactorsRepository> logger) : base(context, memoryCache, logger)
     {
     }
-    public async Task<List<RatingFactorMaster>> GetRatingFactorBySection(string version, short sectionId)
+    public async Task<IEnumerable<RatingFactorMaster>> GetRatingFactorBySection(string version, short sectionId)
     {
         return await _context.RatingFactor!
             .Where(_ => _.Version == version && _.SectionId == sectionId).ToListAsync();

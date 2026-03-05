@@ -9,6 +9,6 @@ namespace Hiscox.RaterApiWrapper.Application.Abstractions;
 
 public interface IRatingFactorsRepository
 {
-    Task<List<RatingFactorMaster>> GetRatingFactorBySection(string version, short sectionId);
+    Task<IEnumerable<RatingFactorMaster>> GetRatingFactorBySection(string version, short sectionId);
     Task<RatingFactorMaster?> GetRatingFactorByQuestion(string version, short sectionId, short questionId);
 }

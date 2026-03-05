@@ -1,6 +1,7 @@
 // Copyright (c) Hiscox Insurance. All rights reserved.
 
 using Hiscox.RaterApiWrapper.Application;
+using Hiscox.RaterApiWrapper.Application.Abstractions;
 using Hiscox.RaterApiWrapper.Domain.Configuration;
 using Hiscox.RaterApiWrapper.Infrastructure;
 using Hiscox.RaterApiWrapper.Infrastructure.Data;
@@ -55,6 +56,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+var staticDatasets = app.Services.GetRequiredService<IStaticDatasets>();
+await staticDatasets.LoadStaticDatasets();
 
 await app.RunAsync();
 

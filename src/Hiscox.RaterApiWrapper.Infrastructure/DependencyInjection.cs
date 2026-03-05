@@ -2,23 +2,24 @@
 
 using Hiscox.RaterApiWrapper.Application;
 using Hiscox.RaterApiWrapper.Application.Abstractions;
+using Hiscox.RaterApiWrapper.Application.Abstractions;
+using Hiscox.RaterApiWrapper.Infrastructure.Data;
 using Hiscox.RaterApiWrapper.Infrastructure.Data.Repositories;
+using Hiscox.RaterApiWrapper.Infrastructure.Data.StaticRepositories;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace Hiscox.RaterApiWrapper.Infrastructure;
 
 public static class DependencyInjection
 {
     public static void AddInfrastructureServices(this IServiceCollection services)
     {
-        services.AddScoped<IMagicPolicyRepository, MagicPolicyRepository>();
-        services.AddScoped<IGeographicModRepository, GeographicModRepository>();        
-        services.AddScoped<IIndustrySectorRepository, IndustrySectorRepository>();
-        services.AddScoped<IIndustrySubSectorRepository, IndustrySubSectorRepository>();
-        services.AddScoped<IIndustrySpecialtyRepository, IndustrySpecialtyRepository>();
-        services.AddScoped<IFormRepository, FormRepository>();
-        services.AddScoped<IFormEligibilityRepository, FormEligibilityRepository>();
+        services.AddScoped<IPolicyRepository, StaticPolicyRepository>();
+        services.AddScoped<IGeographicModRepository, StaticGeographicModRepository>();        
+        services.AddScoped<IIndustrySectorRepository, StaticIndustrySectorRepository>();
+        services.AddScoped<IIndustrySubSectorRepository, StaticIndustrySubSectorRepository>();
+        services.AddScoped<IIndustrySpecialtyRepository, StaticIndustrySpecialtyRepository>();
         services.AddScoped<IRatingFactorsRepository, RatingFactorsRepository>();
         services.AddScoped<ILookupRepository, LookupRepository>();
+        services.AddSingleton<IStaticDatasets, StaticDatasets>();
     }
 }

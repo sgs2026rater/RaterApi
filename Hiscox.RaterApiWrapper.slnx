@@ -43,22 +43,6 @@
     <File Path="tests/HttpTests/InvalidPolicyNumber.http" />
     <File Path="tests/HttpTests/StandardSuccessful.http" />
   </Folder>
-  <Folder Name="/Tests/UnitTests/" />
-  <Folder Name="/Tests/UnitTests/0_Aspire/">
-    <Project Path="tests/UnitTests/0_Aspire/Hiscox.RaterApiWrapper.Aspire.AppHost.Tests/Hiscox.RaterApiWrapper.Aspire.AppHost.Tests.csproj" Id="b4a42e06-d9f8-44ab-ad56-e1d3f43f8ca0" />
-  </Folder>
-  <Folder Name="/Tests/UnitTests/1_Domain/">
-    <Project Path="tests/UnitTests/1_Domain/Hiscox.RaterApiWrapper.Domain.Tests/Hiscox.RaterApiWrapper.Domain.Tests.csproj" Id="1caa0f52-b025-428d-842b-4b7e6f10e4fd" />
-  </Folder>
-  <Folder Name="/Tests/UnitTests/2_Application/">
-    <Project Path="tests/UnitTests/2_Application/Hiscox.RaterApiWrapper.Application.Tests/Hiscox.RaterApiWrapper.Application.Tests.csproj" Id="19c98d31-37ca-4b22-ada2-76ca15dce255" />
-  </Folder>
-  <Folder Name="/Tests/UnitTests/3_Presentation/">
-    <Project Path="tests/UnitTests/3_Presentation/Hiscox.RaterApiWrapper.Presentation.Api.Tests/Hiscox.RaterApiWrapper.Presentation.Api.Tests.csproj" Id="ed257095-58dc-4d1d-b93b-8f91de5ad9e6" />
-  </Folder>
-  <Folder Name="/Tests/UnitTests/4_Infrastructure/">
-    <Project Path="tests/UnitTests/4_Infrastructure/Hiscox.RaterApiWrapper.Infrastructure.Tests/Hiscox.RaterApiWrapper.Infrastructure.Tests.csproj" Id="af46b0d7-c586-4d1f-9661-46617fa21ea2" />
-  </Folder>
   <Folder Name="/_misc/">
     <File Path="_misc/Notes.txt" />
     <File Path="_misc/rq.json" />

@@ -1,4 +1,6 @@
-﻿drop table FormEligibility;
+﻿USE RaterApiWrapper;
+
+drop table FormEligibility;
 drop table Form;
 
 drop TABLE PolicyDetails;

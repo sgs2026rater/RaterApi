@@ -1,0 +1,178 @@
+[
+  {
+    "Version": "v2.0.101",
+    "Id": 1,
+    "SectionId": 2,
+    "QuestionId": 1,
+    "Answer": true,
+    "Factor": 0.85,
+    "Low": 0.85,
+    "High": 0.95,
+    "DegreeOfConcern": "Confident"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 2,
+    "SectionId": 2,
+    "QuestionId": 2,
+    "Answer": true,
+    "Factor": 1.00,
+    "Low": 0.85,
+    "High": 1.00,
+    "DegreeOfConcern": "Comfortable"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 3,
+    "SectionId": 2,
+    "QuestionId": 3,
+    "Answer": true,
+    "Factor": 1.25,
+    "Low": 0.85,
+    "High": 1.50,
+    "DegreeOfConcern": "Low Concern"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 4,
+    "SectionId": 2,
+    "QuestionId": 4,
+    "Answer": true,
+    "Factor": 2.00,
+    "Low": 0.85,
+    "High": 2.50,
+    "DegreeOfConcern": "Medium Concern"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 5,
+    "SectionId": 2,
+    "QuestionId": 5,
+    "Answer": true,
+    "Factor": 3.00,
+    "Low": 0.85,
+    "High": 3.50,
+    "DegreeOfConcern": "High Concern"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 6,
+    "SectionId": 2,
+    "QuestionId": 6,
+    "Answer": true,
+    "Factor": 3.50,
+    "Low": 0.85,
+    "High": 1000.00,
+    "DegreeOfConcern": "Very High Concern"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 7,
+    "SectionId": 3,
+    "QuestionId": 1,
+    "Answer": false,
+    "Factor": 1.00,
+    "Low": 1.00,
+    "High": 1.05,
+    "DegreeOfConcern": "Average"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 8,
+    "SectionId": 3,
+    "QuestionId": 2,
+    "Answer": false,
+    "Factor": 1.05,
+    "Low": 1.00,
+    "High": 1.10,
+    "DegreeOfConcern": "Average"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 9,
+    "SectionId": 3,
+    "QuestionId": 3,
+    "Answer": false,
+    "Factor": 1.15,
+    "Low": 1.10,
+    "High": 1.20,
+    "DegreeOfConcern": "Deficient"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 10,
+    "SectionId": 3,
+    "QuestionId": 4,
+    "Answer": false,
+    "Factor": 1.25,
+    "Low": 1.20,
+    "High": 1.30,
+    "DegreeOfConcern": "Deficient"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 11,
+    "SectionId": 3,
+    "QuestionId": 5,
+    "Answer": false,
+    "Factor": 1.25,
+    "Low": 1.20,
+    "High": 1.30,
+    "DegreeOfConcern": "Deficient"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 12,
+    "SectionId": 3,
+    "QuestionId": 1,
+    "Answer": true,
+    "Factor": 1.00,
+    "Low": 0.95,
+    "High": 1.00,
+    "DegreeOfConcern": "Average"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 13,
+    "SectionId": 3,
+    "QuestionId": 2,
+    "Answer": true,
+    "Factor": 0.90,
+    "Low": 0.85,
+    "High": 0.95,
+    "DegreeOfConcern": "Average"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 14,
+    "SectionId": 3,
+    "QuestionId": 3,
+    "Answer": true,
+    "Factor": 0.85,
+    "Low": 0.80,
+    "High": 0.90,
+    "DegreeOfConcern": "Above Average"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 15,
+    "SectionId": 3,
+    "QuestionId": 4,
+    "Answer": true,
+    "Factor": 0.85,
+    "Low": 0.80,
+    "High": 0.90,
+    "DegreeOfConcern": "Above Average"
+  },
+  {
+    "Version": "v2.0.101",
+    "Id": 16,
+    "SectionId": 3,
+    "QuestionId": 5,
+    "Answer": true,
+    "Factor": 0.85,
+    "Low": 0.80,
+    "High": 0.90,
+    "DegreeOfConcern": "Above Average"
+  }
+]
