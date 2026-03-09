@@ -770,16 +770,24 @@ public class RaterService : IRaterService
 
         var projectTypeFactor = await _lookupRepository.GetProjectTypeFactor();
         decimal rscf = 0;
+        decimal? f248 = 0;
 
-        foreach (var factor in projectTypeFactor)
+        if (additionalRiskProfile?.ProjectTypes != null)
         {
-            if (additionalRiskProfile.ProjectTypes.Contains(factor.ProjectType))
+            foreach (var factor in projectTypeFactor)
             {
-                rscf += factor.Factor;
+                if (additionalRiskProfile.ProjectTypes.Contains(factor.ProjectType))
+                {
+                    rscf += factor.Factor;
+                }
             }
-        }
 
-        var f248 = rscf / additionalRiskProfile?.ProjectTypes?.Count;
+            f248 = rscf / additionalRiskProfile?.ProjectTypes?.Count;
+        }
+        else
+        {
+            f248 = 0.8m;
+        }
 
         var f250 = f102 * f153 * f198 * f245 * f246 * f247 * f248;
 

@@ -11,5 +11,6 @@ drop TABLE RatingFactorMaster;
 drop TABLE FormInfoLookup;
 drop TABLE IndustryForm;
 drop TABLE IndustryFormMaster;
+drop TABLE ProjectTypeFactor;
 
 drop TABLE __EFMigrationsHistory;

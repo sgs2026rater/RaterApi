@@ -1,9 +1,9 @@
 ﻿[
-  { "ProjectType": "Civil/infrastructure", "Factor": 1.05 },
-  { "ProjectType": "Commercial", "Factor": 1.00 },
-  { "ProjectType": "Industrial", "Factor": 1.03 },
-  { "ProjectType": "Institutional", "Factor": 0.95 },
-  { "ProjectType": "Power and Utilities", "Factor": 1.05 },
-  { "ProjectType": "Multi-unit Residential Communities (HOA, Condominium, Master Plan Communities)", "Factor": 1.20 },
-  { "ProjectType": "ResidentialAndApartments", "Factor": 1.15 }
+  { "Id": 1, "Version": "v2.0.101", "ProjectType": "Civil/infrastructure", "Factor": 1.05 },
+  { "Id": 2, "Version": "v2.0.101", "ProjectType": "Commercial", "Factor": 1.00 },
+  { "Id": 3, "Version": "v2.0.101", "ProjectType": "Industrial", "Factor": 1.03 },
+  { "Id": 4, "Version": "v2.0.101", "ProjectType": "Institutional", "Factor": 0.95 },
+  { "Id": 5, "Version": "v2.0.101", "ProjectType": "Power and Utilities", "Factor": 1.05 },
+  { "Id": 6, "Version": "v2.0.101", "ProjectType": "Multi-unit Residential Communities (HOA, Condominium, Master Plan Communities)", "Factor": 1.20 },
+  { "Id": 7, "Version": "v2.0.101", "ProjectType": "ResidentialAndApartments", "Factor": 1.15 }
 ]
