@@ -89,6 +89,10 @@ public class RaterService : IRaterService
         {
             return new RaterFailureDetails("InvalidIndustryClassification", "One or more industry classifications are invalid.");
         }
+        if(!ValidateIndustryInformationExceed(raterInputs.IndustryClassifications!))
+        {
+            return new RaterFailureDetails("InvalidIndustryClassification", "Maximum 5 Industry Classifications are allowed.");
+        }
 
         //var eligibleForms = await GetEligibileForms(_raterDetails.PrimaryIndustryClassification!.SpecialtyId!.Value);
 
@@ -159,6 +163,11 @@ public class RaterService : IRaterService
             PremiumChange = premiumChange,
             RateChange = rateChange
         };
+    }
+
+    private static bool ValidateIndustryInformationExceed(List<IndustryClassification> industryClassifications)
+    {
+        return industryClassifications.Count <= 5;
     }
 
     private static bool ValidateOptionalEnhancements(RaterInputs raterInputs)
@@ -551,8 +560,10 @@ public class RaterService : IRaterService
             industryClassification.SpecialtyId = matchingIndustrySpecialty.Id;
         }
 
-        worksheet.IndustryClassifications = industryClassifications.ToList();
+        worksheet.IndustryClassifications = [.. industryClassifications.OrderByDescending(x => x.PercentageExposure).Take(5)];
         worksheet.PrimaryIndustryClassification = worksheet.IndustryClassifications[0];//Assuming the first value as Primary Industry info
+        worksheet.AdditionalIndustryClassifications = [.. worksheet.IndustryClassifications.Skip(1)];
+
         return true;
     }
 
