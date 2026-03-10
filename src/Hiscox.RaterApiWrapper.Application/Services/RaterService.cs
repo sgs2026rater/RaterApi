@@ -169,6 +169,10 @@ public class RaterService : IRaterService
 
         var rateChange = await CalculateRateChange(_raterDetails?.Profile, _raterDetails?.PrimaryCoverage, premium);
 
+        _raterDetails?.RevenueChange = revnueChange;
+        _raterDetails?.PremiumChange = premiumChange;
+        _raterDetails?.RateChange = rateChange;
+
         return new RaterResult()
         {
             RaterVersion = _raterOptions.Version,
@@ -792,11 +796,11 @@ public class RaterService : IRaterService
 
         //F153 in Calculations excel sheet
         decimal? baseRateForChosenExposure = await CalculateBaseRate(_raterDetails.Profile?.Revenue ?? 0m);
+        _raterDetails.BaseRateForChosenExposure = baseRateForChosenExposure;
 
         //F198 in Calculations excel sheet
         decimal? limitFactor = await CalculateLimitFactor(occrLimit, aggrLimit, coverage?.Retention ?? 0m);
-
-        _raterDetails.UpcomingTermLimitFactor = limitFactor;
+        _raterDetails.LimitFactor = limitFactor;
 
         //F245 in Calculations excel sheet
         var industryModifier = 3.49m;
