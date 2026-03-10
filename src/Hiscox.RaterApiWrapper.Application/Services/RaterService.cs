@@ -144,7 +144,7 @@ public class RaterService : IRaterService
         var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
         var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
 
-        //var rateChange = CalculateRateChange(); // TODO: some conditional logic was put to bypass divide by zero. Needs to be removed.
+        //var rateChange = CalculateRateChange(); // TODO: Only upcomingTermTotalPremium and projectSpecificXSLimitFactor calculation logic still needs to be implemented. Hardcoded for now.
 
         return new RaterResult()
         {
@@ -175,7 +175,8 @@ public class RaterService : IRaterService
         var baseRateTablesTable1Records = new List<BaseRateTablesTable1>() { new() { Revenue = 0m, BaseRateEAndO = 350 },
                                                                              new() { Revenue = 25000m, BaseRateEAndO = 354 },
                                                                              new() { Revenue = 50000m, BaseRateEAndO = 388 },
-                                                                             new() { Revenue = 75000m, BaseRateEAndO = 444 } };
+                                                                             new() { Revenue = 75000m, BaseRateEAndO = 444 },
+                                                                             new() { Revenue = 100000m, BaseRateEAndO = 513 } };
 
         //baseRateTablesTable1Records.Sort();
 
@@ -208,6 +209,9 @@ public class RaterService : IRaterService
                                                                          new() { RetainedValue = 1.2m, FactorEAndO = 1.021m },
                                                                          new() { RetainedValue = 1.4m, FactorEAndO = 1.044m },
                                                                          // ...
+                                                                         new() { RetainedValue = 2.0m, FactorEAndO = 1.097m },
+                                                                         new() { RetainedValue = 2.2m, FactorEAndO = 1.111m },
+                                                                         // ...
                                                                          new() { RetainedValue = 3m, FactorEAndO = 1.157m },        // The FactorEAndO is calculated through a formula and has more digits after decimal point in the table.
                                                                          new() { RetainedValue = 3.2m, FactorEAndO = 1.166m }, };
 
@@ -225,7 +229,8 @@ public class RaterService : IRaterService
                                                                          new() { RetainedValue = 0.1m, Factor = 0.9276m },
                                                                          // ...
                                                                          new() { RetainedValue = 0.95m, Factor = 0.9875m },
-                                                                         new() { RetainedValue = 1m, Factor = 1m }, };
+                                                                         new() { RetainedValue = 1m, Factor = 1m },
+                                                                         new() { RetainedValue = 10m, Factor = 1m } };
 
         //ratingTablesTable3Records.Sort();
 
@@ -267,28 +272,28 @@ public class RaterService : IRaterService
             upcomingTermExposure = alternativeExposureValue;
         }
         
-        var upcomingTermExposureMatchingRecordLow = _raterDetails?.BaseRateTablesTable1Records?.FirstOrDefault<BaseRateTablesTable1>(brtr => brtr.Revenue <= upcomingTermExposure); // List is sorted.
+        var upcomingTermExposureMatchingRecordLow = _raterDetails?.BaseRateTablesTable1Records?.LastOrDefault<BaseRateTablesTable1>(brtr => brtr.Revenue <= upcomingTermExposure); // List is sorted.
         var upcomingTermExposureMatchingRecordHigh = _raterDetails?.BaseRateTablesTable1Records?.SkipWhile<BaseRateTablesTable1>(brtr => brtr != upcomingTermExposureMatchingRecordLow).Skip(1).FirstOrDefault();
         var upcomingTermExposureHighValue = upcomingTermExposureMatchingRecordHigh?.Revenue;
         var upcomingTermExposureLowValue = upcomingTermExposureMatchingRecordLow?.Revenue;
         var upcomingTermExposureHighCoefficient = upcomingTermExposureMatchingRecordHigh?.BaseRateEAndO;
         var upcomingTermExposureLowCoefficient = upcomingTermExposureMatchingRecordLow?.BaseRateEAndO;
-        var upcomingTermBaseRates = (upcomingTermExposure - upcomingTermExposureLowValue) / ((upcomingTermExposureHighValue - upcomingTermExposureLowValue) == 0 ? 1 : (upcomingTermExposureHighValue - upcomingTermExposureLowValue)) * upcomingTermExposureHighCoefficient
-                                    + (1 - (upcomingTermExposure - upcomingTermExposureLowValue) / ((upcomingTermExposureHighValue - upcomingTermExposureLowValue) == 0 ? 1 : (upcomingTermExposureHighValue - upcomingTermExposureLowValue))) * upcomingTermExposureLowCoefficient;
+        var upcomingTermBaseRates = (upcomingTermExposure - upcomingTermExposureLowValue) / (upcomingTermExposureHighValue - upcomingTermExposureLowValue) * upcomingTermExposureHighCoefficient
+                                    + (1 - (upcomingTermExposure - upcomingTermExposureLowValue) / (upcomingTermExposureHighValue - upcomingTermExposureLowValue)) * upcomingTermExposureLowCoefficient;
 
         #endregion UpcomingTermBaseRates
 
         #region PriorTermBaseRates
 
         var priorTermExposure = _raterDetails?.Profile?.ExposureBase;
-        var priorTermExposureMatchingRecordLow = _raterDetails?.BaseRateTablesTable1Records?.FirstOrDefault<BaseRateTablesTable1>(brtr => brtr.Revenue <= priorTermExposure); // List is sorted.
+        var priorTermExposureMatchingRecordLow = _raterDetails?.BaseRateTablesTable1Records?.LastOrDefault<BaseRateTablesTable1>(brtr => brtr.Revenue <= priorTermExposure); // List is sorted.
         var priorTermExposureMatchingRecordHigh = _raterDetails?.BaseRateTablesTable1Records?.SkipWhile<BaseRateTablesTable1>(brtr => brtr != priorTermExposureMatchingRecordLow).Skip(1).FirstOrDefault();
         var priorTermExposureHighValue = priorTermExposureMatchingRecordHigh?.Revenue;
         var priorTermExposureLowValue = priorTermExposureMatchingRecordLow?.Revenue;
         var priorTermExposureHighCoefficient = priorTermExposureMatchingRecordHigh?.BaseRateEAndO;
         var priorTermExposureLowCoefficient = priorTermExposureMatchingRecordLow?.BaseRateEAndO;
-        var priorTermBaseRates = (priorTermExposure - priorTermExposureLowValue) / ((priorTermExposureHighValue - priorTermExposureLowValue) == 0 ? 1 : (priorTermExposureHighValue - priorTermExposureLowValue)) * priorTermExposureHighCoefficient
-                                 + (1 - (priorTermExposure - priorTermExposureLowValue) / ((priorTermExposureHighValue - priorTermExposureLowValue) == 0 ? 1 : (priorTermExposureHighValue - priorTermExposureLowValue))) * priorTermExposureLowCoefficient;
+        var priorTermBaseRates = (priorTermExposure - priorTermExposureLowValue) / (priorTermExposureHighValue - priorTermExposureLowValue) * priorTermExposureHighCoefficient
+                                 + (1 - (priorTermExposure - priorTermExposureLowValue) / (priorTermExposureHighValue - priorTermExposureLowValue)) * priorTermExposureLowCoefficient;
 
         #endregion PriorTermBaseRates
 
@@ -301,7 +306,7 @@ public class RaterService : IRaterService
 
         // W21
         var retention = _raterDetails?.PrimaryCoverage?.Retention;
-        var retentionMatchingRecordLow = _raterDetails?.RatingTablesTable1Records?.FirstOrDefault<RatingTablesTable1>(rtr => rtr.LimitOrRetentionOption <= retention); // List is sorted.
+        var retentionMatchingRecordLow = _raterDetails?.RatingTablesTable1Records?.LastOrDefault<RatingTablesTable1>(rtr => rtr.LimitOrRetentionOption <= retention); // List is sorted.
         var retentionMatchingRecordHigh = _raterDetails?.RatingTablesTable1Records?.SkipWhile<RatingTablesTable1>(rtr => rtr != retentionMatchingRecordLow).Skip(1).FirstOrDefault();
 
         // W324
@@ -314,40 +319,42 @@ public class RaterService : IRaterService
         var retentionHighCoefficient = retentionMatchingRecordHigh?.EAndOMedium;
 
         //W322
-        var occuranceRetentionSum = _raterDetails?.PrimaryCoverage?.Retention + _raterDetails?.PrimaryCoverage?.OccuranceLimit;
-        var occuranceRetentionSumMatchingRecordLow = _raterDetails?.RatingTablesTable1Records?.FirstOrDefault<RatingTablesTable1>(rtr => rtr.LimitOrRetentionOption <= occuranceRetentionSum); // List is sorted.
-        var occuranceRetentionSumMatchingRecordHigh = _raterDetails?.RatingTablesTable1Records?.SkipWhile<RatingTablesTable1>(rtr => rtr != occuranceRetentionSumMatchingRecordLow).Skip(1).FirstOrDefault();
+        var occurrenceRetentionSum = _raterDetails?.PrimaryCoverage?.Retention + _raterDetails?.PrimaryCoverage?.OccuranceLimit;
+        var occurrenceRetentionSumMatchingRecordLow = _raterDetails?.RatingTablesTable1Records?.LastOrDefault<RatingTablesTable1>(rtr => rtr.LimitOrRetentionOption <= occurrenceRetentionSum); // List is sorted.
+        var occurrenceRetentionSumMatchingRecordHigh = _raterDetails?.RatingTablesTable1Records?.SkipWhile<RatingTablesTable1>(rtr => rtr != occurrenceRetentionSumMatchingRecordLow).Skip(1).FirstOrDefault();
 
         // W326
-        var occuranceRetentionSumLowValue = occuranceRetentionSumMatchingRecordLow?.LimitOrRetentionOption;
+        var occurrenceRetentionSumLowValue = occurrenceRetentionSumMatchingRecordLow?.LimitOrRetentionOption;
         // W327
-        var occuranceRetentionSumHighValue = occuranceRetentionSumMatchingRecordHigh?.LimitOrRetentionOption;
+        var occurrenceRetentionSumHighValue = occurrenceRetentionSumMatchingRecordHigh?.LimitOrRetentionOption;
         // W331
-        var occuranceRetentionSumLowCoefficient = occuranceRetentionSumMatchingRecordLow?.EAndOMedium;
+        var occurrenceRetentionSumLowCoefficient = occurrenceRetentionSumMatchingRecordLow?.EAndOMedium;
         // W332
-        var occuranceRetentionSumHighCoefficient = occuranceRetentionSumMatchingRecordHigh?.EAndOMedium;
+        var occurrenceRetentionSumHighCoefficient = occurrenceRetentionSumMatchingRecordHigh?.EAndOMedium;
 
         // W334 - = (W321 - W324) / (W325 - W324) * W330 + (1 - (W321 - W324) / (W325 - W324)) * W329
-        var retentionWeightedCoefficient = (retention - retentionLowValue) / ((retentionHighValue - retentionLowValue) == 0 ? 1 : (retentionHighValue - retentionLowValue)) * retentionHighCoefficient
-                                           + (1 - (retention - retentionLowValue) / ((retentionHighValue - retentionLowValue) == 0 ? 1 : (retentionHighValue - retentionLowValue))) * retentionLowCoefficient;
+        var retentionWeightedCoefficient = (retention - retentionLowValue) / (retentionHighValue - retentionLowValue) * retentionHighCoefficient
+                                           + (1 - (retention - retentionLowValue) / (retentionHighValue - retentionLowValue)) * retentionLowCoefficient;
 
         // W335 - = (W322 - W326) / (W327 - W326) * W332 + (1 - (W322 - W326) / (W327 - W326)) * W331
-        var occuranceRetentionSumWeightedCoefficient = (occuranceRetentionSum - occuranceRetentionSumLowValue) / ((occuranceRetentionSumHighValue - occuranceRetentionSumLowValue) == 0 ? 1 : (occuranceRetentionSumHighValue - occuranceRetentionSumLowValue)) * occuranceRetentionSumHighCoefficient
-                                                       + (1 - (occuranceRetentionSum - occuranceRetentionSumLowValue) / ((occuranceRetentionSumHighValue - occuranceRetentionSumLowValue) == 0 ? 1 : (occuranceRetentionSumHighValue - occuranceRetentionSumLowValue))) * occuranceRetentionSumLowCoefficient;
+        var occurrenceRetentionSumWeightedCoefficient = (occurrenceRetentionSum - occurrenceRetentionSumLowValue) / (occurrenceRetentionSumHighValue - occurrenceRetentionSumLowValue) * occurrenceRetentionSumHighCoefficient
+                                                       + (1 - (occurrenceRetentionSum - occurrenceRetentionSumLowValue) / (occurrenceRetentionSumHighValue - occurrenceRetentionSumLowValue)) * occurrenceRetentionSumLowCoefficient;
 
         // Calculations!W336 - Limit Retention Factor - Formula - =W335-W334
-        var limitRetentionFactor = occuranceRetentionSumWeightedCoefficient - retentionWeightedCoefficient;
+        var limitRetentionFactor = occurrenceRetentionSumWeightedCoefficient - retentionWeightedCoefficient;
 
         #endregion LimitRetentionFactor
 
         #region SplitLimitFactor
 
-        var annualPremium = _raterDetails?.Profile?.EO_GWP;
+        // W311
+        var perClaim = _raterDetails?.PrimaryCoverage?.OccuranceLimit;
+        // X311
         var aggregate = _raterDetails?.PrimaryCoverage?.AggregateLimit;
 
         //W340
-        var splitLimitFactorRetainedValue = 1 + (aggregate - annualPremium) / annualPremium;
-        var splitLimitFactorRetainedValueMatchingRecordLow = _raterDetails?.RatingTablesTable2Records?.FirstOrDefault<RatingTablesTable2>(rtr => rtr.RetainedValue <= splitLimitFactorRetainedValue); // List is sorted.
+        var splitLimitFactorRetainedValue = 1 + (aggregate - perClaim) / perClaim;
+        var splitLimitFactorRetainedValueMatchingRecordLow = _raterDetails?.RatingTablesTable2Records?.LastOrDefault<RatingTablesTable2>(rtr => rtr.RetainedValue <= splitLimitFactorRetainedValue); // List is sorted.
         var splitLimitFactorRetainedValueMatchingRecordHigh = _raterDetails?.RatingTablesTable2Records?.SkipWhile<RatingTablesTable2>(rtr => rtr != splitLimitFactorRetainedValueMatchingRecordLow).Skip(1).FirstOrDefault();
 
         // W341
@@ -363,8 +370,8 @@ public class RaterService : IRaterService
         var splitLimitFactorHighCoefficient = splitLimitFactorRetainedValueMatchingRecordHigh?.FactorEAndO;
 
         // W347 - Split Limit Factor -Formula - = (W$340 - W341)/ (W342 - W341) * W345 + (1 - (W$340 - W341)/ (W342 - W341))*W344
-        var splitLimitFactor = (splitLimitFactorRetainedValue - splitLimitFactorLowValue) / ((splitLimitFactorHighValue - splitLimitFactorLowValue) == 0 ? 1 : (splitLimitFactorHighValue - splitLimitFactorLowValue)) * splitLimitFactorHighCoefficient
-                               + (1 - (splitLimitFactorRetainedValue - splitLimitFactorLowValue) / ((splitLimitFactorHighValue - splitLimitFactorLowValue) == 0 ? 1 : 0)) * splitLimitFactorLowCoefficient;
+        var splitLimitFactor = (splitLimitFactorRetainedValue - splitLimitFactorLowValue) / (splitLimitFactorHighValue - splitLimitFactorLowValue) * splitLimitFactorHighCoefficient
+                               + (1 - (splitLimitFactorRetainedValue - splitLimitFactorLowValue) / (splitLimitFactorHighValue - splitLimitFactorLowValue)) * splitLimitFactorLowCoefficient;
 
         #endregion SplitLimitFactor
 
@@ -392,8 +399,8 @@ public class RaterService : IRaterService
             sharedLimitRetainedValue = 1 + (adjustedLimit - sharedLim) / sharedLim;
         }
 
-        var sharedLimitRetainedValueMatchingRecordLow = _raterDetails?.RatingTablesTable3Records?.FirstOrDefault<RatingTablesTable3>(rtr => rtr.RetainedValue <= splitLimitFactorRetainedValue); // List is sorted.
-        var sharedLimitRetainedValueMatchingRecordHigh = _raterDetails?.RatingTablesTable3Records?[(_raterDetails?.RatingTablesTable3Records?.IndexOf(sharedLimitRetainedValueMatchingRecordLow!) ?? 0 + 1)];
+        var sharedLimitRetainedValueMatchingRecordLow = _raterDetails?.RatingTablesTable3Records?.LastOrDefault<RatingTablesTable3>(rtr => rtr.RetainedValue <= sharedLimitRetainedValue); // List is sorted.
+        var sharedLimitRetainedValueMatchingRecordHigh = _raterDetails?.RatingTablesTable3Records?[(_raterDetails?.RatingTablesTable3Records?.IndexOf(sharedLimitRetainedValueMatchingRecordLow!) ?? 0) + 1];
 
         // W352
         var sharedLimitLowValue = sharedLimitRetainedValueMatchingRecordLow?.RetainedValue;
@@ -408,7 +415,7 @@ public class RaterService : IRaterService
         var sharedLimitHighCoefficient = sharedLimitRetainedValueMatchingRecordHigh?.Factor;
 
         // W358 - Shared Limit - Formula - = (W351 - W352) / (W353 - W352) * (W356 - W355) + W355
-        var sharedLimit = (sharedLimitRetainedValue - sharedLimitLowValue) / ((sharedLimitHighValue - sharedLimitLowValue) == 0 ? 1 : (sharedLimitHighValue - sharedLimitLowValue)) * (sharedLimitHighCoefficient - sharedLimitLowCoefficient) + sharedLimitLowCoefficient;
+        var sharedLimit = (sharedLimitRetainedValue - sharedLimitLowValue) / (sharedLimitHighValue - sharedLimitLowValue) * (sharedLimitHighCoefficient - sharedLimitLowCoefficient) + sharedLimitLowCoefficient;
 
         #endregion SharedLimit
 
@@ -426,7 +433,7 @@ public class RaterService : IRaterService
         // 
         var upcomingTermLimitAdjustedPremium = upcomingTermTotalPremium / upcomingTermBaseRates * priorTermBaseRates / upcomingTermLimitFactor * priorTermLimitFactor;
 
-        var rateChange = upcomingTermLimitAdjustedPremium / priorTermTotalPremium - 1;
+        var rateChange = (upcomingTermLimitAdjustedPremium / priorTermTotalPremium - 1) * 100;
         return rateChange ?? 0m;
     }
 
