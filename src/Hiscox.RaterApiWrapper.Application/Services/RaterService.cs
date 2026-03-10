@@ -26,6 +26,13 @@ public class RaterService : IRaterService
     private readonly IFormRepository _formRepository;
     private readonly IFormEligibilityRepository _formEligibilityRepository;
     private readonly ILookupRepository _lookupRepository;
+    private readonly ILimitRetentionFactorRepository _limitRetentionFactorRepository;
+    private readonly IOccLimitFactorRepository _occLimitFactorRepository;
+    private readonly IProjectTypeFactorRepository _projectTypeFactorRepository;
+    private readonly IRetainedValueFactorRepository _retainedValueFactorRepository;
+    private readonly IRetainedValueFactorMatrixRepository _retainedValueFactorMatrixRepository;
+    private readonly IRevenueBaseRateRepository _revenueBaseRateRepository;
+    
 
     private readonly RaterDetails _raterDetails = new();
     private readonly ILogger _logger;
@@ -49,7 +56,13 @@ public class RaterService : IRaterService
         IRatingFactorsRepository iRatingFactorsRepository,
         IFormRepository formRepository,
         IFormEligibilityRepository formEligibilityRepository,
-        ILookupRepository lookupRepository)
+        ILookupRepository lookupRepository,
+        ILimitRetentionFactorRepository limitRetentionFactorRepository,
+        IOccLimitFactorRepository occLimitFactorRepository,
+        IProjectTypeFactorRepository projectTypeFactorRepository,
+        IRetainedValueFactorRepository retainedValueFactorRepository,
+        IRetainedValueFactorMatrixRepository retainedValueFactorMatrixRepository,
+        IRevenueBaseRateRepository revenueBaseRateRepository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -61,7 +74,13 @@ public class RaterService : IRaterService
         _formRepository = formRepository;
         _iRatingFactorsRepository = iRatingFactorsRepository;
         _formEligibilityRepository = formEligibilityRepository;
-        _lookupRepository= lookupRepository;
+        _lookupRepository = lookupRepository;
+        _limitRetentionFactorRepository = limitRetentionFactorRepository;
+        _occLimitFactorRepository = occLimitFactorRepository;
+        _projectTypeFactorRepository = projectTypeFactorRepository;
+        _retainedValueFactorRepository = retainedValueFactorRepository;
+        _retainedValueFactorMatrixRepository = retainedValueFactorMatrixRepository;
+        _revenueBaseRateRepository = revenueBaseRateRepository;
     }
 
 
@@ -753,6 +772,7 @@ public class RaterService : IRaterService
         var aggrLimit = coverage?.AggregateLimit ?? 0m;
         decimal technologyCoverage = occrLimit;
 
+        //var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
         var optionalCoverages = await _lookupRepository.GetOccLimitFactor();
 
         int percentageCrisisManagerMent = (int)Math.Round((crisisManagerMent / occrLimit * 100), MidpointRounding.AwayFromZero);
@@ -788,6 +808,7 @@ public class RaterService : IRaterService
         //F247 in Calculations excel sheet
         var formFactor = 1;
 
+        //var projectTypeFactor = await _projectTypeFactorRepository.GetAll(_raterOptions.Version);
         var projectTypeFactor = await _lookupRepository.GetProjectTypeFactor();
         decimal totalRscf = 0;
 
@@ -827,6 +848,7 @@ public class RaterService : IRaterService
     private async Task<decimal?> CalculateBaseRate(decimal revenueOrExposure)
     {
         var revenueBaseRate = await _lookupRepository.GetRevenueBaseRate();
+        //var revenueBaseRate = await _revenueBaseRateRepository.GetAll(_raterOptions.Version);
 
         var baseRateRevenue = revenueBaseRate.Where(x => x.Revenue <= revenueOrExposure).OrderByDescending(x => x.Revenue).FirstOrDefault();
 
@@ -875,6 +897,7 @@ public class RaterService : IRaterService
         //F158 in Calculations excel sheet
         var occAndEoRetention = (occrLimit) + eoRetention;
 
+        //var limitRetentionFactors = await _limitRetentionFactorRepository.GetAll(_raterOptions.Version);
         var limitRetentionFactors = await _lookupRepository.GetLimitRetentionFactor();
 
         var forRetention = limitRetentionFactors.Where(x => x.LimitRetentionOption <= eoRetention).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
@@ -919,6 +942,7 @@ public class RaterService : IRaterService
         var retainedSplitLimitValue = 1 + ((aggrLimit - occrLimit) / occrLimit);
 
         var retainedValueFactorMatrix = await _lookupRepository.GetRetainedValueFactorMatrix();
+        //var retainedValueFactorMatrix = await _retainedValueFactorMatrixRepository.GetAll(_raterOptions.Version);
 
         var lowRetainedFactorMatrixValue = retainedValueFactorMatrix.Where(x => x.RetainedValue <= retainedSplitLimitValue).OrderByDescending(x => x.RetainedValue).FirstOrDefault();
 
@@ -943,6 +967,7 @@ public class RaterService : IRaterService
         var retainedSharedLimit = 100;
 
         var retainedValueFactor = await _lookupRepository.GetRetainedValueFactor();
+        //var retainedValueFactor = await _retainedValueFactorRepository.GetAll(_raterOptions.Version);
 
         var lowRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent <= retainedSharedLimit).OrderByDescending(x => x.RetainedValuePercent).FirstOrDefault();
 

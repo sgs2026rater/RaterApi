@@ -8,6 +8,8 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
 public class LimitRetentionFactor
 {
+    public required string Version { get; set; }
+    public int Id { get; set; }
     public long? LimitRetentionOption { get; set; }
     public decimal? EoLow { get; set; }
     public decimal? EoMedium { get; set; }
