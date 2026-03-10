@@ -10,6 +10,7 @@ public record RaterDetails
     public decimal RevenueAdjusted { get; set; }
     public List<IndustryClassification>? IndustryClassifications { get; set; }
     public IndustryClassification? PrimaryIndustryClassification { get; set; }
+    public List<IndustryClassification>? AdditionalIndustryClassifications { get; set; }
     public string? ChosenForm {  get; set; }
     public string? FormType { get; set; }
     public RatingFactor? RatingFactorStep { get; set; }
@@ -25,7 +26,7 @@ public record RaterDetails
     public bool UITrigAnEFlag { get; set; }
 
     #endregion Additional UW(Tab4)
-
+    
     #region Coverage(Tab6)
     public string SharedOrSeparatedEAndO { get; set; } = "N/A";
     public List<string>? IncludedCoverageEnhancements { get; set; }

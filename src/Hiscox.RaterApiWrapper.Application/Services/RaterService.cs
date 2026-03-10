@@ -26,6 +26,13 @@ public class RaterService : IRaterService
     private readonly IFormRepository _formRepository;
     private readonly IFormEligibilityRepository _formEligibilityRepository;
     private readonly ILookupRepository _lookupRepository;
+    private readonly ILimitRetentionFactorRepository _limitRetentionFactorRepository;
+    private readonly IOccLimitFactorRepository _occLimitFactorRepository;
+    private readonly IProjectTypeFactorRepository _projectTypeFactorRepository;
+    private readonly IRetainedValueFactorRepository _retainedValueFactorRepository;
+    private readonly IRetainedValueFactorMatrixRepository _retainedValueFactorMatrixRepository;
+    private readonly IRevenueBaseRateRepository _revenueBaseRateRepository;
+    
 
     private readonly RaterDetails _raterDetails = new();
     private readonly ILogger _logger;
@@ -49,7 +56,13 @@ public class RaterService : IRaterService
         IRatingFactorsRepository iRatingFactorsRepository,
         IFormRepository formRepository,
         IFormEligibilityRepository formEligibilityRepository,
-        ILookupRepository lookupRepository)
+        ILookupRepository lookupRepository,
+        ILimitRetentionFactorRepository limitRetentionFactorRepository,
+        IOccLimitFactorRepository occLimitFactorRepository,
+        IProjectTypeFactorRepository projectTypeFactorRepository,
+        IRetainedValueFactorRepository retainedValueFactorRepository,
+        IRetainedValueFactorMatrixRepository retainedValueFactorMatrixRepository,
+        IRevenueBaseRateRepository revenueBaseRateRepository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -61,7 +74,13 @@ public class RaterService : IRaterService
         _formRepository = formRepository;
         _iRatingFactorsRepository = iRatingFactorsRepository;
         _formEligibilityRepository = formEligibilityRepository;
-        _lookupRepository= lookupRepository;
+        _lookupRepository = lookupRepository;
+        _limitRetentionFactorRepository = limitRetentionFactorRepository;
+        _occLimitFactorRepository = occLimitFactorRepository;
+        _projectTypeFactorRepository = projectTypeFactorRepository;
+        _retainedValueFactorRepository = retainedValueFactorRepository;
+        _retainedValueFactorMatrixRepository = retainedValueFactorMatrixRepository;
+        _revenueBaseRateRepository = revenueBaseRateRepository;
     }
 
 
@@ -88,6 +107,10 @@ public class RaterService : IRaterService
         if (!ValidateIndustryClassifications(raterInputs.IndustryClassifications!, _raterDetails))
         {
             return new RaterFailureDetails("InvalidIndustryClassification", "One or more industry classifications are invalid.");
+        }
+        if(!ValidateIndustryInformationExceed(raterInputs.IndustryClassifications!))
+        {
+            return new RaterFailureDetails("InvalidIndustryClassification", "Maximum 5 Industry Classifications are allowed.");
         }
 
         //var eligibleForms = await GetEligibileForms(_raterDetails.PrimaryIndustryClassification!.SpecialtyId!.Value);
@@ -140,11 +163,12 @@ public class RaterService : IRaterService
         decimal mediaActivitiesValue = mediaActivities == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(mediaActivities);
 
         var premium = await CalculatePremium(_raterDetails?.PrimaryCoverage, raterInputs.AdditionalRiskProfile, crisisManagementValue, mediaActivitiesValue);
-
+        
         var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
         var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
 
         //var rateChange = CalculateRateChange(); // TODO: Only upcomingTermTotalPremium and projectSpecificXSLimitFactor calculation logic still needs to be implemented. Hardcoded for now.
+        var rateChange = await CalculateRateChange(_raterDetails?.Profile, _raterDetails?.PrimaryCoverage, premium);
 
         return new RaterResult()
         {
@@ -155,10 +179,15 @@ public class RaterService : IRaterService
             Retention = _raterDetails?.PrimaryCoverage?.Retention ?? 0m,
             ExpiringPremium = _raterDetails?.Profile.EO_GWP ?? 0m,
             RenewalPremium = premium,
-            RevenueChange = Math.Round(revnueChange, 2, MidpointRounding.AwayFromZero),
-            PremiumChange = Math.Round(premiumChange, 2, MidpointRounding.AwayFromZero),
-            RateChange = 56.3m//rateChange
+            RevenueChange = revnueChange,
+            PremiumChange = premiumChange,
+            RateChange = rateChange
         };
+    }
+
+    private static bool ValidateIndustryInformationExceed(List<IndustryClassification> industryClassifications)
+    {
+        return industryClassifications.Count <= 5;
     }
 
     private Dictionary<string, string> LoadIndustryNameToAlternativeExposureBaseMap()
@@ -827,8 +856,10 @@ public class RaterService : IRaterService
             industryClassification.SpecialtyId = matchingIndustrySpecialty.Id;
         }
 
-        worksheet.IndustryClassifications = industryClassifications.ToList();
+        worksheet.IndustryClassifications = [.. industryClassifications.OrderByDescending(x => x.PercentageExposure).Take(5)];
         worksheet.PrimaryIndustryClassification = worksheet.IndustryClassifications[0];//Assuming the first value as Primary Industry info
+        worksheet.AdditionalIndustryClassifications = [.. worksheet.IndustryClassifications.Skip(1)];
+
         return true;
     }
 
@@ -869,7 +900,7 @@ public class RaterService : IRaterService
     {
         _raterDetails.RatingFactorStep ??= new RatingFactor();
         _raterDetails.RatingFactorStep.ComplexityOfRiskRatingFactorDetails = ratingFactor.ComplexityOfRiskRatingFactorDetails;
-        _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor = ratingFactor.ComplexityOfRiskRatingFactorDetails.Factor;
+        _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor = ratingFactor.ComplexityOfRiskRatingFactorDetails?.Factor ?? 0;
         if (ratingFactor.ComplexityOfRiskRatingFactorDetails?.Factor == 1)
         {
             _raterDetails.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.DegreeOfConcern= "Comfortable";
@@ -1011,12 +1042,14 @@ public class RaterService : IRaterService
     /// <returns>Premuim</returns>
     private async Task<decimal> CalculatePremium(Coverage? coverage, AdditionalRiskProfile? additionalRiskProfile, decimal crisisManagerMent, decimal mediaActivities)
     {
-        const decimal l13 = 35.5m;
+        // L13 in OptioinalCoverage excel sheet
+        const decimal optionalCoreCoverageFactor = 35.5m;
         var perpcentContractorsPolution = -15.79m;
         var occrLimit = coverage?.OccuranceLimit ?? 0m;
         var aggrLimit = coverage?.AggregateLimit ?? 0m;
         decimal technologyCoverage = occrLimit;
 
+        //var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
         var optionalCoverages = await _lookupRepository.GetOccLimitFactor();
 
         int percentageCrisisManagerMent = (int)Math.Round((crisisManagerMent / occrLimit * 100), MidpointRounding.AwayFromZero);
@@ -1029,112 +1062,212 @@ public class RaterService : IRaterService
 
         var forTechnologyCoverage = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageTechnologyCoverage).OrderByDescending(x => x.TechnologyCoverageExtension).FirstOrDefault();
 
-        var f255 = l13 + forInsuranceCrisisManagerMent?.CrisisManagement + forInsurancemediaActivities?.MediaActivities + perpcentContractorsPolution + forTechnologyCoverage.TechnologyCoverageExtension;
+        //F255 in Calculations excel sheet
+        var optionalCoverageFactor = optionalCoreCoverageFactor + forInsuranceCrisisManagerMent?.CrisisManagement + forInsurancemediaActivities?.MediaActivities + perpcentContractorsPolution + forTechnologyCoverage?.TechnologyCoverageExtension;
 
-        var f102 = 0.74m;
+        //F102 in Calculations excel sheet
+        var purePremiumSplit = 0.74m;
 
-        var revenueBaseRate = await _lookupRepository.GetRevenueBaseRate();
+        //F153 in Calculations excel sheet
+        decimal? baseRateForChosenExposure = await CalculateBaseRate(_raterDetails.Profile?.Revenue ?? 0m);
 
-        var baseRateRevenue = revenueBaseRate.Where(x => x.Revenue <= _raterDetails.Profile?.Revenue).OrderByDescending(x => x.Revenue).FirstOrDefault();
-        var f138 = baseRateRevenue != null ? baseRateRevenue.Revenue : 0;
-        var f140 = baseRateRevenue != null ? baseRateRevenue.BaseRateEO : 0m;
+        //F198 in Calculations excel sheet
+        decimal? limitFactor = await CalculateLimitFactor(occrLimit, aggrLimit, coverage?.Retention ?? 0m);
 
-        var baseRateCoef = revenueBaseRate.Where(x => x.Revenue > f138).OrderBy(x => x.Revenue).FirstOrDefault();
-        var f139 = baseRateCoef != null ? baseRateCoef.Revenue : 0;
-        var f141 = baseRateCoef != null ? baseRateCoef.BaseRateEO : 0m;
+        _raterDetails.UpcomingTermLimitFactor = limitFactor;
 
-        var f153 = (_raterDetails.Profile?.Revenue - f138) / (f139 - f138) * f141 + (1 - (_raterDetails.Profile?.Revenue - f138) / (f139 - f138)) * f140;
+        //F245 in Calculations excel sheet
+        var industryModifier = 3.49m;
 
-        var f157 = coverage?.Retention ?? 0m;
-        var f158 = (coverage?.OccuranceLimit ?? 0m) + f157;
+        //F246 in Calculations excel sheet
+        var geoGraphicModifier = await _geographicModRepository.GetAE(_raterOptions.Version, _raterDetails.Profile?.Zip ?? string.Empty);
 
-        var limitRetentionFactors = await _lookupRepository.GetLimitRetentionFactor();
+        //F247 in Calculations excel sheet
+        var formFactor = 1;
 
-        var forRetention = limitRetentionFactors.Where(x => x.LimitRetentionOption <= f157).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
-        var f160 = forRetention?.LimitRetentionOption;
-
-        var forOccurance = limitRetentionFactors.Where(x => x.LimitRetentionOption > f160).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
-        var f161 = forOccurance?.LimitRetentionOption;
-
-        var forRetentionCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption <= f158).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
-        var f162 = forRetentionCoef?.LimitRetentionOption;
-
-        var forOccuranceCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption > f162).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
-        var f163 = forOccuranceCoef?.LimitRetentionOption;
-
-        var f165 = forRetention?.EoMedium;
-        var f166 = forOccurance?.EoMedium;
-        var f167 = forRetentionCoef?.EoMedium;
-        var f168 = forOccuranceCoef?.EoMedium;
-
-        var f170 = ((f157 - f160) / (f161 - f160) * f166) + (1 - (f157 - f160) / (f161 - f160)) * f165;
-        var f171 = ((f158 - f162) / (f163 - f162) * f168) + (1 - (f158 - f162) / (f163 - f162)) * f167;
-
-        var f172 = f171 - f170;
-
-        var f176 = 1 + ((aggrLimit - occrLimit) / occrLimit);
-
-        var retainedValueFactorMatrix= await _lookupRepository.GetRetainedValueFactorMatrix();
-
-        var lowRetainedFactorMatrixValue= retainedValueFactorMatrix.Where(x => x.RetainedValue <= f176).OrderByDescending(x => x.RetainedValue).FirstOrDefault();
-        var f177 = lowRetainedFactorMatrixValue?.RetainedValue;
-        var f180 = lowRetainedFactorMatrixValue?.FactorEO;
-
-        var highRetainedValue = retainedValueFactorMatrix.Where(x => x.RetainedValue > f176).OrderBy(x => x.RetainedValue).FirstOrDefault();
-        var f178 = highRetainedValue?.RetainedValue;
-        var f181 = highRetainedValue?.FactorEO;
-
-        var f183 = ((f176 - f177) / (f178 - f177) * f181) + (1 - (f176 - f177) / (f178 - f177)) * f180;
-
-        var f187 = 100;
-
-        var retainedValueFactor= await _lookupRepository.GetRetainedValueFactor();
-
-        var lowRetainedValueFactor= retainedValueFactor.Where(x => x.RetainedValuePercent <= f187).OrderByDescending(x => x.RetainedValuePercent).FirstOrDefault();
-        var f188 = lowRetainedValueFactor?.RetainedValuePercent / 100;
-        var f191 = lowRetainedValueFactor?.Factor;
-
-        var highRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent > f187).OrderBy(x => x.RetainedValuePercent).FirstOrDefault();
-        var f189 = highRetainedValueFactor?.RetainedValuePercent / 100;
-        var f192 = highRetainedValueFactor?.Factor;
-
-        var f194 = (f187 - f188) / (f189 - f188) * (f192 - f191) + f191;
-
-        var f196 = 1;
-
-        var f198 = f172 * f183 * f194 * f196;
-        _raterDetails.UpcomingTermLimitFactor = f198;
-
-        var f245 = 3.49m;
-
-        var f246 = await _geographicModRepository.GetAE(_raterOptions.Version, _raterDetails.Profile?.Zip);
-
-        var f247 = 1;
-
+        //var projectTypeFactor = await _projectTypeFactorRepository.GetAll(_raterOptions.Version);
         var projectTypeFactor = await _lookupRepository.GetProjectTypeFactor();
-        decimal rscf = 0;
+        decimal totalRscf = 0;
 
-        foreach (var factor in projectTypeFactor)
+        //F248 in Calculations excel sheet
+        decimal? rscf = 0;
+
+        if (additionalRiskProfile?.ProjectTypes != null)
         {
-            if (additionalRiskProfile.ProjectTypes.Contains(factor.ProjectType))
-            {
-                rscf += factor.Factor;
-            }
+            totalRscf += projectTypeFactor
+                        .Where(f => additionalRiskProfile.ProjectTypes.Contains(f.ProjectType))
+                        .Sum(f => f.Factor);
+
+            rscf = totalRscf / additionalRiskProfile?.ProjectTypes?.Count;
+        }
+        else
+        {
+            rscf = 0.8m;
         }
 
-        var f248 = rscf / additionalRiskProfile?.ProjectTypes?.Count;
+        //F250 in Calculations excel sheet
+        var grandBasePremium = purePremiumSplit * baseRateForChosenExposure * limitFactor * industryModifier * geoGraphicModifier * formFactor * rscf;
 
-        var f250 = f102 * f153 * f198 * f245 * f246 * f247 * f248;
-
-        var f251 = f153 * (1 - f102) * f198;
+        //F251 in Calculations excel sheet
+        var basePremium = baseRateForChosenExposure * (1 - purePremiumSplit) * limitFactor;
 
         var var_exp_load = 0.25m;
 
-        var f253 = (f250 + f251) / (1 - var_exp_load);
+        //F253 in Calculations excel sheet
+        var premiumBeforeOptionalCoverage = (grandBasePremium + basePremium) / (1 - var_exp_load);
 
-        var premium = f247 * (f253 * (1 + (f255/100)));
+        var premium = formFactor * (premiumBeforeOptionalCoverage * (1 + (optionalCoverageFactor / 100)));
         _raterDetails.Premium = premium;
 
         return Math.Round(premium ?? 0, 2, MidpointRounding.AwayFromZero);
+    }
+
+    private async Task<decimal?> CalculateBaseRate(decimal revenueOrExposure)
+    {
+        var revenueBaseRate = await _lookupRepository.GetRevenueBaseRate();
+        //var revenueBaseRate = await _revenueBaseRateRepository.GetAll(_raterOptions.Version);
+
+        var baseRateRevenue = revenueBaseRate.Where(x => x.Revenue <= revenueOrExposure).OrderByDescending(x => x.Revenue).FirstOrDefault();
+
+        //F138 in Calculations excel sheet
+        var lowRevenueExposure = baseRateRevenue != null ? baseRateRevenue.Revenue : 0;
+
+        //f140 in Calculations excel sheet
+        var lowCoefRevenueExposure = baseRateRevenue != null ? baseRateRevenue.BaseRateEO : 0m;
+
+        var baseRateCoef = revenueBaseRate.Where(x => x.Revenue > lowRevenueExposure).OrderBy(x => x.Revenue).FirstOrDefault();
+
+        //F139 in Calculations excel sheet
+        var highRevenueExposure = baseRateCoef != null ? baseRateCoef.Revenue : 0;
+
+        //F141 in Calculations excel sheet
+        var highCoefRevenueExposure = baseRateCoef != null ? baseRateCoef.BaseRateEO : 0m;
+
+        return (revenueOrExposure - lowRevenueExposure) / (highRevenueExposure - lowRevenueExposure) * highCoefRevenueExposure + (1 - (revenueOrExposure - lowRevenueExposure) / (highRevenueExposure - lowRevenueExposure)) * lowCoefRevenueExposure;
+    }
+
+    /// <summary>
+    /// Calculates Rate Change that will be sent to response
+    /// </summary>
+    /// <returns></returns>
+    private async Task<decimal> CalculateRateChange(PolicyDetails? policyDetails, Coverage? coverage, decimal premium)
+    {
+        var priorBaseRate = await CalculateBaseRate(policyDetails?.ExposureBase ?? 0);
+
+        var priorLimitFactor = await CalculateLimitFactor(policyDetails?.EO_OccLimit ?? 0m, policyDetails?.EO_AggLimit ?? 0m, policyDetails?.EO_Retention ?? 0m);
+
+        var upcomingPriorBaseRate = await CalculateBaseRate(policyDetails?.Revenue ?? 0);
+
+        var upcomingLimitFactor = await CalculateLimitFactor(coverage?.OccuranceLimit ?? 0m, coverage?.AggregateLimit ?? 0m, coverage?.Retention ?? 0m);
+
+        var limitsAdjustedPremium = premium / upcomingPriorBaseRate * priorBaseRate / upcomingLimitFactor * priorLimitFactor;
+
+        var rateChange = (limitsAdjustedPremium / policyDetails?.EO_GWP - 1) * 100;
+
+        return rateChange ?? 0m;
+    }
+    private async Task<decimal?> CalculateLimitFactor(decimal occrLimit, decimal aggrLimit, decimal retention)
+    {
+        //F157 in Calculations excel sheet
+        var eoRetention = retention;
+
+        //F158 in Calculations excel sheet
+        var occAndEoRetention = (occrLimit) + eoRetention;
+
+        //var limitRetentionFactors = await _limitRetentionFactorRepository.GetAll(_raterOptions.Version);
+        var limitRetentionFactors = await _lookupRepository.GetLimitRetentionFactor();
+
+        var forRetention = limitRetentionFactors.Where(x => x.LimitRetentionOption <= eoRetention).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
+
+        //F160 in Calculations excel sheet
+        var eoRetentionLowValue = forRetention?.LimitRetentionOption;
+
+        var forOccurance = limitRetentionFactors.Where(x => x.LimitRetentionOption > eoRetentionLowValue).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
+
+        //F161 in Calculations excel sheet
+        var eoRetentionHighValue = forOccurance?.LimitRetentionOption;
+
+        var forRetentionCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption <= occAndEoRetention).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
+
+        //F162 in Calculations excel sheet
+        var occLimitLowValue = forRetentionCoef?.LimitRetentionOption;
+
+        var forOccuranceCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption > occLimitLowValue).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
+
+        //F163 in Calculations excel sheet
+        var occLimitHighValue = forOccuranceCoef?.LimitRetentionOption;
+
+        //F165 in Calculations excel sheet
+        var retentionLowCoef = forRetention?.EoMedium;
+        //F166 in Calculations excel sheet
+        var retentionHighCoef = forOccurance?.EoMedium;
+        //F167 in Calculations excel sheet
+        var occLimitLowCoef = forRetentionCoef?.EoMedium;
+        //F168 in Calculations excel sheet
+        var occLimitHighCoef = forOccuranceCoef?.EoMedium;
+
+        //F170 in Calculations excel sheet
+        var retentionWeightedCoeff = ((eoRetention - eoRetentionLowValue) / (eoRetentionHighValue - eoRetentionLowValue) * retentionHighCoef) + (1 - (eoRetention - eoRetentionLowValue) / (eoRetentionHighValue - eoRetentionLowValue)) * retentionLowCoef;
+
+        //F171 in Calculations excel sheet
+        var occRetentionWeightedCoeff = ((occAndEoRetention - occLimitLowValue) / (occLimitHighValue - occLimitLowValue) * occLimitHighCoef) + (1 - (occAndEoRetention - occLimitLowValue) / (occLimitHighValue - occLimitLowValue)) * occLimitLowCoef;
+
+        //F172 in Calculations excel sheet
+        var limitRetentionFactor = occRetentionWeightedCoeff - retentionWeightedCoeff;
+
+        //F176 in Calculations excel sheet
+        var retainedSplitLimitValue = 1 + ((aggrLimit - occrLimit) / occrLimit);
+
+        var retainedValueFactorMatrix = await _lookupRepository.GetRetainedValueFactorMatrix();
+        //var retainedValueFactorMatrix = await _retainedValueFactorMatrixRepository.GetAll(_raterOptions.Version);
+
+        var lowRetainedFactorMatrixValue = retainedValueFactorMatrix.Where(x => x.RetainedValue <= retainedSplitLimitValue).OrderByDescending(x => x.RetainedValue).FirstOrDefault();
+
+        //F177 in Calculations excel sheet
+        var occAggLowSplitLimitValue = lowRetainedFactorMatrixValue?.RetainedValue;
+
+        //F180 in Calculations excel sheet
+        var occAggLowSplitLimitCoef = lowRetainedFactorMatrixValue?.FactorEO;
+
+        var highRetainedValue = retainedValueFactorMatrix.Where(x => x.RetainedValue > retainedSplitLimitValue).OrderBy(x => x.RetainedValue).FirstOrDefault();
+
+        //F178 in Calculations excel sheet
+        var occAggHighSplitLimitValue = highRetainedValue?.RetainedValue;
+
+        //F181 in Calculations excel sheet
+        var occAggHighSplitLimitCoef = highRetainedValue?.FactorEO;
+
+        //F183 in Calculations excel sheet
+        var splitLimitFactor = ((retainedSplitLimitValue - occAggLowSplitLimitValue) / (occAggHighSplitLimitValue - occAggLowSplitLimitValue) * occAggHighSplitLimitCoef) + (1 - (retainedSplitLimitValue - occAggLowSplitLimitValue) / (occAggHighSplitLimitValue - occAggLowSplitLimitValue)) * occAggLowSplitLimitCoef;
+
+        //F187 in Calculations excel sheet
+        var retainedSharedLimit = 100;
+
+        var retainedValueFactor = await _lookupRepository.GetRetainedValueFactor();
+        //var retainedValueFactor = await _retainedValueFactorRepository.GetAll(_raterOptions.Version);
+
+        var lowRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent <= retainedSharedLimit).OrderByDescending(x => x.RetainedValuePercent).FirstOrDefault();
+
+        //F188 in Calculations excel sheet
+        var sharedLimitLowValue = lowRetainedValueFactor?.RetainedValuePercent / 100;
+
+        //F191 in Calculations excel sheet
+        var sharedLimitLowCoef = lowRetainedValueFactor?.Factor;
+
+        var highRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent > retainedSharedLimit).OrderBy(x => x.RetainedValuePercent).FirstOrDefault();
+
+        //F189 in Calculations excel sheet
+        var sharedLimitHighValue = highRetainedValueFactor?.RetainedValuePercent / 100;
+
+        //F192 in Calculations excel sheet
+        var sharedLimitHighCoef = highRetainedValueFactor?.Factor;
+
+        //F194 in Calculations excel sheet
+        var sharedLimit = (retainedSharedLimit - sharedLimitLowValue) / (sharedLimitHighValue - sharedLimitLowValue) * (sharedLimitHighCoef - sharedLimitLowCoef) + sharedLimitLowCoef;
+
+        //F196 in Calculations excel sheet
+        var xsLimitFactor = 1;
+
+        return limitRetentionFactor * splitLimitFactor * sharedLimit * xsLimitFactor;
     }
 }

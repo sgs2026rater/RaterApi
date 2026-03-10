@@ -8,6 +8,8 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
 public class OccLimitFactor
 {
+    public required string Version { get; set; }
+    public int Id { get; set; }
     public decimal PercentOfOccLimit { get; set; }
     public decimal ClassActionSublimit { get; set; }
     public decimal CrisisManagement { get; set; }
