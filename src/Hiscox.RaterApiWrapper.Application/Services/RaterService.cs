@@ -772,8 +772,7 @@ public class RaterService : IRaterService
         var aggrLimit = coverage?.AggregateLimit ?? 0m;
         decimal technologyCoverage = occrLimit;
 
-        //var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
-        var optionalCoverages = await _lookupRepository.GetOccLimitFactor();
+        var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
 
         int percentageCrisisManagerMent = (int)Math.Round((crisisManagerMent / occrLimit * 100), MidpointRounding.AwayFromZero);
         int percentageMediaActivities = (int)Math.Round((mediaActivities / occrLimit * 100), MidpointRounding.AwayFromZero);
@@ -808,8 +807,8 @@ public class RaterService : IRaterService
         //F247 in Calculations excel sheet
         var formFactor = 1;
 
-        //var projectTypeFactor = await _projectTypeFactorRepository.GetAll(_raterOptions.Version);
-        var projectTypeFactor = await _lookupRepository.GetProjectTypeFactor();
+        var projectTypeFactor = await _projectTypeFactorRepository.GetAll(_raterOptions.Version);
+
         decimal totalRscf = 0;
 
         //F248 in Calculations excel sheet
@@ -847,8 +846,7 @@ public class RaterService : IRaterService
 
     private async Task<decimal?> CalculateBaseRate(decimal revenueOrExposure)
     {
-        var revenueBaseRate = await _lookupRepository.GetRevenueBaseRate();
-        //var revenueBaseRate = await _revenueBaseRateRepository.GetAll(_raterOptions.Version);
+        var revenueBaseRate = await _revenueBaseRateRepository.GetAll(_raterOptions.Version);
 
         var baseRateRevenue = revenueBaseRate.Where(x => x.Revenue <= revenueOrExposure).OrderByDescending(x => x.Revenue).FirstOrDefault();
 
@@ -897,8 +895,7 @@ public class RaterService : IRaterService
         //F158 in Calculations excel sheet
         var occAndEoRetention = (occrLimit) + eoRetention;
 
-        //var limitRetentionFactors = await _limitRetentionFactorRepository.GetAll(_raterOptions.Version);
-        var limitRetentionFactors = await _lookupRepository.GetLimitRetentionFactor();
+        var limitRetentionFactors = await _limitRetentionFactorRepository.GetAll(_raterOptions.Version);
 
         var forRetention = limitRetentionFactors.Where(x => x.LimitRetentionOption <= eoRetention).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
 
@@ -941,8 +938,7 @@ public class RaterService : IRaterService
         //F176 in Calculations excel sheet
         var retainedSplitLimitValue = 1 + ((aggrLimit - occrLimit) / occrLimit);
 
-        var retainedValueFactorMatrix = await _lookupRepository.GetRetainedValueFactorMatrix();
-        //var retainedValueFactorMatrix = await _retainedValueFactorMatrixRepository.GetAll(_raterOptions.Version);
+        var retainedValueFactorMatrix = await _retainedValueFactorMatrixRepository.GetAll(_raterOptions.Version);
 
         var lowRetainedFactorMatrixValue = retainedValueFactorMatrix.Where(x => x.RetainedValue <= retainedSplitLimitValue).OrderByDescending(x => x.RetainedValue).FirstOrDefault();
 
@@ -966,8 +962,7 @@ public class RaterService : IRaterService
         //F187 in Calculations excel sheet
         var retainedSharedLimit = 100;
 
-        var retainedValueFactor = await _lookupRepository.GetRetainedValueFactor();
-        //var retainedValueFactor = await _retainedValueFactorRepository.GetAll(_raterOptions.Version);
+        var retainedValueFactor = await _retainedValueFactorRepository.GetAll(_raterOptions.Version);
 
         var lowRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent <= retainedSharedLimit).OrderByDescending(x => x.RetainedValuePercent).FirstOrDefault();
 
