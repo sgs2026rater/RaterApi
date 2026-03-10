@@ -12,7 +12,7 @@ public static class DependencyInjection
     public static void AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<IMagicPolicyRepository, MagicPolicyRepository>();
-        services.AddScoped<IGeographicModRepository, GeographicModRepository>();        
+        services.AddScoped<IGeographicModRepository, GeographicModRepository>();
         services.AddScoped<IIndustrySectorRepository, IndustrySectorRepository>();
         services.AddScoped<IIndustrySubSectorRepository, IndustrySubSectorRepository>();
         services.AddScoped<IIndustrySpecialtyRepository, IndustrySpecialtyRepository>();
@@ -20,6 +20,12 @@ public static class DependencyInjection
         services.AddScoped<IFormEligibilityRepository, FormEligibilityRepository>();
         services.AddScoped<IRatingFactorsRepository, RatingFactorsRepository>();
         services.AddScoped<ILookupRepository, LookupRepository>();
+        services.AddScoped<ILimitRetentionFactorRepository, LimitRetentionFactorRepository>();
+        services.AddScoped<IOccLimitFactorRepository, OccLimitFactorRepository>();
+        services.AddScoped<IProjectTypeFactorRepository, ProjectTypeFactorRepository>();
+        services.AddScoped<IRetainedValueFactorRepository, RetainedValueFactorRepository>();
+        services.AddScoped<IRetainedValueFactorMatrixRepository, RetainedValueFactorMatrixRepository>();
+        services.AddScoped<IRevenueBaseRateRepository, RevenueBaseRateRepository>();
         services.AddScoped<IIncludedCoverageEnhancementsRepository, IncludedCoverageEnhancementsRepository>();
         services.AddScoped<IOptCovTable1Repository, OptCovTable1Repository>();
         services.AddScoped<IOptionalCoverageTable1Repository, OptionalCoverageTable1Repository>();

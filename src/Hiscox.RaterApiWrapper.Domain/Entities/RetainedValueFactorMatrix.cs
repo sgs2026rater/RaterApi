@@ -8,6 +8,8 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
 public class RetainedValueFactorMatrix
 {
+    public required string Version { get; set; }
+    public int Id { get; set; }
     public decimal RetainedValue { get; set; }
     public decimal FactorEO { get; set; }
     public decimal FactorGL { get; set; }

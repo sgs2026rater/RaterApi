@@ -8,6 +8,8 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
 public class RevenueBaseRate
 {
+    public required string Version { get; set; }
+    public int Id { get; set; }
     public int? Revenue { get; set; }
     public decimal BaseRateEO { get; set; }
     public decimal GLPremisesOperations1 { get; set; }

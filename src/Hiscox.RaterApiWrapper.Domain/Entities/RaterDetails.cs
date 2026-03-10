@@ -47,12 +47,19 @@ public record RaterDetails
 
     #region Summary
 
+
+    public decimal? RenewalPremium { get; set; }
+    public decimal? LimitFactor { get; set; }
+    public decimal? BaseRateForChosenExposure { get; set; }
+    public decimal? RevenueChange { get; set; }
+    public decimal? PremiumChange { get; set; }
+    public decimal? RateChange { get; set; }         
+
     public Dictionary<string, string>? IndustryNameToAlternativeExposureBaseMap { get; set; } // This comes from cell range alt_exp_master_list in Industry_lookup sheet. Table might need to be created for this.
     public List<BaseRateTablesTable1>? BaseRateTablesTable1Records { get; set; }
     public List<RatingTablesTable1>? RatingTablesTable1Records { get; set; }
     public List<RatingTablesTable2>? RatingTablesTable2Records { get; set; }
     public List<RatingTablesTable3>? RatingTablesTable3Records { get; set; }
-    public decimal? UpcomingTermLimitFactor { get; set; }
 
     #endregion Summary
 }
