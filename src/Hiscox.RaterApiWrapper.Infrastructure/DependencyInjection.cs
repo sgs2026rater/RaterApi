@@ -20,5 +20,8 @@ public static class DependencyInjection
         services.AddScoped<IFormEligibilityRepository, FormEligibilityRepository>();
         services.AddScoped<IRatingFactorsRepository, RatingFactorsRepository>();
         services.AddScoped<ILookupRepository, LookupRepository>();
+        services.AddScoped<IIncludedCoverageEnhancementsRepository, IncludedCoverageEnhancementsRepository>();
+        services.AddScoped<IOptCovTable1Repository, OptCovTable1Repository>();
+        services.AddScoped<IOptionalCoverageTable1Repository, OptionalCoverageTable1Repository>();
     }
 }
