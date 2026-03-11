@@ -25,7 +25,7 @@ public class RetainedValueFactorConfiguration : IEntityTypeConfiguration<Retaine
             .IsRequired(true);
 
         builder.Property(_ => _.RetainedValuePercent)
-            .HasColumnType("decimal(18,4)")
+            .HasColumnType("int")
             .IsRequired(true);
 
         builder.Property(_ => _.Factor)

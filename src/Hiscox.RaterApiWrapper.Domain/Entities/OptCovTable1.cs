@@ -8,9 +8,11 @@ namespace Hiscox.RaterApiWrapper.Domain.Entities;
 
 public class OptCovTable1
 {
-    public string? OptionalCoverage {  get; set; }//Column B in OptCov Sheet
-    public string? ApplicableToCoverageOrGTC { get; set; }//Column E in OptCov Sheet
-    public string? ApplicableToFormOrEndorsment { get; set; }//Column Q in OptCov Sheet
-    public string? ENumber {  get; set; }//Column R in OptCov Sheet
+    public required string Version { get; set; }
+    public int Id { get; set; }
+    public required string OptionalCoverage {  get; set; }//Column B in OptCov Sheet
+    public required string ApplicableToCoverageOrGTC { get; set; }//Column E in OptCov Sheet
+    public required string ApplicableToFormOrEndorsement { get; set; }//Column Q in OptCov Sheet
+    public required string ENumber {  get; set; }//Column R in OptCov Sheet
 
 }

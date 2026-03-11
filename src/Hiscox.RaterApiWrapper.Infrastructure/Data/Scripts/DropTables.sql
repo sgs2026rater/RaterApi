@@ -12,5 +12,10 @@ drop TABLE FormInfoLookup;
 drop TABLE IndustryForm;
 drop TABLE IndustryFormMaster;
 drop TABLE ProjectTypeFactor;
+drop TABLE LimitRetentionFactor;
+drop TABLE OccLimitFactor;
+drop TABLE RetainedValueFactor;
+drop TABLE RetainedValueFactorMatrix;
+drop TABLE RevenueBaseRate;
 
 drop TABLE __EFMigrationsHistory;

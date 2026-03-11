@@ -159,6 +159,39 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.ToTable("GeographicMod", (string)null);
                 });
 
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.IncludedCoverageEnhancements", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimsMode")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("CoverageEnhancements")
+                        .IsRequired()
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Form")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("LineOfBusiness")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("ShortenedLineOfBusiness")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("IncludedCoverageEnhancements", (string)null);
+                });
+
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.IndustrySector", b =>
                 {
                     b.Property<string>("Version")
@@ -218,6 +251,60 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.HasIndex("Version", "IndustrySectorId");
 
                     b.ToTable("IndustrySubSector", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptCovTable1", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicableToCoverageOrGTC")
+                        .IsRequired()
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("ApplicableToFormOrEndorsement")
+                        .IsRequired()
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("ENumber")
+                        .IsRequired()
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("OptionalCoverage")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("OptCovTable1", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptionalCoveragesTable1", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OptionalAdditionalCoverage")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Premium")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("ValueOfInsurance")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("OptionalCoverageTable1", (string)null);
                 });
 
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.PolicyDetails", b =>

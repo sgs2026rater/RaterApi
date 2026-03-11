@@ -9,7 +9,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Data;
-using System.Text.Json;
 
 namespace Hiscox.RaterApiWrapper.Application.Services;
 
@@ -33,6 +32,10 @@ public class RaterService : IRaterService
     private readonly IRetainedValueFactorMatrixRepository _retainedValueFactorMatrixRepository;
     private readonly IRevenueBaseRateRepository _revenueBaseRateRepository;
     
+
+    private readonly IIncludedCoverageEnhancementsRepository _includedCoverageEnhancementsRepository;
+    private readonly IOptCovTable1Repository _optCovTable1Repository;
+    private readonly IOptionalCoverageTable1Repository _optionalCoverageTable1Repository;
 
     private readonly RaterDetails _raterDetails = new();
     private readonly ILogger _logger;
@@ -63,6 +66,9 @@ public class RaterService : IRaterService
         IRetainedValueFactorRepository retainedValueFactorRepository,
         IRetainedValueFactorMatrixRepository retainedValueFactorMatrixRepository,
         IRevenueBaseRateRepository revenueBaseRateRepository)
+        ILookupRepository lookupRepository, IIncludedCoverageEnhancementsRepository includedCoverageEnhancementsRepository,
+        IOptCovTable1Repository optCovTable1Repository,
+        IOptionalCoverageTable1Repository optionalCoverageTable1Repository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -81,6 +87,10 @@ public class RaterService : IRaterService
         _retainedValueFactorRepository = retainedValueFactorRepository;
         _retainedValueFactorMatrixRepository = retainedValueFactorMatrixRepository;
         _revenueBaseRateRepository = revenueBaseRateRepository;
+        _lookupRepository= lookupRepository;
+        _includedCoverageEnhancementsRepository = includedCoverageEnhancementsRepository;
+        _optCovTable1Repository = optCovTable1Repository;
+        _optionalCoverageTable1Repository = optionalCoverageTable1Repository;
     }
 
 
@@ -130,7 +140,7 @@ public class RaterService : IRaterService
 
         AdditionalUWCalculation(raterInputs.AdditionalRiskProfile);
 
-        GetOptionalEnhancements();
+        await GetOptionalEnhancements();
 
 
         _raterDetails.PrimaryCoverage = GetPrimaryCoverage(raterInputs.Coverages!);
@@ -169,6 +179,10 @@ public class RaterService : IRaterService
 
         //var rateChange = CalculateRateChange(); // TODO: Only upcomingTermTotalPremium and projectSpecificXSLimitFactor calculation logic still needs to be implemented. Hardcoded for now.
         var rateChange = await CalculateRateChange(_raterDetails?.Profile, _raterDetails?.PrimaryCoverage, premium);
+
+        _raterDetails?.RevenueChange = revnueChange;
+        _raterDetails?.PremiumChange = premiumChange;
+        _raterDetails?.RateChange = rateChange;
 
         return new RaterResult()
         {
@@ -468,8 +482,9 @@ public class RaterService : IRaterService
 
     private static bool ValidateOptionalEnhancements(RaterInputs raterInputs)
     {
-        List<string> optionalEnhancements = new List<string>()
-        {
+        //TODO:Below values are from OptCov Sheet (from both B67:B77 and Q67:Q76)
+        List<string> optionalEnhancements =
+        [
             "Crisis Management",
             "Media activities",
             "Contractors Pollution (Claims Made)",
@@ -485,14 +500,14 @@ public class RaterService : IRaterService
             "Property Damage",
             "Personal & Advertising Injury",
             "Third Party Discrimination",
-            "Protective Idemnity",
+            "Protective Indemnity",
             "Pollutants in Transit",
             "Non-Owned Disposal Site",
             "Failure to disclose pollutants",
             "Pollution liability",
             "Technology Coverage Extension",
             "Network security & privacy",
-        };
+        ];
         if (raterInputs?.OptionalEnhancements?.Any(e => !optionalEnhancements.Contains(e.OptionalEnhancementName ?? "")) == true)
         {
              return false;
@@ -635,10 +650,11 @@ public class RaterService : IRaterService
             _raterDetails.LimitationOfLiabilityQuestionFlag = true;
         }
     }
-    internal List<string> LoadIncludedCoverageEnhancements()
+    internal async Task<List<string>> LoadIncludedCoverageEnhancementsAsync()
     {
         //TODO:FIll IncludedCoverageEnhancements in RaterDetails based on FormChosen which will have list of coverages which is included in the coverage.
         //This info is from the Other_lookup sheet (Table name - form_info_lkup) column AU.
+        //List<string> includedCoverageEnhancements = (await _includedCoverageEnhancementsRepository.GetByForm(_raterOptions.Version,"Form Chosen")).ToList();
         List<string> includedCoverageEnhancements = new List<string>() { "Property Damage(full limit)",            
                                                                          "Bodily Injury(full limit)", 
                                                                          "Pollution Liability(full limit)", 
@@ -654,20 +670,22 @@ public class RaterService : IRaterService
         _raterDetails.IncludedCoverageEnhancements = includedCoverageEnhancements;
         return includedCoverageEnhancements;
     }
-    internal List<OptCovTable1> LoadOptCovTable1()
+    internal async Task<List<OptCovTable1>> LoadOptCovTable1Async()
     {
         //TODO: The values to be filled from OptCov Sheet from Range or table from (B8 to E58)
+        //_raterDetails.OptCovTable1Records = (List<OptCovTable1>?)await _optCovTable1Repository.GetAll(_raterOptions.Version);
          _raterDetails.OptCovTable1Records = new List<OptCovTable1>() { 
-             new OptCovTable1() { OptionalCoverage = "Crisis Management", ApplicableToCoverageOrGTC = "Coverage", ApplicableToFormOrEndorsment =  "Form", ENumber = ""} ,
-             new OptCovTable1() { OptionalCoverage = "Media activities", ApplicableToCoverageOrGTC = "Coverage", ApplicableToFormOrEndorsment = "Form", ENumber = ""} };
+             new() {Version="", Id = 0, OptionalCoverage = "Crisis Management", ApplicableToCoverageOrGTC = "Coverage", ApplicableToFormOrEndorsement =  "Form", ENumber = ""} ,
+             new() {Version="", Id = 0, OptionalCoverage = "Media activities", ApplicableToCoverageOrGTC = "Coverage", ApplicableToFormOrEndorsement = "Form", ENumber = ""} };
         return _raterDetails.OptCovTable1Records;
     }
-    internal List<OptionalCoveragesTable1> LoadOptionalCoveragesTable1()
+    internal async Task<List<OptionalCoveragesTable1>> LoadOptionalCoveragesTable1Async()
     {
         //TODO: The values to be filled from Optional_CoveragesTable Sheet from Range or table from (C7 to M65)
+        //_raterDetails.OptionalCoveragesTable1Records = (List<OptionalCoveragesTable1>?)await _optionalCoverageTable1Repository.GetAll(_raterOptions.Version);
         _raterDetails.OptionalCoveragesTable1Records = new List<OptionalCoveragesTable1>() {
-             new OptionalCoveragesTable1() { OptionalAdditionalCoverage = "Crisis Management", ValueOfInsurance = 1.97m, Premium = 45} ,
-             new OptionalCoveragesTable1() { OptionalAdditionalCoverage = "Media activities", ValueOfInsurance = 10.53m, Premium = 243} };
+             new() {Version="", Id = 0, OptionalAdditionalCoverage = "Crisis Management", ValueOfInsurance = 1.97m, Premium = 45} ,
+             new OptionalCoveragesTable1() {Version="", Id = 0, OptionalAdditionalCoverage = "Media activities", ValueOfInsurance = 10.53m, Premium = 243} };
         return _raterDetails.OptionalCoveragesTable1Records;
     }
     internal Dictionary<string, string> LoadOptionalCoverageNameToDefaultAmountMap()
@@ -693,12 +711,12 @@ public class RaterService : IRaterService
 
         return _raterDetails.OptionalCoverageToDifferentialMap;
     }
-    internal void GetOptionalEnhancements()
+    internal async Task GetOptionalEnhancements()
     {
-        LoadIncludedCoverageEnhancements();
-        LoadOptCovTable1();
+        await LoadIncludedCoverageEnhancementsAsync();
+        await LoadOptCovTable1Async();
         LoadOptionalCoverageNameToDefaultAmountMap();
-        LoadOptionalCoveragesTable1();
+        await LoadOptionalCoveragesTable1Async();
         LoadOptionalCoverageToDifferentialMap();
 
         foreach (var optionalEnhancement in _raterDetails?.RaterInputs?.OptionalEnhancements ?? Enumerable.Empty<OptionalEnhancement>())
@@ -720,7 +738,7 @@ public class RaterService : IRaterService
 
             //Formula for Version is : - =IF(OR(HY16="",IA16<>"Yes"),"",IF(VLOOKUP(HY16,OptCov!$B$8:$T$58,16,FALSE)="Endorsement",VLOOKUP(HY16,OptCov!$B$8:$T$58,17,FALSE),
             //                                          IF(IC16=VLOOKUP(Rater!HY16,OptCov!$B$67:$G$93,3,FALSE),"Included coverage enhancement","Modified coverage enhancement")))
-            if(matchingOptCovRecord?.ApplicableToFormOrEndorsment == "Endorsment")
+            if(matchingOptCovRecord?.ApplicableToFormOrEndorsement == "Endorsment")
             {
                 optionalEnhancement.Version = matchingOptCovRecord?.ENumber;
             }
@@ -771,7 +789,7 @@ public class RaterService : IRaterService
         _industrySectors = (await _industrySectorRepository.GetAll(_raterOptions.Version)).ToList();
         _industrySubSectors = (await _industrySubSectorRepository.GetAll(_raterOptions.Version)).ToList();
         _industrySpecialties = (await _industrySpecialtyRepository.GetAll(_raterOptions.Version)).ToList();
-        //_forms = (await _formRepository.GetAll(_raterOptions.Version)).ToList();
+        _forms = (await _formRepository.GetAll(_raterOptions.Version)).ToList();
     }
 
 
@@ -1049,8 +1067,7 @@ public class RaterService : IRaterService
         var aggrLimit = coverage?.AggregateLimit ?? 0m;
         decimal technologyCoverage = occrLimit;
 
-        //var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
-        var optionalCoverages = await _lookupRepository.GetOccLimitFactor();
+        var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
 
         int percentageCrisisManagerMent = (int)Math.Round((crisisManagerMent / occrLimit * 100), MidpointRounding.AwayFromZero);
         int percentageMediaActivities = (int)Math.Round((mediaActivities / occrLimit * 100), MidpointRounding.AwayFromZero);
@@ -1070,11 +1087,11 @@ public class RaterService : IRaterService
 
         //F153 in Calculations excel sheet
         decimal? baseRateForChosenExposure = await CalculateBaseRate(_raterDetails.Profile?.Revenue ?? 0m);
+        _raterDetails.BaseRateForChosenExposure = baseRateForChosenExposure;
 
         //F198 in Calculations excel sheet
         decimal? limitFactor = await CalculateLimitFactor(occrLimit, aggrLimit, coverage?.Retention ?? 0m);
-
-        _raterDetails.UpcomingTermLimitFactor = limitFactor;
+        _raterDetails.LimitFactor = limitFactor;
 
         //F245 in Calculations excel sheet
         var industryModifier = 3.49m;
@@ -1085,8 +1102,8 @@ public class RaterService : IRaterService
         //F247 in Calculations excel sheet
         var formFactor = 1;
 
-        //var projectTypeFactor = await _projectTypeFactorRepository.GetAll(_raterOptions.Version);
-        var projectTypeFactor = await _lookupRepository.GetProjectTypeFactor();
+        var projectTypeFactor = await _projectTypeFactorRepository.GetAll(_raterOptions.Version);
+
         decimal totalRscf = 0;
 
         //F248 in Calculations excel sheet
@@ -1124,8 +1141,7 @@ public class RaterService : IRaterService
 
     private async Task<decimal?> CalculateBaseRate(decimal revenueOrExposure)
     {
-        var revenueBaseRate = await _lookupRepository.GetRevenueBaseRate();
-        //var revenueBaseRate = await _revenueBaseRateRepository.GetAll(_raterOptions.Version);
+        var revenueBaseRate = await _revenueBaseRateRepository.GetAll(_raterOptions.Version);
 
         var baseRateRevenue = revenueBaseRate.Where(x => x.Revenue <= revenueOrExposure).OrderByDescending(x => x.Revenue).FirstOrDefault();
 
@@ -1174,8 +1190,7 @@ public class RaterService : IRaterService
         //F158 in Calculations excel sheet
         var occAndEoRetention = (occrLimit) + eoRetention;
 
-        //var limitRetentionFactors = await _limitRetentionFactorRepository.GetAll(_raterOptions.Version);
-        var limitRetentionFactors = await _lookupRepository.GetLimitRetentionFactor();
+        var limitRetentionFactors = await _limitRetentionFactorRepository.GetAll(_raterOptions.Version);
 
         var forRetention = limitRetentionFactors.Where(x => x.LimitRetentionOption <= eoRetention).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
 
@@ -1218,8 +1233,7 @@ public class RaterService : IRaterService
         //F176 in Calculations excel sheet
         var retainedSplitLimitValue = 1 + ((aggrLimit - occrLimit) / occrLimit);
 
-        var retainedValueFactorMatrix = await _lookupRepository.GetRetainedValueFactorMatrix();
-        //var retainedValueFactorMatrix = await _retainedValueFactorMatrixRepository.GetAll(_raterOptions.Version);
+        var retainedValueFactorMatrix = await _retainedValueFactorMatrixRepository.GetAll(_raterOptions.Version);
 
         var lowRetainedFactorMatrixValue = retainedValueFactorMatrix.Where(x => x.RetainedValue <= retainedSplitLimitValue).OrderByDescending(x => x.RetainedValue).FirstOrDefault();
 
@@ -1243,8 +1257,7 @@ public class RaterService : IRaterService
         //F187 in Calculations excel sheet
         var retainedSharedLimit = 100;
 
-        var retainedValueFactor = await _lookupRepository.GetRetainedValueFactor();
-        //var retainedValueFactor = await _retainedValueFactorRepository.GetAll(_raterOptions.Version);
+        var retainedValueFactor = await _retainedValueFactorRepository.GetAll(_raterOptions.Version);
 
         var lowRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent <= retainedSharedLimit).OrderByDescending(x => x.RetainedValuePercent).FirstOrDefault();
 
