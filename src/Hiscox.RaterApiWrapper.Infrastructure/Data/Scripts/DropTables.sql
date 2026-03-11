@@ -17,5 +17,6 @@ drop TABLE OccLimitFactor;
 drop TABLE RetainedValueFactor;
 drop TABLE RetainedValueFactorMatrix;
 drop TABLE RevenueBaseRate;
+drop TABLE OptionalCoverageFactor;
 
 drop TABLE __EFMigrationsHistory;
