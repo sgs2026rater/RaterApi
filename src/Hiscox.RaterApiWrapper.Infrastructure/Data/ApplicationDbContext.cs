@@ -44,6 +44,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<RevenueBaseRate>? RevenueBaseRates { get; set; } = null;
     public DbSet<IncludedCoverageEnhancements>? IncludedCoverageEnhancements { get; set;  } = null;
     public DbSet<OptCovTable1>? OptCovTables { get; set; } = null;
+    public DbSet<OptionalCoverageFactor>? OptionalCoverageFactors { get; set; } = null;
+    
     public DbSet<OptionalCoveragesTable1>? OptionalCoveragesTables { get; set; } = null;
 
 }

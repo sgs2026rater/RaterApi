@@ -24,9 +24,8 @@ public class RaterService : IRaterService
 
     private readonly IFormRepository _formRepository;
     private readonly IFormEligibilityRepository _formEligibilityRepository;
-    private readonly ILookupRepository _lookupRepository;
     private readonly ILimitRetentionFactorRepository _limitRetentionFactorRepository;
-    private readonly IOccLimitFactorRepository _occLimitFactorRepository;
+    private readonly IOptionalCoverageFactorsRepository _occLimitFactorRepository;
     private readonly IProjectTypeFactorRepository _projectTypeFactorRepository;
     private readonly IRetainedValueFactorRepository _retainedValueFactorRepository;
     private readonly IRetainedValueFactorMatrixRepository _retainedValueFactorMatrixRepository;
@@ -59,9 +58,8 @@ public class RaterService : IRaterService
         IRatingFactorsRepository iRatingFactorsRepository,
         IFormRepository formRepository,
         IFormEligibilityRepository formEligibilityRepository,
-        ILookupRepository lookupRepository,
         ILimitRetentionFactorRepository limitRetentionFactorRepository,
-        IOccLimitFactorRepository occLimitFactorRepository,
+        IOptionalCoverageFactorsRepository occLimitFactorRepository,
         IProjectTypeFactorRepository projectTypeFactorRepository,
         IRetainedValueFactorRepository retainedValueFactorRepository,
         IRetainedValueFactorMatrixRepository retainedValueFactorMatrixRepository,
@@ -80,14 +78,12 @@ public class RaterService : IRaterService
         _formRepository = formRepository;
         _iRatingFactorsRepository = iRatingFactorsRepository;
         _formEligibilityRepository = formEligibilityRepository;
-        _lookupRepository = lookupRepository;
         _limitRetentionFactorRepository = limitRetentionFactorRepository;
         _occLimitFactorRepository = occLimitFactorRepository;
         _projectTypeFactorRepository = projectTypeFactorRepository;
         _retainedValueFactorRepository = retainedValueFactorRepository;
         _retainedValueFactorMatrixRepository = retainedValueFactorMatrixRepository;
         _revenueBaseRateRepository = revenueBaseRateRepository;
-        _lookupRepository= lookupRepository;
         _includedCoverageEnhancementsRepository = includedCoverageEnhancementsRepository;
         _optCovTable1Repository = optCovTable1Repository;
         _optionalCoverageTable1Repository = optionalCoverageTable1Repository;
@@ -166,13 +162,7 @@ public class RaterService : IRaterService
             await SetRatingFactor(raterInputs.RatingFactorStep, _raterOptions.Version);
         }
 
-        var crisisManagement = raterInputs.OptionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == "Crisis Management")?.OptionalEnhancementValue;
-        var mediaActivities = raterInputs.OptionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == "Media activities")?.OptionalEnhancementValue;
-
-        decimal crisisManagementValue = crisisManagement == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(crisisManagement);
-        decimal mediaActivitiesValue = mediaActivities == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(mediaActivities);
-
-        var premium = await CalculatePremium(_raterDetails?.PrimaryCoverage, raterInputs.AdditionalRiskProfile, crisisManagementValue, mediaActivitiesValue);
+        var premium = await CalculatePremium(_raterDetails?.PrimaryCoverage, raterInputs.AdditionalRiskProfile, raterInputs.OptionalEnhancements);
         
         var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
         var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
@@ -768,6 +758,62 @@ public class RaterService : IRaterService
         }
     }
     /// <summary>
+    /// Calculates total factor for all optional coverages selected in step-6 Coverage
+    /// </summary>
+    /// <param name="coverage">Coverages step fields</param>
+    /// <param name="optionalEnhancements">Optional Coverages selected in step-6</param>
+    /// <returns></returns>
+    private async Task<decimal> CalculateOptionalCoverageFactor(Coverage? coverage, List<OptionalEnhancement>? optionalEnhancements)
+    {
+        decimal totalOptionalCoverageFactor = 0;
+        var occrLimit = coverage?.OccuranceLimit ?? 0m;
+        if (optionalEnhancements != null && optionalEnhancements.Any())
+        {
+            foreach (var oe in optionalEnhancements ?? Enumerable.Empty<OptionalEnhancement>())
+            {
+                var optionalCoverage = optionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == oe.OptionalEnhancementName)?.OptionalEnhancementValue;
+
+                decimal optionalCoverageValue = optionalCoverage == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(optionalCoverage);
+
+                var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
+
+                int percentageOptionalCoverage = (int)Math.Round((optionalCoverageValue / occrLimit * 100), MidpointRounding.AwayFromZero);
+
+                var forOptionalCoverage = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageOptionalCoverage && x.Type == oe.OptionalEnhancementName).OrderByDescending(x => x.PercentOfOccLimit).FirstOrDefault();
+
+                totalOptionalCoverageFactor += forOptionalCoverage?.Factor ?? 0;
+            }
+        }
+
+        //There are default coverages that are applied even if the optional enhancement is not selected.
+        //So, if those optional enhancements are not selected, we need to add their factors to the total optional coverage factor.
+        if (optionalEnhancements != null && optionalEnhancements.Any())
+        {
+            if (!optionalEnhancements.Any(x => x.OptionalEnhancementName == "Bodily Injury"))
+            {
+                totalOptionalCoverageFactor += 19.74M;
+            }
+            if (!optionalEnhancements.Any(x => x.OptionalEnhancementName == "Property Damage"))
+            {
+                totalOptionalCoverageFactor += 7.9M;
+            }
+            if (!optionalEnhancements.Any(x => x.OptionalEnhancementName == "Intellectual Property Infringement"))
+            {
+                totalOptionalCoverageFactor += 7.9M;
+            }
+            if (!optionalEnhancements.Any(x => x.OptionalEnhancementName == "Class Action Sublimit"))
+            {
+                totalOptionalCoverageFactor += -15.79M;
+            }
+            if (!optionalEnhancements.Any(x => x.OptionalEnhancementName == "Technology Coverage Extension"))
+            {
+                totalOptionalCoverageFactor += 9.72M;
+            }
+        }
+
+        return totalOptionalCoverageFactor;
+    }
+    /// <summary>
     /// Calculates premium that will be sent to response
     /// </summary>
     /// <param name="coverage"></param>
@@ -775,46 +821,30 @@ public class RaterService : IRaterService
     /// <param name="crisisManagerMent"></param>
     /// <param name="mediaActivities"></param>
     /// <returns>Premuim</returns>
-    private async Task<decimal> CalculatePremium(Coverage? coverage, AdditionalRiskProfile? additionalRiskProfile, decimal crisisManagerMent, decimal mediaActivities)
+    private async Task<decimal> CalculatePremium(Coverage? coverage, AdditionalRiskProfile? additionalRiskProfile, List<OptionalEnhancement>? optionalEnhancements)
     {
-        // L13 in OptioinalCoverage excel sheet
-        const decimal optionalCoreCoverageFactor = 35.5m;
-        var perpcentContractorsPolution = -15.79m;
         var occrLimit = coverage?.OccuranceLimit ?? 0m;
         var aggrLimit = coverage?.AggregateLimit ?? 0m;
-        decimal technologyCoverage = occrLimit;
 
-        var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
-
-        int percentageCrisisManagerMent = (int)Math.Round((crisisManagerMent / occrLimit * 100), MidpointRounding.AwayFromZero);
-        int percentageMediaActivities = (int)Math.Round((mediaActivities / occrLimit * 100), MidpointRounding.AwayFromZero);
-        int percentageTechnologyCoverage = (int)Math.Round((technologyCoverage / occrLimit * 100), MidpointRounding.AwayFromZero);
-
-        var forInsuranceCrisisManagerMent = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageCrisisManagerMent).OrderByDescending(x => x.PercentOfOccLimit).FirstOrDefault();
-
-        var forInsurancemediaActivities = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageMediaActivities).OrderByDescending(x => x.PercentOfOccLimit).FirstOrDefault();
-
-        var forTechnologyCoverage = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageTechnologyCoverage).OrderByDescending(x => x.TechnologyCoverageExtension).FirstOrDefault();
-
-        //F255 in Calculations excel sheet
-        var optionalCoverageFactor = optionalCoreCoverageFactor + forInsuranceCrisisManagerMent?.CrisisManagement + forInsurancemediaActivities?.MediaActivities + perpcentContractorsPolution + forTechnologyCoverage?.TechnologyCoverageExtension;
+        //F255 in Calculations excel sheet. This calculates total additional coverage factor from Step-6 Coverage
+        decimal optionalCoverageFactor = await CalculateOptionalCoverageFactor(coverage, optionalEnhancements);
 
         //F102 in Calculations excel sheet
         var purePremiumSplit = 0.74m;
 
         //F153 in Calculations excel sheet
-        decimal? baseRateForChosenExposure = await CalculateBaseRate(_raterDetails.Profile?.Revenue ?? 0m);
-        _raterDetails.BaseRateForChosenExposure = baseRateForChosenExposure;
+        decimal? baseRateForChosenExposure = await CalculateBaseRate(_raterDetails?.Profile?.Revenue ?? 0m);
+        _raterDetails?.BaseRateForChosenExposure = baseRateForChosenExposure;
 
         //F198 in Calculations excel sheet
         decimal? limitFactor = await CalculateLimitFactor(occrLimit, aggrLimit, coverage?.Retention ?? 0m);
-        _raterDetails.LimitFactor = limitFactor;
+        _raterDetails?.LimitFactor = limitFactor;
 
         //F245 in Calculations excel sheet
         var industryModifier = 3.49m;
 
         //F246 in Calculations excel sheet
-        var geoGraphicModifier = await _geographicModRepository.GetAE(_raterOptions.Version, _raterDetails.Profile?.Zip ?? string.Empty);
+        var geoGraphicModifier = await _geographicModRepository.GetAE(_raterOptions.Version, _raterDetails?.Profile?.Zip ?? string.Empty);
 
         //F247 in Calculations excel sheet
         var formFactor = 1;
@@ -832,7 +862,9 @@ public class RaterService : IRaterService
                         .Where(f => additionalRiskProfile.ProjectTypes.Contains(f.ProjectType))
                         .Sum(f => f.Factor);
 
-            rscf = totalRscf / additionalRiskProfile?.ProjectTypes?.Count;
+            rscf = (totalRscf / additionalRiskProfile?.ProjectTypes?.Count) * _raterDetails?.RatingFactorStep?.ClaimHistoryRatingFactorDetails?.Factor
+                                                            //* _raterDetails?.RatingFactorStep?.RiskProfileRatingFactorDetails?.Factor
+                                                            * _raterDetails?.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor;
         }
         else
         {
@@ -851,7 +883,7 @@ public class RaterService : IRaterService
         var premiumBeforeOptionalCoverage = (grandBasePremium + basePremium) / (1 - var_exp_load);
 
         var premium = formFactor * (premiumBeforeOptionalCoverage * (1 + (optionalCoverageFactor / 100)));
-        _raterDetails.Premium = premium;
+        _raterDetails?.Premium = premium;
 
         return Math.Round(premium ?? 0, 2, MidpointRounding.AwayFromZero);
     }

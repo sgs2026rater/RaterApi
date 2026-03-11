@@ -19,9 +19,8 @@ public static class DependencyInjection
         services.AddScoped<IFormRepository, FormRepository>();
         services.AddScoped<IFormEligibilityRepository, FormEligibilityRepository>();
         services.AddScoped<IRatingFactorsRepository, RatingFactorsRepository>();
-        services.AddScoped<ILookupRepository, LookupRepository>();
         services.AddScoped<ILimitRetentionFactorRepository, LimitRetentionFactorRepository>();
-        services.AddScoped<IOccLimitFactorRepository, OccLimitFactorRepository>();
+        services.AddScoped<IOptionalCoverageFactorsRepository, OptionalCoverageFactorsRepository>();
         services.AddScoped<IProjectTypeFactorRepository, ProjectTypeFactorRepository>();
         services.AddScoped<IRetainedValueFactorRepository, RetainedValueFactorRepository>();
         services.AddScoped<IRetainedValueFactorMatrixRepository, RetainedValueFactorMatrixRepository>();
