@@ -373,42 +373,36 @@ public class RaterService : IRaterService
             _raterDetails.LimitationOfLiabilityQuestionFlag = true;
         }
     }
-    internal async Task<List<string>> LoadIncludedCoverageEnhancementsAsync()
+    internal async Task<string?> LoadIncludedCoverageEnhancementsAsync()
     {
         //TODO:FIll IncludedCoverageEnhancements in RaterDetails based on FormChosen which will have list of coverages which is included in the coverage.
         //This info is from the Other_lookup sheet (Table name - form_info_lkup) column AU.
-        //List<string> includedCoverageEnhancements = (await _includedCoverageEnhancementsRepository.GetByForm(_raterOptions.Version,"Form Chosen")).ToList();
-        List<string> includedCoverageEnhancements = new List<string>() { "Property Damage(full limit)",            
-                                                                         "Bodily Injury(full limit)", 
-                                                                         "Pollution Liability(full limit)", 
-                                                                         "Third Party Discrimination(full Limit)", 
-                                                                         "Personal & Advertising Injury",
-                                                                         "Crisis Management", 
-                                                                         "Media activities",
-                                                                         "Defense of Licensing Proceedings", 
-                                                                         "FHA / OSHA / ADA regulatory proceedings",
-                                                                         "Pre - claim assistance", 
-                                                                         "Subpoena assistance", 
-                                                                         "Supplemental payments" };
-        _raterDetails.IncludedCoverageEnhancements = includedCoverageEnhancements;
+        string? includedCoverageEnhancements = await _includedCoverageEnhancementsRepository.GetCoverageEnhancementsByForm(_raterOptions.Version, "A&E & Construction Managers");
+        _raterDetails.IncludedCoverageEnhancements = includedCoverageEnhancements ?? string.Empty;
         return includedCoverageEnhancements;
     }
     internal async Task<List<OptCovTable1>> LoadOptCovTable1Async()
     {
         //TODO: The values to be filled from OptCov Sheet from Range or table from (B8 to E58)
-        //_raterDetails.OptCovTable1Records = (List<OptCovTable1>?)await _optCovTable1Repository.GetAll(_raterOptions.Version);
-         _raterDetails.OptCovTable1Records = new List<OptCovTable1>() { 
-             new() {Version="", Id = 0, OptionalCoverage = "Crisis Management", ApplicableToCoverageOrGTC = "Coverage", ApplicableToFormOrEndorsement =  "Form", ENumber = ""} ,
-             new() {Version="", Id = 0, OptionalCoverage = "Media activities", ApplicableToCoverageOrGTC = "Coverage", ApplicableToFormOrEndorsement = "Form", ENumber = ""} };
+        var optCovRecords = (await _optCovTable1Repository.GetAll(_raterOptions.Version))?.ToList() ?? [];
+        _raterDetails.OptCovTable1Records = optCovRecords;
         return _raterDetails.OptCovTable1Records;
     }
     internal async Task<List<OptionalCoveragesTable1>> LoadOptionalCoveragesTable1Async()
     {
         //TODO: The values to be filled from Optional_CoveragesTable Sheet from Range or table from (C7 to M65)
-        //_raterDetails.OptionalCoveragesTable1Records = (List<OptionalCoveragesTable1>?)await _optionalCoverageTable1Repository.GetAll(_raterOptions.Version);
-        _raterDetails.OptionalCoveragesTable1Records = new List<OptionalCoveragesTable1>() {
-             new() {Version="", Id = 0, OptionalAdditionalCoverage = "Crisis Management", ValueOfInsurance = 1.97m, Premium = 45} ,
-             new OptionalCoveragesTable1() {Version="", Id = 0, OptionalAdditionalCoverage = "Media activities", ValueOfInsurance = 10.53m, Premium = 243} };
+        // Use repository to fetch actual records for the configured version. Fallback to the sample defaults if repository returns no data.
+        var records = (await _optionalCoverageTable1Repository.GetAll(_raterOptions.Version))?.ToList();
+
+        if (records == null || records.Count == 0)
+        {
+            // fallback sample records to preserve existing behavior when repository doesn't return data
+            records = new List<OptionalCoveragesTable1>() {
+                 new() {Version="", Id = 0, OptionalAdditionalCoverage = "Crisis Management", ValueOfInsurance = 1.97m, Premium = 45} ,
+                 new OptionalCoveragesTable1() {Version="", Id = 0, OptionalAdditionalCoverage = "Media activities", ValueOfInsurance = 10.53m, Premium = 243} };
+        }
+
+        _raterDetails.OptionalCoveragesTable1Records = records;
         return _raterDetails.OptionalCoveragesTable1Records;
     }
     internal Dictionary<string, string> LoadOptionalCoverageNameToDefaultAmountMap()
@@ -421,7 +415,7 @@ public class RaterService : IRaterService
     internal Dictionary<string, string> LoadOptionalCoverageNameToDataValidationMap()
     {
         _raterDetails.OptionalCoverageNameToDataValidationMap = new Dictionary<string, string>()
-                                                                {{ "Crisis Management", "Vol" },{"Mediact Aivities", "Vol"}};
+                                                               {{ "Crisis Management", "Vol" },{"Media activities", "Vol"}};
         //TODO:DataValidation(AOE/Vol etc.) to be fetched from AW7 to AX58 range in OptCov Sheet.
 
         return _raterDetails.OptionalCoverageNameToDataValidationMap;
@@ -461,7 +455,7 @@ public class RaterService : IRaterService
 
             //Formula for Version is : - =IF(OR(HY16="",IA16<>"Yes"),"",IF(VLOOKUP(HY16,OptCov!$B$8:$T$58,16,FALSE)="Endorsement",VLOOKUP(HY16,OptCov!$B$8:$T$58,17,FALSE),
             //                                          IF(IC16=VLOOKUP(Rater!HY16,OptCov!$B$67:$G$93,3,FALSE),"Included coverage enhancement","Modified coverage enhancement")))
-            if(matchingOptCovRecord?.ApplicableToFormOrEndorsement == "Endorsment")
+            if(matchingOptCovRecord?.ApplicableToFormOrEndorsement == "Endorsement")
             {
                 optionalEnhancement.Version = matchingOptCovRecord?.ENumber;
             }

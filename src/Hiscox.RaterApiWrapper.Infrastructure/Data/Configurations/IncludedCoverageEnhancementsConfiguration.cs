@@ -11,6 +11,7 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Data.Configurations;
 
 public class IncludedCoverageEnhancementsConfiguration : IEntityTypeConfiguration<IncludedCoverageEnhancements>
 {
+    //This table corresponds to Other_lookup!(Table name - form_info_lkup) column AU in the Rater Worksheet   
     public void Configure(EntityTypeBuilder<IncludedCoverageEnhancements> builder)
     {
         builder.ToTable("IncludedCoverageEnhancements");

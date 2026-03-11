@@ -11,6 +11,7 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Data.Configurations;
 
 public class OptCovTable1Configuration : IEntityTypeConfiguration<OptCovTable1>
 {
+    //This table corresponds to OptCov!(Columns B,E,Q and R) in the Rater Worksheet   
     public void Configure(EntityTypeBuilder<OptCovTable1> builder)
     {
         builder.ToTable("OptCovTable1");

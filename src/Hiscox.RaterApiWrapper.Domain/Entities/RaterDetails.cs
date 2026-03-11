@@ -29,7 +29,7 @@ public record RaterDetails
     
     #region Coverage(Tab6)
     public string SharedOrSeparatedEAndO { get; set; } = "N/A";
-    public List<string>? IncludedCoverageEnhancements { get; set; }
+    public string? IncludedCoverageEnhancements { get; set; }
     public List<OptionalEnhancement>? OptionalEnhancements { get; set; }
     public List<OptCovTable1>? OptCovTable1Records {  get; set; }
     public Dictionary<string,string>? OptionalCoverageNameToDefaultAmountMap {  get; set; }

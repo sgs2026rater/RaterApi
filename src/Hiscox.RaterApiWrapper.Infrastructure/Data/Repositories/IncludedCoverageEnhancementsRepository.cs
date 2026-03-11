@@ -15,11 +15,12 @@ public class IncludedCoverageEnhancementsRepository : RepositoryBase, IIncludedC
     {
     }
 
-    public async Task<IEnumerable<IncludedCoverageEnhancements>> GetByForm(string version, string form)
+    public async Task<string?> GetCoverageEnhancementsByForm(string version, string form)
     {
         return await _context.IncludedCoverageEnhancements!
-            .Where(_ => _.Version == version && _.Form == form)
-            .OrderBy(_ => _.Id)
-            .ToListAsync();
+         .Where(x => x.Version == version && x.Form == form)
+         .OrderBy(x => x.Id)
+         .Select(x => x.CoverageEnhancements)
+         .FirstOrDefaultAsync();
     }
 }

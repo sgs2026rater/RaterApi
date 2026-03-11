@@ -9,5 +9,5 @@ namespace Hiscox.RaterApiWrapper.Application.Abstractions;
 
 public interface IIncludedCoverageEnhancementsRepository
 {
-    Task<IEnumerable<IncludedCoverageEnhancements>> GetByForm(string version, string form);
+    Task<string?> GetCoverageEnhancementsByForm(string version, string form);
 }

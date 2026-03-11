@@ -11,6 +11,7 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Data.Configurations;
 
 public class OptionalCoverageTable1Configuration : IEntityTypeConfiguration<OptionalCoveragesTable1>
 {
+    //This table corresponds to Optional_Coverages!(3 columns from range C7 to M65) in the Rater Worksheet   
     public void Configure(EntityTypeBuilder<OptionalCoveragesTable1> builder)
     {
         builder.ToTable("OptionalCoverageTable1");
