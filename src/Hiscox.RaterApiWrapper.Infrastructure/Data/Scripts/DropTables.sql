@@ -19,5 +19,7 @@ drop TABLE RetainedValueFactorMatrix;
 drop TABLE RevenueBaseRate;
 drop TABLE OptionalCoverageFactor;
 drop TABLE IncludedCoverageEnhancements;
+drop TABLE OptCovTable1;
+drop TABLE OptionalCoverageTable1;
 
 drop TABLE __EFMigrationsHistory;
