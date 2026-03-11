@@ -65,8 +65,8 @@ public class RaterService : IRaterService
         IProjectTypeFactorRepository projectTypeFactorRepository,
         IRetainedValueFactorRepository retainedValueFactorRepository,
         IRetainedValueFactorMatrixRepository retainedValueFactorMatrixRepository,
-        IRevenueBaseRateRepository revenueBaseRateRepository)
-        ILookupRepository lookupRepository, IIncludedCoverageEnhancementsRepository includedCoverageEnhancementsRepository,
+        IRevenueBaseRateRepository revenueBaseRateRepository,
+        IIncludedCoverageEnhancementsRepository includedCoverageEnhancementsRepository,
         IOptCovTable1Repository optCovTable1Repository,
         IOptionalCoverageTable1Repository optionalCoverageTable1Repository)
     {
@@ -340,7 +340,7 @@ public class RaterService : IRaterService
 
         #endregion PriorTermBaseRates
 
-        var upcomingTermLimitFactor = _raterDetails?.UpcomingTermLimitFactor;
+        var upcomingTermLimitFactor = _raterDetails?.LimitFactor;
 
 
         #region PriorTermLimitFactor
