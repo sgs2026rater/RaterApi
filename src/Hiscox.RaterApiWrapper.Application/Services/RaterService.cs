@@ -128,7 +128,7 @@ public class RaterService : IRaterService
             return new RaterFailureDetails("InvalidIndustryClassification", "Maximum 5 Industry Classifications are allowed.");
         }
 
-        //var eligibleForms = await GetEligibileForms(_raterDetails.PrimaryIndustryClassification!.SpecialtyId!.Value);
+        //var eligibleForms = await GetEligibleForms(_raterDetails.PrimaryIndustryClassification!.SpecialtyId!.Value);
 
         //Validate sum of exposure percentages
         if (!ValidateTotalExposure(_raterDetails))
@@ -152,7 +152,7 @@ public class RaterService : IRaterService
 
         if ((_raterDetails.PrimaryCoverage?.OccuranceLimit ?? 0m) != (_raterDetails?.Profile.EO_OccLimit ?? 0m))
         {
-            _logger.LogWarning("OccuranceLimit ({0}) of Coverages in the request does not match with the Magic database ({1}).",
+            _logger.LogWarning("OccurrenceLimit ({0}) of Coverages in the request does not match with the Magic database ({1}).",
                                             _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m, decimal.Truncate(_raterDetails?.Profile.EO_OccLimit ?? 0m));
         }
         if ((_raterDetails?.PrimaryCoverage?.AggregateLimit ?? 0m) != (_raterDetails?.Profile.EO_AggLimit ?? 0m))
@@ -173,12 +173,12 @@ public class RaterService : IRaterService
 
         var premium = await CalculatePremium(_raterDetails?.PrimaryCoverage, raterInputs.AdditionalRiskProfile, raterInputs.OptionalEnhancements);
         
-        var revnueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
+        var revenueChange = (_raterDetails?.Profile.Revenue - _raterDetails?.Profile.ExposureBase) * 100 / _raterDetails?.Profile.ExposureBase ?? 0m;
         var premiumChange = (premium - _raterDetails?.Profile.EO_GWP ?? 0m) * 100 / _raterDetails?.Profile.EO_GWP ?? 0m;
 
         var rateChange = await CalculateRateChange(_raterDetails?.Profile, _raterDetails?.PrimaryCoverage, premium);
 
-        _raterDetails?.RevenueChange = revnueChange;
+        _raterDetails?.RevenueChange = revenueChange;
         _raterDetails?.PremiumChange = premiumChange;
         _raterDetails?.RateChange = rateChange;
 
@@ -191,7 +191,7 @@ public class RaterService : IRaterService
             Retention = _raterDetails?.PrimaryCoverage?.Retention ?? 0m,
             ExpiringPremium = _raterDetails?.Profile.EO_GWP ?? 0m,
             RenewalPremium = premium,
-            RevenueChange = revnueChange,
+            RevenueChange = revenueChange,
             PremiumChange = premiumChange,
             RateChange = rateChange
         };
@@ -295,8 +295,8 @@ public class RaterService : IRaterService
                                      IF(bed_and_revenue,
                                          D666,
                                          revenue))))
- adjusted_fees - Sum of products of Constuction Value and Rate.Calculations!H74
- industy - = Industry_lookup!S62.This comes from industry tab and depends on all three values selected.
+ adjusted_fees - Sum of products of Construction Value and Rate.Calculations!H74
+ industry - = Industry_lookup!S62.This comes from industry tab and depends on all three values selected.
  $F$77 - = 0.1 * alternative_exposure_value.alternative_exposure_value comes from Risk Profile tab on enabling Alternative exposure in Profile tab.
  F88 - = industry_sub_sector = "Real Estate Developers"
  F89 - = red_exposure.red_exposure is CK71 in Risk Profile tab.It is hidden for Design Professionals.
@@ -304,7 +304,7 @@ public class RaterService : IRaterService
  D645 - Atleast one bed specialty ? - = COUNTIFS($Q$34:$Q$42, "Number of beds").Each of Q34 to Q42 have other formulas.TODO:.
  D646 - Atleast one revenue rated specialty ? - = COUNTIFS($Q$34:$Q$42, "Revenue").Each of Q34 to Q42 have other formulas.TODO:.
  D666 - = MAX(revenue - D664, 0) TODO: 
- D664 - Total Bed cost post geo mod. = D660 * D662.Where D660 is Total Bed cost and D662 is geo modifier. Total Bed Cost has its own formula and Geo mod is a vlookup.@TODO:*/
+ D664 - Total Bed cost post geo mod. = D660 * D662.Where D660 is Total Bed cost and D662 is geo modifier. Total Bed Cost has its own formula and Geo mod is a VLOOKUP.@TODO:*/
 
         //To Calculate UITrigDesignprof3MRevFlag
         //Assumption is the first value is the Primary Industry Name. In case if its not, implement the logic for Primary Industry Info.
@@ -601,13 +601,13 @@ public class RaterService : IRaterService
         return true;
     }
 
-    private async Task<IEnumerable<Form>?> GetEligibileForms(int industrySpecialtyId)
+    private async Task<IEnumerable<Form>?> GetEligibleForms(int industrySpecialtyId)
     {
-        var eligibileFormIds = (await _formEligibilityRepository.GetForIndustrySpeciality(_raterOptions.Version, industrySpecialtyId))
+        var eligibleFormIds = (await _formEligibilityRepository.GetForIndustrySpeciality(_raterOptions.Version, industrySpecialtyId))
             .Select(_ => _.FormId);
-        if (eligibileFormIds.Any())
+        if (eligibleFormIds.Any())
         {
-            return _forms!.Where(_ => eligibileFormIds.Contains(_.Id));
+            return _forms!.Where(_ => eligibleFormIds.Contains(_.Id));
         }
 
         return null;
@@ -713,33 +713,33 @@ public class RaterService : IRaterService
                                                                         (short)RatingFactorSectionType.RiskManagement);
         }
 
-        int noAnswerOccurances = 0;
+        int noAnswerOccurrences = 0;
         if (ratingFactor.RiskProfileQuestions != null)
         {
-            noAnswerOccurances = ratingFactor.RiskProfileQuestions.Count(x => x.Value == false);
+            noAnswerOccurrences = ratingFactor.RiskProfileQuestions.Count(x => x.Value == false);
         }
 
-        if (noAnswerOccurances > 0)
+        if (noAnswerOccurrences > 0)
         {
             calculatedRatingFactor = ratingFactorList
                                         .Where(x => !x.Answer)
                                         .OrderBy(x => x.QuestionId)
-                                        .ElementAtOrDefault(noAnswerOccurances - 1);
+                                        .ElementAtOrDefault(noAnswerOccurrences - 1);
         }
         else
         {
-            int yesAnswerOccurances = 0;
+            int yesAnswerOccurrences = 0;
             if (ratingFactor.RiskProfileQuestions != null)
             {
-                yesAnswerOccurances = ratingFactor.RiskProfileQuestions!.Count(x => x.Value == true);
+                yesAnswerOccurrences = ratingFactor.RiskProfileQuestions!.Count(x => x.Value == true);
             }
 
-            if (yesAnswerOccurances > 0)
+            if (yesAnswerOccurrences > 0)
             {
                 calculatedRatingFactor = ratingFactorList
                                             .Where(x => x.Answer)
                                             .OrderBy(x => x.QuestionId)
-                                            .ElementAtOrDefault(yesAnswerOccurances - 1);
+                                            .ElementAtOrDefault(yesAnswerOccurrences - 1);
             }
             else
             {
@@ -833,7 +833,7 @@ public class RaterService : IRaterService
     /// <param name="additionalRiskProfile"></param>
     /// <param name="crisisManagerMent"></param>
     /// <param name="mediaActivities"></param>
-    /// <returns>Premuim</returns>
+    /// <returns>Premium</returns>
     private async Task<decimal> CalculatePremium(Coverage? coverage, AdditionalRiskProfile? additionalRiskProfile, List<OptionalEnhancement>? optionalEnhancements)
     {
         var occrLimit = coverage?.OccuranceLimit ?? 0m;
@@ -911,17 +911,17 @@ public class RaterService : IRaterService
         var lowRevenueExposure = baseRateRevenue != null ? baseRateRevenue.Revenue : 0;
 
         //f140 in Calculations excel sheet
-        var lowCoefRevenueExposure = baseRateRevenue != null ? baseRateRevenue.BaseRateEO : 0m;
+        var lowCoefficientRevenueExposure = baseRateRevenue != null ? baseRateRevenue.BaseRateEO : 0m;
 
-        var baseRateCoef = revenueBaseRate.Where(x => x.Revenue > lowRevenueExposure).OrderBy(x => x.Revenue).FirstOrDefault();
+        var baseRateCoefficient = revenueBaseRate.Where(x => x.Revenue > lowRevenueExposure).OrderBy(x => x.Revenue).FirstOrDefault();
 
         //F139 in Calculations excel sheet
-        var highRevenueExposure = baseRateCoef != null ? baseRateCoef.Revenue : 0;
+        var highRevenueExposure = baseRateCoefficient != null ? baseRateCoefficient.Revenue : 0;
 
         //F141 in Calculations excel sheet
-        var highCoefRevenueExposure = baseRateCoef != null ? baseRateCoef.BaseRateEO : 0m;
+        var highCoefficientRevenueExposure = baseRateCoefficient != null ? baseRateCoefficient.BaseRateEO : 0m;
 
-        return (revenueOrExposure - lowRevenueExposure) / (highRevenueExposure - lowRevenueExposure) * highCoefRevenueExposure + (1 - (revenueOrExposure - lowRevenueExposure) / (highRevenueExposure - lowRevenueExposure)) * lowCoefRevenueExposure;
+        return (revenueOrExposure - lowRevenueExposure) / (highRevenueExposure - lowRevenueExposure) * highCoefficientRevenueExposure + (1 - (revenueOrExposure - lowRevenueExposure) / (highRevenueExposure - lowRevenueExposure)) * lowCoefficientRevenueExposure;
     }
 
     /// <summary>
@@ -959,35 +959,35 @@ public class RaterService : IRaterService
         //F160 in Calculations excel sheet
         var eoRetentionLowValue = forRetention?.LimitRetentionOption;
 
-        var forOccurance = limitRetentionFactors.Where(x => x.LimitRetentionOption > eoRetentionLowValue).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
+        var forOccurrence = limitRetentionFactors.Where(x => x.LimitRetentionOption > eoRetentionLowValue).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
 
         //F161 in Calculations excel sheet
-        var eoRetentionHighValue = forOccurance?.LimitRetentionOption;
+        var eoRetentionHighValue = forOccurrence?.LimitRetentionOption;
 
-        var forRetentionCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption <= occAndEoRetention).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
+        var forRetentionCoefficient = limitRetentionFactors.Where(x => x.LimitRetentionOption <= occAndEoRetention).OrderByDescending(x => x.LimitRetentionOption).FirstOrDefault();
 
         //F162 in Calculations excel sheet
-        var occLimitLowValue = forRetentionCoef?.LimitRetentionOption;
+        var occLimitLowValue = forRetentionCoefficient?.LimitRetentionOption;
 
-        var forOccuranceCoef = limitRetentionFactors.Where(x => x.LimitRetentionOption > occLimitLowValue).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
+        var forOccurrenceCoefficient = limitRetentionFactors.Where(x => x.LimitRetentionOption > occLimitLowValue).OrderBy(x => x.LimitRetentionOption).FirstOrDefault();
 
         //F163 in Calculations excel sheet
-        var occLimitHighValue = forOccuranceCoef?.LimitRetentionOption;
+        var occLimitHighValue = forOccurrenceCoefficient?.LimitRetentionOption;
 
         //F165 in Calculations excel sheet
-        var retentionLowCoef = forRetention?.EoMedium;
+        var retentionLowCoefficient = forRetention?.EoMedium;
         //F166 in Calculations excel sheet
-        var retentionHighCoef = forOccurance?.EoMedium;
+        var retentionHighCoefficient = forOccurrence?.EoMedium;
         //F167 in Calculations excel sheet
-        var occLimitLowCoef = forRetentionCoef?.EoMedium;
+        var occLimitLowCoefficient = forRetentionCoefficient?.EoMedium;
         //F168 in Calculations excel sheet
-        var occLimitHighCoef = forOccuranceCoef?.EoMedium;
+        var occLimitHighCoefficient = forOccurrenceCoefficient?.EoMedium;
 
         //F170 in Calculations excel sheet
-        var retentionWeightedCoeff = ((eoRetention - eoRetentionLowValue) / (eoRetentionHighValue - eoRetentionLowValue) * retentionHighCoef) + (1 - (eoRetention - eoRetentionLowValue) / (eoRetentionHighValue - eoRetentionLowValue)) * retentionLowCoef;
+        var retentionWeightedCoeff = ((eoRetention - eoRetentionLowValue) / (eoRetentionHighValue - eoRetentionLowValue) * retentionHighCoefficient) + (1 - (eoRetention - eoRetentionLowValue) / (eoRetentionHighValue - eoRetentionLowValue)) * retentionLowCoefficient;
 
         //F171 in Calculations excel sheet
-        var occRetentionWeightedCoeff = ((occAndEoRetention - occLimitLowValue) / (occLimitHighValue - occLimitLowValue) * occLimitHighCoef) + (1 - (occAndEoRetention - occLimitLowValue) / (occLimitHighValue - occLimitLowValue)) * occLimitLowCoef;
+        var occRetentionWeightedCoeff = ((occAndEoRetention - occLimitLowValue) / (occLimitHighValue - occLimitLowValue) * occLimitHighCoefficient) + (1 - (occAndEoRetention - occLimitLowValue) / (occLimitHighValue - occLimitLowValue)) * occLimitLowCoefficient;
 
         //F172 in Calculations excel sheet
         var limitRetentionFactor = occRetentionWeightedCoeff - retentionWeightedCoeff;
@@ -1003,7 +1003,7 @@ public class RaterService : IRaterService
         var occAggLowSplitLimitValue = lowRetainedFactorMatrixValue?.RetainedValue;
 
         //F180 in Calculations excel sheet
-        var occAggLowSplitLimitCoef = lowRetainedFactorMatrixValue?.FactorEO;
+        var occAggLowSplitLimitCoefficient = lowRetainedFactorMatrixValue?.FactorEO;
 
         var highRetainedValue = retainedValueFactorMatrix.Where(x => x.RetainedValue > retainedSplitLimitValue).OrderBy(x => x.RetainedValue).FirstOrDefault();
 
@@ -1011,10 +1011,10 @@ public class RaterService : IRaterService
         var occAggHighSplitLimitValue = highRetainedValue?.RetainedValue;
 
         //F181 in Calculations excel sheet
-        var occAggHighSplitLimitCoef = highRetainedValue?.FactorEO;
+        var occAggHighSplitLimitCoefficient = highRetainedValue?.FactorEO;
 
         //F183 in Calculations excel sheet
-        var splitLimitFactor = ((retainedSplitLimitValue - occAggLowSplitLimitValue) / (occAggHighSplitLimitValue - occAggLowSplitLimitValue) * occAggHighSplitLimitCoef) + (1 - (retainedSplitLimitValue - occAggLowSplitLimitValue) / (occAggHighSplitLimitValue - occAggLowSplitLimitValue)) * occAggLowSplitLimitCoef;
+        var splitLimitFactor = ((retainedSplitLimitValue - occAggLowSplitLimitValue) / (occAggHighSplitLimitValue - occAggLowSplitLimitValue) * occAggHighSplitLimitCoefficient) + (1 - (retainedSplitLimitValue - occAggLowSplitLimitValue) / (occAggHighSplitLimitValue - occAggLowSplitLimitValue)) * occAggLowSplitLimitCoefficient;
 
         //F187 in Calculations excel sheet
         var retainedSharedLimit = 100;
@@ -1027,7 +1027,7 @@ public class RaterService : IRaterService
         var sharedLimitLowValue = lowRetainedValueFactor?.RetainedValuePercent / 100;
 
         //F191 in Calculations excel sheet
-        var sharedLimitLowCoef = lowRetainedValueFactor?.Factor;
+        var sharedLimitLowCoefficient = lowRetainedValueFactor?.Factor;
 
         var highRetainedValueFactor = retainedValueFactor.Where(x => x.RetainedValuePercent > retainedSharedLimit).OrderBy(x => x.RetainedValuePercent).FirstOrDefault();
 
@@ -1035,10 +1035,10 @@ public class RaterService : IRaterService
         var sharedLimitHighValue = highRetainedValueFactor?.RetainedValuePercent / 100;
 
         //F192 in Calculations excel sheet
-        var sharedLimitHighCoef = highRetainedValueFactor?.Factor;
+        var sharedLimitHighCoefficient = highRetainedValueFactor?.Factor;
 
         //F194 in Calculations excel sheet
-        var sharedLimit = (retainedSharedLimit - sharedLimitLowValue) / (sharedLimitHighValue - sharedLimitLowValue) * (sharedLimitHighCoef - sharedLimitLowCoef) + sharedLimitLowCoef;
+        var sharedLimit = (retainedSharedLimit - sharedLimitLowValue) / (sharedLimitHighValue - sharedLimitLowValue) * (sharedLimitHighCoefficient - sharedLimitLowCoefficient) + sharedLimitLowCoefficient;
 
         //F196 in Calculations excel sheet
         var xsLimitFactor = 1;
