@@ -37,7 +37,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<RatingFactorMaster>? RatingFactor { get; set; } = null;
     public DbSet<FormEligibility>? FormEligibilities { get; set; } = null;
     public DbSet<LimitRetentionFactor>? LimitRetentionFactors { get; set; } = null;
-    public DbSet<OccLimitFactor>? OccLimitFactors { get; set; } = null;
     public DbSet<ProjectTypeFactor>? ProjectTypeFactors { get; set; } = null;
     public DbSet<RetainedValueFactor>? RetainedValueFactors { get; set; } = null;
     public DbSet<RetainedValueFactorMatrix>? RetainedValueFactorMatrixs { get; set; } = null;
