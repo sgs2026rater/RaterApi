@@ -30,7 +30,9 @@ public class RaterService : IRaterService
     private readonly IRetainedValueFactorRepository _retainedValueFactorRepository;
     private readonly IRetainedValueFactorMatrixRepository _retainedValueFactorMatrixRepository;
     private readonly IRevenueBaseRateRepository _revenueBaseRateRepository;
-    
+    private readonly IBusinessSizeDefinitionRepository _businessSizeDefinitionRepository;
+    private readonly IRatingFactorSectionEnabilityRepository _ratingFactorSectionEnabilityRepository;
+
 
     private readonly IIncludedCoverageEnhancementsRepository _includedCoverageEnhancementsRepository;
     private readonly IOptCovTable1Repository _optCovTable1Repository;
@@ -72,7 +74,9 @@ public class RaterService : IRaterService
         IOptionalCoverageTable1Repository optionalCoverageTable1Repository,
         IDisplayedDefaultPerilRepository displayedDefaultPerilRepository,
         IDataValidationRepository dataValidationRepository,
-        IOptionalCoveragesTable2Repository optionalCoveragesTable2Repository)
+        IOptionalCoveragesTable2Repository optionalCoveragesTable2Repository,
+        IBusinessSizeDefinitionRepository businessSizeDefinitionRepository,
+        IRatingFactorSectionEnabilityRepository ratingFactorSectionEnabilityRepository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -96,6 +100,8 @@ public class RaterService : IRaterService
         _displayedDefaultPerilRepository = displayedDefaultPerilRepository;
         _dataValidationRepository = dataValidationRepository;
         _optionalCoveragesTable2Repository = optionalCoveragesTable2Repository;
+        _businessSizeDefinitionRepository = businessSizeDefinitionRepository;
+        _ratingFactorSectionEnabilityRepository = ratingFactorSectionEnabilityRepository;
     }
 
 
@@ -498,6 +504,7 @@ public class RaterService : IRaterService
         }
         //Option2 and Option3 is not part of Design Professional workflow.
         //Option1 is filled from profile tab.
+    
     }
 
     /// <summary>
@@ -782,13 +789,13 @@ public class RaterService : IRaterService
         var occrLimit = coverage?.OccuranceLimit ?? 0m;
         if (optionalEnhancements != null && optionalEnhancements.Any())
         {
-            foreach (var oe in optionalEnhancements ?? Enumerable.Empty<OptionalEnhancement>())
+            foreach (var oe in optionalEnhancements)
             {
                 var optionalCoverage = optionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == oe.OptionalEnhancementName)?.OptionalEnhancementValue;
 
                 decimal optionalCoverageValue = optionalCoverage == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(optionalCoverage);
 
-                var optionalCoverages = await _occLimitFactorRepository.GetAll(_raterOptions.Version);
+                var optionalCoverages = await _occLimitFactorRepository.GetByEnhancementName(_raterOptions.Version, oe.OptionalEnhancementName ?? string.Empty);
 
                 int percentageOptionalCoverage = (int)Math.Round((optionalCoverageValue / occrLimit * 100), MidpointRounding.AwayFromZero);
 
@@ -875,9 +882,16 @@ public class RaterService : IRaterService
                         .Where(f => additionalRiskProfile.ProjectTypes.Contains(f.ProjectType))
                         .Sum(f => f.Factor);
 
-            rscf = (totalRscf / additionalRiskProfile?.ProjectTypes?.Count) * _raterDetails?.RatingFactorStep?.ClaimHistoryRatingFactorDetails?.Factor
-                                                            //* _raterDetails?.RatingFactorStep?.RiskProfileRatingFactorDetails?.Factor
-                                                            * _raterDetails?.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor;
+            var size = await _businessSizeDefinitionRepository.GetByRevenue(_raterOptions.Version, _raterDetails?.Profile?.Revenue ?? 0M);
+            
+            var claimHistoryEnabled = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.ClaimHistory, size?.Size ?? 0);
+            var riskManagement = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.RiskManagement, size?.Size ?? 0);
+            var complexityOfRisk = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.ComplexityOfRisk, size?.Size ?? 0);
+
+            rscf = (totalRscf / additionalRiskProfile?.ProjectTypes?.Count)
+                                                            * (claimHistoryEnabled?.Enabled == true ? _raterDetails?.RatingFactorStep?.ClaimHistoryRatingFactorDetails?.Factor ?? 1 : 1)
+                                                            * (riskManagement?.Enabled == true ? _raterDetails?.RatingFactorStep?.RiskProfileRatingFactorDetails?.Factor ?? 1 : 1)
+                                                            * (complexityOfRisk?.Enabled == true ? _raterDetails?.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor ?? 1 : 1);
         }
         else
         {

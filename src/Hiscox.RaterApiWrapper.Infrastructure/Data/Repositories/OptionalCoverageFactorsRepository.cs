@@ -24,4 +24,12 @@ public class OptionalCoverageFactorsRepository : RepositoryBase, IOptionalCovera
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<OptionalCoverageFactor>> GetByEnhancementName(string version, string enhancementName)
+    {
+        return await _context.OptionalCoverageFactors!
+            .Where(_ => _.Version == version && _.Type == enhancementName)
+            .OrderBy(_ => _.Id)
+            .ToListAsync();
+    }
+
 }

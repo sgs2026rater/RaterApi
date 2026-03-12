@@ -7,4 +7,5 @@ namespace Hiscox.RaterApiWrapper.Application.Abstractions;
 public interface IOptionalCoverageFactorsRepository
 {
     Task<IEnumerable<OptionalCoverageFactor>> GetAll(string version);
+    Task<IEnumerable<OptionalCoverageFactor>> GetByEnhancementName(string version, string enhancementName);
 }

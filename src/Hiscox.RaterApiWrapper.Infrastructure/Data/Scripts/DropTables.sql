@@ -23,5 +23,7 @@ drop TABLE OptionalCoverageTable1;
 drop TABLE DisplayedDefaultPerils;
 drop TABLE DataValidations;
 drop TABLE OptionalCoveragesTable2s;
+drop TABLE BusinessSizeDefinition;
+drop TABLE RatingFactorSectionEnability;
 
 drop TABLE __EFMigrationsHistory;

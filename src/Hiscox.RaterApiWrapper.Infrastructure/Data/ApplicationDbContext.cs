@@ -52,6 +52,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<DisplayedDefaultPeril>? DisplayedDefaultPerils { get; set; } = null;
     public DbSet<DataValidation>? DataValidations { get; set; } = null;
     public DbSet<OptionalCoveragesTable2>? OptionalCoveragesTable2s { get; set; } = null;
+    public DbSet<BusinessSizeDefinition>? BusinessSizeDefinitions { get; set; } = null;
+    public DbSet<RatingFactorSectionEnability>? RatingFactorSectionEnabilities { get; set; } = null;
 
     #endregion Coverage (Tab 6)
 
