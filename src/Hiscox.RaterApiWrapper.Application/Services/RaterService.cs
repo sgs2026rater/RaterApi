@@ -35,6 +35,9 @@ public class RaterService : IRaterService
     private readonly IIncludedCoverageEnhancementsRepository _includedCoverageEnhancementsRepository;
     private readonly IOptCovTable1Repository _optCovTable1Repository;
     private readonly IOptionalCoverageTable1Repository _optionalCoverageTable1Repository;
+    private readonly IDisplayedDefaultPerilRepository _displayedDefaultPerilRepository;
+    private readonly IDataValidationRepository _dataValidationRepository;
+    private readonly IOptionalCoveragesTable2Repository _optionalCoveragesTable2Repository;
 
     private readonly RaterDetails _raterDetails = new();
     private readonly ILogger _logger;
@@ -66,7 +69,10 @@ public class RaterService : IRaterService
         IRevenueBaseRateRepository revenueBaseRateRepository,
         IIncludedCoverageEnhancementsRepository includedCoverageEnhancementsRepository,
         IOptCovTable1Repository optCovTable1Repository,
-        IOptionalCoverageTable1Repository optionalCoverageTable1Repository)
+        IOptionalCoverageTable1Repository optionalCoverageTable1Repository,
+        IDisplayedDefaultPerilRepository displayedDefaultPerilRepository,
+        IDataValidationRepository dataValidationRepository,
+        IOptionalCoveragesTable2Repository optionalCoveragesTable2Repository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -87,6 +93,9 @@ public class RaterService : IRaterService
         _includedCoverageEnhancementsRepository = includedCoverageEnhancementsRepository;
         _optCovTable1Repository = optCovTable1Repository;
         _optionalCoverageTable1Repository = optionalCoverageTable1Repository;
+        _displayedDefaultPerilRepository = displayedDefaultPerilRepository;
+        _dataValidationRepository = dataValidationRepository;
+        _optionalCoveragesTable2Repository = optionalCoveragesTable2Repository;
     }
 
 
@@ -388,33 +397,36 @@ public class RaterService : IRaterService
         {
             // fallback sample records to preserve existing behavior when repository doesn't return data
             records = new List<OptionalCoveragesTable1>() {
-                 new() {Version="", Id = 0, OptionalAdditionalCoverage = "Crisis Management", ValueOfInsurance = 1.97m, Premium = 45} ,
-                 new OptionalCoveragesTable1() {Version="", Id = 0, OptionalAdditionalCoverage = "Media activities", ValueOfInsurance = 10.53m, Premium = 243} };
+                 new() { Version="", Id = 0, OptionalAdditionalCoverage = "Crisis Management", ValueOfInsurance = 1.97m, Premium = 45 } ,
+                 new OptionalCoveragesTable1() { Version="", Id = 0, OptionalAdditionalCoverage = "Media activities", ValueOfInsurance = 10.53m, Premium = 243 } };
         }
 
         _raterDetails.OptionalCoveragesTable1Records = records;
         return _raterDetails.OptionalCoveragesTable1Records;
     }
-    internal Dictionary<string, string> LoadOptionalCoverageNameToDefaultAmountMap()
+    internal async Task<Dictionary<string, string>> LoadOptionalCoverageNameToDefaultAmountMap()
     {
-        _raterDetails.OptionalCoverageNameToDefaultAmountMap = new Dictionary<string, string>()
-                                                                {{ "Crisis Management", "50000" },{"Media activities", "Full"}};
         //TODO:Default amount to be fetched from D67 onwards in OptCov Sheet.
+        //_raterDetails.OptionalCoverageNameToDefaultAmountMap = (await _displayedDefaultPerilRepository.GetAll(_raterOptions.Version))//.Select(_ => new { _.DefaultPeril, _.DefaultValueWhenSwitchedOn }).ToDictionary<string, string>(_ => _.DefaultPeril, _ => _.DefaultValueWhenSwitchedOn);
+        _raterDetails.OptionalCoverageNameToDefaultAmountMap = new Dictionary<string, string>() { { "Crisis Management", "50000" },
+                                                                                                  { "Media activities", "Full" } };
         return _raterDetails.OptionalCoverageNameToDefaultAmountMap;
     }
-    internal Dictionary<string, string> LoadOptionalCoverageNameToDataValidationMap()
+    internal async Task<Dictionary<string, string>> LoadOptionalCoverageNameToDataValidationMap()
     {
-        _raterDetails.OptionalCoverageNameToDataValidationMap = new Dictionary<string, string>()
-                                                               {{ "Crisis Management", "Vol" },{"Media activities", "Vol"}};
         //TODO:DataValidation(AOE/Vol etc.) to be fetched from AW7 to AX58 range in OptCov Sheet.
+        //_raterDetails.OptionalCoverageNameToDataValidationMap = (await _dataValidationRepository.GetAll(_raterOptions.Version));
+        _raterDetails.OptionalCoverageNameToDataValidationMap = new Dictionary<string, string>() { { "Crisis Management", "Vol" },
+                                                                                                   { "Media activities", "Vol" } };
 
         return _raterDetails.OptionalCoverageNameToDataValidationMap;
     }
-    internal Dictionary<string, string> LoadOptionalCoverageToDifferentialMap()
+    internal async Task<Dictionary<string, string>> LoadOptionalCoverageToDifferentialMap()
     {
-        _raterDetails.OptionalCoverageToDifferentialMap = new Dictionary<string, string>()
-                                                                {{ "Crisis Management", "0% / $0" },{"Media activities", "0% / $0"}};
         //TODO:Differential to be fetched from C276 to R335 range in Optional_Coverages Sheet.
+        //_raterDetails.OptionalCoverageToDifferentialMap = (await _optionalCoveragesTable2Repository.GetAll(_raterOptions.Version));
+        _raterDetails.OptionalCoverageToDifferentialMap = new Dictionary<string, string>() { { "Crisis Management", "0% / $0" },
+                                                                                             { "Media activities", "0% / $0" } };
 
         return _raterDetails.OptionalCoverageToDifferentialMap;
     }
@@ -422,9 +434,10 @@ public class RaterService : IRaterService
     {
         await LoadIncludedCoverageEnhancementsAsync();
         await LoadOptCovTable1Async();
-        LoadOptionalCoverageNameToDefaultAmountMap();
         await LoadOptionalCoveragesTable1Async();
-        LoadOptionalCoverageToDifferentialMap();
+        await LoadOptionalCoverageNameToDefaultAmountMap();
+        await LoadOptionalCoverageNameToDataValidationMap();
+        await LoadOptionalCoverageToDifferentialMap();
 
         foreach (var optionalEnhancement in _raterDetails?.RaterInputs?.OptionalEnhancements ?? Enumerable.Empty<OptionalEnhancement>())
         {

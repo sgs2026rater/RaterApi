@@ -12,6 +12,36 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "DataValidations",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Peril = table.Column<string>(type: "varchar(55)", nullable: false),
+                    DataValidationToUse = table.Column<string>(type: "varchar(10)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DataValidations", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DisplayedDefaultPerils",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    DefaultPeril = table.Column<string>(type: "varchar(55)", nullable: false),
+                    IsSwitchedOnByDefault = table.Column<bool>(type: "bit", nullable: false),
+                    DefaultValueWhenSwitchedOn = table.Column<string>(type: "varchar(55)", nullable: false),
+                    ApplicableTo = table.Column<string>(type: "varchar(55)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DisplayedDefaultPerils", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Form",
                 columns: table => new
                 {
@@ -163,6 +193,20 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OptionalCoverageFactor", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OptionalCoveragesTable2s",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Coverage = table.Column<string>(type: "varchar(55)", nullable: false),
+                    Differential = table.Column<string>(type: "varchar(20)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OptionalCoveragesTable2s", x => new { x.Version, x.Id });
                 });
 
             migrationBuilder.CreateTable(
@@ -384,6 +428,12 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "DataValidations");
+
+            migrationBuilder.DropTable(
+                name: "DisplayedDefaultPerils");
+
+            migrationBuilder.DropTable(
                 name: "FormEligibility");
 
             migrationBuilder.DropTable(
@@ -406,6 +456,9 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "OptionalCoverageFactor");
+
+            migrationBuilder.DropTable(
+                name: "OptionalCoveragesTable2s");
 
             migrationBuilder.DropTable(
                 name: "OptionalCoverageTable1");

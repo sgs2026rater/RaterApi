@@ -25,8 +25,16 @@ public static class DependencyInjection
         services.AddScoped<IRetainedValueFactorRepository, RetainedValueFactorRepository>();
         services.AddScoped<IRetainedValueFactorMatrixRepository, RetainedValueFactorMatrixRepository>();
         services.AddScoped<IRevenueBaseRateRepository, RevenueBaseRateRepository>();
+
+        #region Coverage (Tab 6)
+
         services.AddScoped<IIncludedCoverageEnhancementsRepository, IncludedCoverageEnhancementsRepository>();
         services.AddScoped<IOptCovTable1Repository, OptCovTable1Repository>();
         services.AddScoped<IOptionalCoverageTable1Repository, OptionalCoverageTable1Repository>();
+        services.AddScoped<IDisplayedDefaultPerilRepository, DisplayedDefaultPerilRepository>();
+        services.AddScoped<IDataValidationRepository, DataValidationRepository>();
+        services.AddScoped<IOptionalCoveragesTable2Repository, OptionalCoveragesTable2Repository>();
+
+        #endregion Coverage (Tab 6)
     }
 }

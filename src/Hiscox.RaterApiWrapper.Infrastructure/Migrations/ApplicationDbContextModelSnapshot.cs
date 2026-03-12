@@ -22,6 +22,55 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.DataValidation", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DataValidationToUse")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("Peril")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("DataValidations", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.DisplayedDefaultPeril", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicableTo")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("DefaultPeril")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("DefaultValueWhenSwitchedOn")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("IsSwitchedOnByDefault")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("DisplayedDefaultPerils", (string)null);
+                });
+
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.Form", b =>
                 {
                     b.Property<string>("Version")
@@ -390,6 +439,27 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.HasKey("Version", "Id");
 
                     b.ToTable("OptionalCoverageTable1", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptionalCoveragesTable2", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Coverage")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Differential")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("OptionalCoveragesTable2s", (string)null);
                 });
 
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.PolicyDetails", b =>

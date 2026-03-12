@@ -21,5 +21,8 @@ drop TABLE OptionalCoverageFactor;
 drop TABLE IncludedCoverageEnhancements;
 drop TABLE OptCovTable1;
 drop TABLE OptionalCoverageTable1;
+drop TABLE DisplayedDefaultPerils;
+drop TABLE DataValidations;
+drop TABLE OptionalCoveragesTable2s;
 
 drop TABLE __EFMigrationsHistory;
