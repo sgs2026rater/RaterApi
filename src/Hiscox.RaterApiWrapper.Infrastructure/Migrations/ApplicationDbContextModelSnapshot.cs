@@ -253,6 +253,68 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.ToTable("IndustrySubSector", (string)null);
                 });
 
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.LimitRetentionFactor", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("EoHigh")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal?>("EoLow")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal?>("EoMedium")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal?>("FactorCyber")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal?>("FactorGlPremisesOperations")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal?>("FactorGlProductsOperations")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<long?>("LimitRetentionOption")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("LimitRetentionFactor", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OccLimitFactor", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ClassActionSublimit")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("CrisisManagement")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("MediaActivities")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("PercentOfOccLimit")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("TechnologyCoverageExtension")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("OccLimitFactor", (string)null);
+                });
+
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptCovTable1", b =>
                 {
                     b.Property<string>("Version")
@@ -280,6 +342,29 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.HasKey("Version", "Id");
 
                     b.ToTable("OptCovTable1", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptionalCoverageFactor", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Factor")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PercentOfOccLimit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("OptionalCoverageFactor", (string)null);
                 });
 
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptionalCoveragesTable1", b =>
@@ -444,6 +529,90 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.HasKey("Version", "Id");
 
                     b.ToTable("RatingFactorMaster", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.RetainedValueFactor", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Factor")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("RetainedValuePercent")
+                        .HasColumnType("int");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("RetainedValueFactor", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.RetainedValueFactorMatrix", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("FactorCyber")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("FactorEO")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("FactorGL")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("RetainedValue")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("RetainedValueFactorMatrix", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.RevenueBaseRate", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("BaseRateAHC")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("BaseRateCyber")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("BaseRateEO")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("BaseRateHomeHealthcare")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("BaseRateSpas")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("BaseRateTechEO")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("GLPremisesOperations1")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("GLPremisesOperations2")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int?>("Revenue")
+                        .HasColumnType("int");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("RevenueBaseRate", (string)null);
                 });
 
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.FormEligibility", b =>

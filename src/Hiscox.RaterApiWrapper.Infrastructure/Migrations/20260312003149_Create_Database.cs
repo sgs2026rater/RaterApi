@@ -69,6 +69,23 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IncludedCoverageEnhancements",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Form = table.Column<string>(type: "varchar(55)", nullable: false),
+                    LineOfBusiness = table.Column<string>(type: "varchar(55)", nullable: false),
+                    ShortenedLineOfBusiness = table.Column<string>(type: "varchar(10)", nullable: false),
+                    ClaimsMode = table.Column<string>(type: "varchar(50)", nullable: false),
+                    CoverageEnhancements = table.Column<string>(type: "varchar(500)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IncludedCoverageEnhancements", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IndustrySector",
                 columns: table => new
                 {
@@ -79,6 +96,88 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_IndustrySector", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LimitRetentionFactor",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    LimitRetentionOption = table.Column<long>(type: "bigint", nullable: true),
+                    EoLow = table.Column<decimal>(type: "decimal(18,4)", nullable: true),
+                    EoMedium = table.Column<decimal>(type: "decimal(18,4)", nullable: true),
+                    EoHigh = table.Column<decimal>(type: "decimal(18,4)", nullable: true),
+                    FactorGlPremisesOperations = table.Column<decimal>(type: "decimal(18,4)", nullable: true),
+                    FactorGlProductsOperations = table.Column<decimal>(type: "decimal(18,4)", nullable: true),
+                    FactorCyber = table.Column<decimal>(type: "decimal(18,4)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LimitRetentionFactor", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OccLimitFactor",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    PercentOfOccLimit = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    ClassActionSublimit = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    CrisisManagement = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    MediaActivities = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    TechnologyCoverageExtension = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OccLimitFactor", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OptCovTable1",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    OptionalCoverage = table.Column<string>(type: "varchar(55)", nullable: false),
+                    ApplicableToCoverageOrGTC = table.Column<string>(type: "varchar(15)", nullable: false),
+                    ApplicableToFormOrEndorsement = table.Column<string>(type: "varchar(25)", nullable: false),
+                    ENumber = table.Column<string>(type: "varchar(25)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OptCovTable1", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OptionalCoverageFactor",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    PercentOfOccLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Type = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Factor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OptionalCoverageFactor", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OptionalCoverageTable1",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    OptionalAdditionalCoverage = table.Column<string>(type: "varchar(55)", nullable: false),
+                    ValueOfInsurance = table.Column<string>(type: "varchar(55)", nullable: false),
+                    Premium = table.Column<string>(type: "varchar(55)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OptionalCoverageTable1", x => new { x.Version, x.Id });
                 });
 
             migrationBuilder.CreateTable(
@@ -117,6 +216,20 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectTypeFactor",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    ProjectType = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Factor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTypeFactor", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RatingFactorMaster",
                 columns: table => new
                 {
@@ -133,6 +246,57 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RatingFactorMaster", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RetainedValueFactor",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    RetainedValuePercent = table.Column<int>(type: "int", nullable: false),
+                    Factor = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RetainedValueFactor", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RetainedValueFactorMatrix",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    RetainedValue = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    FactorEO = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    FactorGL = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    FactorCyber = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RetainedValueFactorMatrix", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RevenueBaseRate",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Revenue = table.Column<int>(type: "int", nullable: true),
+                    BaseRateEO = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    GLPremisesOperations1 = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    GLPremisesOperations2 = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    BaseRateCyber = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    BaseRateTechEO = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    BaseRateAHC = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    BaseRateHomeHealthcare = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    BaseRateSpas = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RevenueBaseRate", x => new { x.Version, x.Id });
                 });
 
             migrationBuilder.CreateTable(
@@ -229,10 +393,40 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 name: "GeographicMod");
 
             migrationBuilder.DropTable(
+                name: "IncludedCoverageEnhancements");
+
+            migrationBuilder.DropTable(
+                name: "LimitRetentionFactor");
+
+            migrationBuilder.DropTable(
+                name: "OccLimitFactor");
+
+            migrationBuilder.DropTable(
+                name: "OptCovTable1");
+
+            migrationBuilder.DropTable(
+                name: "OptionalCoverageFactor");
+
+            migrationBuilder.DropTable(
+                name: "OptionalCoverageTable1");
+
+            migrationBuilder.DropTable(
                 name: "PolicyDetails");
 
             migrationBuilder.DropTable(
+                name: "ProjectTypeFactor");
+
+            migrationBuilder.DropTable(
                 name: "RatingFactorMaster");
+
+            migrationBuilder.DropTable(
+                name: "RetainedValueFactor");
+
+            migrationBuilder.DropTable(
+                name: "RetainedValueFactorMatrix");
+
+            migrationBuilder.DropTable(
+                name: "RevenueBaseRate");
 
             migrationBuilder.DropTable(
                 name: "Form");
