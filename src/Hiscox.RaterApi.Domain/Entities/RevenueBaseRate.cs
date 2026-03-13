@@ -1,0 +1,18 @@
+﻿// Copyright (c) Hiscox Insurance. All rights reserved.
+
+namespace Hiscox.RaterApi.Domain.Entities;
+
+public class RevenueBaseRate
+{
+    public required string Version { get; set; }
+    public int Id { get; set; }
+    public int? Revenue { get; set; }
+    public decimal BaseRateEO { get; set; }
+    public decimal GLPremisesOperations1 { get; set; }
+    public decimal GLPremisesOperations2 { get; set; }
+    public decimal BaseRateCyber { get; set; }
+    public decimal BaseRateTechEO { get; set; }
+    public decimal BaseRateAHC { get; set; }
+    public decimal BaseRateHomeHealthcare { get; set; }
+    public decimal BaseRateSpas { get; set; }
+}

@@ -1,6 +1,6 @@
-@Hiscox.RaterApiWrapper.Presentation.Api_HostAddress = https://localhost:7293
+@Hiscox.RaterApi.Presentation.Api_HostAddress = https://localhost:7293
 
-POST {{Hiscox.RaterApiWrapper.Presentation.Api_HostAddress}}/api/rater/
+POST {{Hiscox.RaterApi.Presentation.Api_HostAddress}}/api/rater/
 Accept: application/json
 Content-Type: application/json
 {
