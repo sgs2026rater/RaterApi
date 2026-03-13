@@ -32,10 +32,10 @@ public record RaterDetails
     public string? IncludedCoverageEnhancements { get; set; }
     public List<OptionalEnhancement>? OptionalEnhancements { get; set; }
     public List<OptCovTable1>? OptCovTable1Records {  get; set; }
-    public Dictionary<string,string>? OptionalCoverageNameToDefaultAmountMap {  get; set; }
-    public Dictionary<string,string>? OptionalCoverageNameToDataValidationMap { get; set;  }
+    public List<DisplayedDefaultPeril>? DisplayedDefaultPerils { get; set; }
+    public List<DataValidation>? DataValidations { get; set; }
     public List<OptionalCoveragesTable1>? OptionalCoveragesTable1Records { get; set; }
-    public Dictionary<string,string>? OptionalCoverageToDifferentialMap {  get; set; }
+    public List<OptionalCoveragesTable2>? OptionalCoveragesTable2Records { get; set; }
 
     #endregion Coverage(Tab6)
 

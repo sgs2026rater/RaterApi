@@ -10,7 +10,7 @@ public class OptionalEnhancement
     public string? OptionalEnhancementName { get; set; }
 
     public string? OptionalEnhancementValue { get; set; }
-    public string? Percentage { get; set; }
+    public string? Differential { get; set; }
     public string? ApplicableTo { get; set; }
     public string? Version { get; set; }
 }

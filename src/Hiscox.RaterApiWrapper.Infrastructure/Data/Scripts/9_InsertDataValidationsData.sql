@@ -51,5 +51,5 @@ INSERT [dbo].[DataValidations] ([Version], [Id], [Peril], [DataValidationToUse])
 INSERT [dbo].[DataValidations] ([Version], [Id], [Peril], [DataValidationToUse]) VALUES (N'v2.0.101', 48, N'Removed Settlement Clause', N'PoP')
 INSERT [dbo].[DataValidations] ([Version], [Id], [Peril], [DataValidationToUse]) VALUES (N'v2.0.101', 49, N'Contingent Property Damage Carveback', N'PoP')
 INSERT [dbo].[DataValidations] ([Version], [Id], [Peril], [DataValidationToUse]) VALUES (N'v2.0.101', 50, N'Duty to Pay', N'PoP')
-INSERT [dbo].[DataValidations] ([Version], [Id], [Peril], [DataValidationToUse]) VALUES (N'v2.0.101', 51, N'Contractors Pollution (Occ)', N'AoE')
+--INSERT [dbo].[DataValidations] ([Version], [Id], [Peril], [DataValidationToUse]) VALUES (N'v2.0.101', 51, N'Contractors Pollution (Occ)', N'AoE') --TODO: This value is a duplicate of row 10 but value is different. Need to check how to handle this.
 GO

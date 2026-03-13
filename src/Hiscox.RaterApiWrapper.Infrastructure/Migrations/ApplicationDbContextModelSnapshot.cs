@@ -22,6 +22,28 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.BusinessSizeDefinition", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoverageType")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Revenue")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("BusinessSizeDefinition", (string)null);
+                });
+
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.DataValidation", b =>
                 {
                     b.Property<string>("Version")
@@ -241,6 +263,26 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.ToTable("IncludedCoverageEnhancements", (string)null);
                 });
 
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.IndustryModifier", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("NAICSModifier")
+                        .HasColumnType("decimal(18,15)");
+
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("IndustryModifier", (string)null);
+                });
+
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.IndustrySector", b =>
                 {
                     b.Property<string>("Version")
@@ -336,34 +378,6 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.ToTable("LimitRetentionFactor", (string)null);
                 });
 
-            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OccLimitFactor", b =>
-                {
-                    b.Property<string>("Version")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ClassActionSublimit")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("CrisisManagement")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("MediaActivities")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("PercentOfOccLimit")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("TechnologyCoverageExtension")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.HasKey("Version", "Id");
-
-                    b.ToTable("OccLimitFactor", (string)null);
-                });
-
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptCovTable1", b =>
                 {
                     b.Property<string>("Version")
@@ -391,6 +405,32 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.HasKey("Version", "Id");
 
                     b.ToTable("OptCovTable1", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptionalAdditionalCoverageFactor", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Coverage")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("MaterialFactor")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("MinimalFactor")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("YesFactor")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("OptionalAdditionalCoverageFactor", (string)null);
                 });
 
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.OptionalCoverageFactor", b =>
@@ -599,6 +639,30 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                     b.HasKey("Version", "Id");
 
                     b.ToTable("RatingFactorMaster", (string)null);
+                });
+
+            modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.RatingFactorSectionEnability", b =>
+                {
+                    b.Property<string>("Version")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Section")
+                        .HasMaxLength(200)
+                        .HasColumnType("int");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.HasKey("Version", "Id");
+
+                    b.ToTable("RatingFactorSectionEnability", (string)null);
                 });
 
             modelBuilder.Entity("Hiscox.RaterApiWrapper.Domain.Entities.RetainedValueFactor", b =>

@@ -415,32 +415,29 @@ public class RaterService : IRaterService
         _raterDetails.OptionalCoveragesTable1Records = records;
         return _raterDetails.OptionalCoveragesTable1Records;
     }
-    internal async Task<Dictionary<string, string>> LoadOptionalCoverageNameToDefaultAmountMap()
-    {
-        //TODO:Default amount to be fetched from D67 onwards in OptCov Sheet.
-        //_raterDetails.OptionalCoverageNameToDefaultAmountMap = (await _displayedDefaultPerilRepository.GetAll(_raterOptions.Version))//.Select(_ => new { _.DefaultPeril, _.DefaultValueWhenSwitchedOn }).ToDictionary<string, string>(_ => _.DefaultPeril, _ => _.DefaultValueWhenSwitchedOn);
-        _raterDetails.OptionalCoverageNameToDefaultAmountMap = new Dictionary<string, string>() { { "Crisis Management", "50000" },
-                                                                                                  { "Media activities", "Full" } };
-        return _raterDetails.OptionalCoverageNameToDefaultAmountMap;
-    }
-    internal async Task<Dictionary<string, string>> LoadOptionalCoverageNameToDataValidationMap()
-    {
-        //TODO:DataValidation(AOE/Vol etc.) to be fetched from AW7 to AX58 range in OptCov Sheet.
-        //_raterDetails.OptionalCoverageNameToDataValidationMap = (await _dataValidationRepository.GetAll(_raterOptions.Version));
-        _raterDetails.OptionalCoverageNameToDataValidationMap = new Dictionary<string, string>() { { "Crisis Management", "Vol" },
-                                                                                                   { "Media activities", "Vol" } };
 
-        return _raterDetails.OptionalCoverageNameToDataValidationMap;
-    }
-    internal async Task<Dictionary<string, string>> LoadOptionalCoverageToDifferentialMap()
+    internal async Task<List<DisplayedDefaultPeril>> LoadOptionalCoverageNameToDefaultAmountMap()
     {
-        //TODO:Differential to be fetched from C276 to R335 range in Optional_Coverages Sheet.
-        //_raterDetails.OptionalCoverageToDifferentialMap = (await _optionalCoveragesTable2Repository.GetAll(_raterOptions.Version));
-        _raterDetails.OptionalCoverageToDifferentialMap = new Dictionary<string, string>() { { "Crisis Management", "0% / $0" },
-                                                                                             { "Media activities", "0% / $0" } };
-
-        return _raterDetails.OptionalCoverageToDifferentialMap;
+        _raterDetails.DisplayedDefaultPerils = [.. (await _displayedDefaultPerilRepository.GetAll(_raterOptions.Version))];
+        return _raterDetails.DisplayedDefaultPerils;
     }
+
+    internal async Task<List<DataValidation>> LoadOptionalCoverageNameToDataValidationMap()
+    {
+        //TODO: The key 'Contractors Pollution (Occ)' is duplicated in row 10 and 51 in DB but the values are different. Need to check how to handle this.
+        _raterDetails.DataValidations = [.. (await _dataValidationRepository.GetAll(_raterOptions.Version))];
+
+        return _raterDetails.DataValidations;
+    }
+
+    internal async Task<List<OptionalCoveragesTable2>> LoadOptionalCoverageToDifferentialMap()
+    {
+        //TODO: The key 'Optional core coverage factor' is duplicated in row 7 and 37 in DB but the values are different. It looks like some total row. Need to check how to handle this.
+        _raterDetails.OptionalCoveragesTable2Records = [.. (await _optionalCoveragesTable2Repository.GetAll(_raterOptions.Version))];
+
+        return _raterDetails.OptionalCoveragesTable2Records;
+    }
+
     internal async Task GetOptionalEnhancements()
     {
         await LoadIncludedCoverageEnhancementsAsync();
@@ -473,7 +470,7 @@ public class RaterService : IRaterService
             {
                 optionalEnhancement.Version = matchingOptCovRecord?.ENumber;
             }
-            else if (optionalEnhancement.OptionalEnhancementValue?.ToString() == _raterDetails?.OptionalCoverageNameToDefaultAmountMap?[optionalEnhancement?.OptionalEnhancementName?.ToString() ?? ""])//TODO:Need to handle Comma in the decimal value.
+            else if (optionalEnhancement.OptionalEnhancementValue?.ToString() == _raterDetails?.DisplayedDefaultPerils?.FirstOrDefault(_ => _.DefaultPeril == (optionalEnhancement?.OptionalEnhancementName?.ToString() ?? ""))?.DefaultValueWhenSwitchedOn.Replace(",", ""))   //TODO:Need to check if we should handle Comma in the decimal value. For now assuming request doesn't have comma in the value.
             {
                 optionalEnhancement?.Version = "Included coverage enhancement";
             }
@@ -490,19 +487,19 @@ public class RaterService : IRaterService
          
             if(optionalEnhancement?.Version != "Included coverage enhancement" && optionalEnhancement?.Version != "Modified coverage enhancement")
             {
-                if (_raterDetails?.OptionalCoverageNameToDataValidationMap?[optionalEnhancement?.OptionalEnhancementName?.ToString() ?? ""] == "AOE")
+                if (_raterDetails?.DataValidations?.FirstOrDefault(_ => _.Peril == (optionalEnhancement?.OptionalEnhancementName?.ToString() ?? ""))?.DataValidationToUse == "AOE")
                 {
-                    optionalEnhancement?.Percentage = $"{matchingOptionalCoverageRecord?.ValueOfInsurance:$#,##0}";
+                    optionalEnhancement?.Differential = $"{matchingOptionalCoverageRecord?.ValueOfInsurance:$#,##0}";
                 }
                 else
                 {
-                    optionalEnhancement?.Percentage = $"{matchingOptionalCoverageRecord?.ValueOfInsurance:$0%}" + " / " + 
+                    optionalEnhancement?.Differential = $"{matchingOptionalCoverageRecord?.ValueOfInsurance:$0%}" + " / " + 
                                                      $"{matchingOptionalCoverageRecord?.Premium:$#,##0}";
                 }
             }
             else
             {
-                optionalEnhancement.Percentage = _raterDetails?.OptionalCoverageToDifferentialMap?[optionalEnhancement?.OptionalEnhancementName?.ToString() ?? ""];
+                optionalEnhancement.Differential = _raterDetails?.OptionalCoveragesTable2Records?.FirstOrDefault(_ => _.Coverage == (optionalEnhancement?.OptionalEnhancementName?.ToString() ?? ""))?.Differential;
             }
             
 

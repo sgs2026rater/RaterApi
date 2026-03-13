@@ -37,7 +37,7 @@ INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Different
 INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 34, N'Defamation Exclusion and Sublimit', N'0% / $0')
 INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 35, N'Invasion of Privacy Exclusion & Sublimit', N'0% / $0')
 INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 36, N'Media activities', N'0% / $0')
-INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 37, N'Optional core coverage factor', N'-57% / $0')
+--INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 37, N'Optional core coverage factor', N'-57% / $0')  --TODO: This value is a duplicate of row 7 but value is different. Need to check how to handle this.
 INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 38, N'Aggregate limit endorsement', N'0% / $0')
 INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 39, N'First Dollar Defense', N'-5% / -$115')
 INSERT [dbo].[OptionalCoveragesTable2s] ([Version], [Id], [Coverage], [Differential]) VALUES (N'v2.0.101', 40, N'Waiver of subrogation', N'-5% / -$115')

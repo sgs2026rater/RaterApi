@@ -12,6 +12,21 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "BusinessSizeDefinition",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    CoverageType = table.Column<int>(type: "int", nullable: false),
+                    Size = table.Column<int>(type: "int", nullable: false),
+                    Revenue = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BusinessSizeDefinition", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DataValidations",
                 columns: table => new
                 {
@@ -116,6 +131,20 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IndustryModifier",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Specialty = table.Column<string>(type: "varchar(100)", nullable: false),
+                    NAICSModifier = table.Column<decimal>(type: "decimal(18,15)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IndustryModifier", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IndustrySector",
                 columns: table => new
                 {
@@ -148,23 +177,6 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OccLimitFactor",
-                columns: table => new
-                {
-                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    PercentOfOccLimit = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    ClassActionSublimit = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    CrisisManagement = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    MediaActivities = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    TechnologyCoverageExtension = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OccLimitFactor", x => new { x.Version, x.Id });
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OptCovTable1",
                 columns: table => new
                 {
@@ -178,6 +190,22 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OptCovTable1", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OptionalAdditionalCoverageFactor",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Coverage = table.Column<string>(type: "varchar(100)", nullable: false),
+                    YesFactor = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    MinimalFactor = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    MaterialFactor = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OptionalAdditionalCoverageFactor", x => new { x.Version, x.Id });
                 });
 
             migrationBuilder.CreateTable(
@@ -290,6 +318,21 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RatingFactorMaster", x => new { x.Version, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RatingFactorSectionEnability",
+                columns: table => new
+                {
+                    Version = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Section = table.Column<int>(type: "int", maxLength: 200, nullable: false),
+                    Size = table.Column<int>(type: "int", nullable: false),
+                    Enabled = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RatingFactorSectionEnability", x => new { x.Version, x.Id });
                 });
 
             migrationBuilder.CreateTable(
@@ -428,6 +471,9 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BusinessSizeDefinition");
+
+            migrationBuilder.DropTable(
                 name: "DataValidations");
 
             migrationBuilder.DropTable(
@@ -446,13 +492,16 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
                 name: "IncludedCoverageEnhancements");
 
             migrationBuilder.DropTable(
+                name: "IndustryModifier");
+
+            migrationBuilder.DropTable(
                 name: "LimitRetentionFactor");
 
             migrationBuilder.DropTable(
-                name: "OccLimitFactor");
+                name: "OptCovTable1");
 
             migrationBuilder.DropTable(
-                name: "OptCovTable1");
+                name: "OptionalAdditionalCoverageFactor");
 
             migrationBuilder.DropTable(
                 name: "OptionalCoverageFactor");
@@ -471,6 +520,9 @@ namespace Hiscox.RaterApiWrapper.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RatingFactorMaster");
+
+            migrationBuilder.DropTable(
+                name: "RatingFactorSectionEnability");
 
             migrationBuilder.DropTable(
                 name: "RetainedValueFactor");
