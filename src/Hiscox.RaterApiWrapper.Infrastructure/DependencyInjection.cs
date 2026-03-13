@@ -27,6 +27,8 @@ public static class DependencyInjection
         services.AddScoped<IRevenueBaseRateRepository, RevenueBaseRateRepository>();
         services.AddScoped<IBusinessSizeDefinitionRepository, BusinessSizeDefinitionRepository>();
         services.AddScoped<IRatingFactorSectionEnabilityRepository, RatingFactorSectionEnabilityRepository>();
+        services.AddScoped<IIndustryModifierRepository, IndustryModifierRepository>(); 
+        services.AddScoped<IOptionalAdditionalCoverageFactorsRepository, OptionalAdditionalCoverageFactorsRepository>();
 
         #region Coverage (Tab 6)
 
