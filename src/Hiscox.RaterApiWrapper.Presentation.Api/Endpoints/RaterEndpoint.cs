@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Hiscox Insurance. All rights reserved.
 
-using Hiscox.RaterApiWrapper.Application;
 using Hiscox.RaterApiWrapper.Domain.Abstractions;
 using Hiscox.RaterApiWrapper.Domain.Entities;
 using Hiscox.RaterApiWrapper.Presentation.Api.Contracts;
@@ -17,6 +16,12 @@ public static class RaterEndpoint
         app.MapPost("api/rater", async ([FromBody] RaterRequest request, IRaterService raterService, ILogger<Program> logger) =>
         {
             var raterInputs = request.Adapt<RaterInputs>();
+            // Ensure nested AdditionalRiskProfile is set on the domain input and propagate trustees-specific value
+            if (request.AdditionalRiskProfile != null)
+            {
+                raterInputs.AdditionalRiskProfile ??= new AdditionalRiskProfile();
+                raterInputs.AdditionalRiskProfile.AlternativeExposureBase_Trustees = request.AdditionalRiskProfile.AlternativeExposureBase_Trustees;
+            }
 
             var response = await raterService.GetRateInformation(raterInputs);
             if (response.IsSuccess)

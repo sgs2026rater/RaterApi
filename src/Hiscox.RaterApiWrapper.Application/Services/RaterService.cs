@@ -50,6 +50,7 @@ public class RaterService : IRaterService
     private List<Form>? _forms;
     private readonly RaterOptions _raterOptions;
     private readonly decimal _defaultRatingFactor = 1;
+    private string? _validationErrorMessage;
 
 
     public RaterService(
@@ -130,11 +131,15 @@ public class RaterService : IRaterService
         await LoadData();
 
         _logger.LogInformation("Validate industry classifications.");
-        if (!ValidateIndustryClassifications(raterInputs.IndustryClassifications!, _raterDetails))
+        if (!ValidateIndustryClassifications(raterInputs.IndustryClassifications!, _raterDetails, raterInputs))
         {
+            if (!string.IsNullOrEmpty(_validationErrorMessage))
+            {
+                return new RaterFailureDetails("InvalidRequest", _validationErrorMessage);
+            }
             return new RaterFailureDetails("InvalidIndustryClassification", "One or more industry classifications are invalid.");
         }
-        if(!ValidateIndustryInformationExceed(raterInputs.IndustryClassifications!))
+        if (!ValidateIndustryInformationExceed(raterInputs.IndustryClassifications!))
         {
             return new RaterFailureDetails("InvalidIndustryClassification", "Maximum 5 Industry Classifications are allowed.");
         }
@@ -151,6 +156,28 @@ public class RaterService : IRaterService
         {
             //Supported Optional Enhancements are : Crisis Management/Media activities
             return new RaterFailureDetails("InvalidOptionalEnhancements", "One or more optional enhancements are invalid.");
+        }
+        // If Accountant specialty was detected, copy accountant-specific percentages from the request into RaterDetails
+        if (_raterDetails.AccountantsCheck && raterInputs.AdditionalRiskProfile != null)
+        {
+            var ap = raterInputs.AdditionalRiskProfile;
+            _raterDetails.BookKeepingServicesRevenuePercentage = ap.BookKeepingServicesRevenuePercentage;
+            _raterDetails.PersonalTaxAndEnrolledAgentServicesRevenuePercentage = ap.PersonalTaxAndEnrolledAgentServicesRevenuePercentage;
+            _raterDetails.PayrollServicesRevenuePercentage = ap.PayrollServicesRevenuePercentage;
+            _raterDetails.BusinessTaxServicesRevenuePercentage = ap.BusinessTaxServicesRevenuePercentage;
+            _raterDetails.AuditingServicesRevenuePercentage = ap.AuditingServicesRevenuePercentage;
+            _raterDetails.EstateTaxReturnsRevenuePercentage = ap.EstateTaxReturnsRevenuePercentage;
+            _raterDetails.ForensicAccountingRevenuePercentage = ap.ForensicAccountingRevenuePercentage;
+            _raterDetails.BusinessValuationsOrForecastsRevenuePercentage = ap.BusinessValuationsOrForecastsRevenuePercentage;
+            _raterDetails.LitigationSupportRevenuePercentage = ap.LitigationSupportRevenuePercentage;
+            _raterDetails.AuditingServices_HighNetWorthClients_10M_assetsRevenuePercentage = ap.AuditingServices_HighNetWorthClients_10M_assetsRevenuePercentage;
+            _raterDetails.AuditingServices_FinancialInstitutionsOrPensionsRevenuePercentage = ap.AuditingServices_FinancialInstitutionsOrPensionsRevenuePercentage;
+            _raterDetails.FinancialPlanningServicesRevenuePercentage = ap.FinancialPlanningServicesRevenuePercentage;
+            _raterDetails.TrusteeServices_PersonalTrusteeRevenuePercentage = ap.TrusteeServices_PersonalTrusteeRevenuePercentage;
+            _raterDetails.TrusteeServices_BankruptcyTrusteeRevenuePercentage = ap.TrusteeServices_BankruptcyTrusteeRevenuePercentage;
+            _raterDetails.ReviewAndCompilationsRevenuePercentage = ap.ReviewAndCompilationsRevenuePercentage;
+            _raterDetails.OtherRevenuePercentage = ap.OtherRevenuePercentage;
+            _raterDetails.HighNetWorthClientOrBusinessOver100M = ap.HighNetWorthClientOrBusinessOver100M;
         }
         _raterDetails.Revenue = raterInputs.Revenue;
 
@@ -501,7 +528,7 @@ public class RaterService : IRaterService
             {
                 optionalEnhancement.Differential = _raterDetails?.OptionalCoveragesTable2Records?.FirstOrDefault(_ => _.Coverage == (optionalEnhancement?.OptionalEnhancementName?.ToString() ?? ""))?.Differential;
             }
-            
+
 
         }
         //Option2 and Option3 is not part of Design Professional workflow.
@@ -567,7 +594,7 @@ public class RaterService : IRaterService
     /// <param name="industryClassifications"></param>
     /// <param name="worksheet"></param>
     /// <returns>A flag indicating whether the industry classifications are valid.</returns>
-    private bool ValidateIndustryClassifications(IEnumerable<IndustryClassification> industryClassifications, RaterDetails worksheet)
+    private bool ValidateIndustryClassifications(IEnumerable<IndustryClassification> industryClassifications, RaterDetails worksheet, RaterInputs raterInputs)
     {
         if (!industryClassifications.Any())
         {
@@ -601,6 +628,31 @@ public class RaterService : IRaterService
             industryClassification.SectorId = matchingIndustrySector.Id;
             industryClassification.SubSectorId = matchingIndustrySubSector.Id;
             industryClassification.SpecialtyId = matchingIndustrySpecialty.Id;
+
+            if (industryClassification.SpecialtyName == "Accountants")
+            {
+                worksheet.AccountantsCheck = true;
+            }
+            if (industryClassification.SpecialtyName == "Claims Adjuster" || industryClassification.SpecialtyName == "Public Claims Adjuster")
+            {
+                worksheet.ClaimsAdjustersCheck = true;
+            }
+            if(industryClassification.SpecialtyName == "Interim Management Services")
+            {
+                worksheet.InterimManagementCheck = true;
+            }
+            if (industryClassification.SpecialtyName == "Trustees")
+            {
+                // AlternativeExposureBase_Trustees must be provided and greater than 0 when Trustees specialty is present.
+                if (raterInputs == null || raterInputs.AdditionalRiskProfile == null || raterInputs.AdditionalRiskProfile.AlternativeExposureBase_Trustees <= 0m)
+                {
+                    _validationErrorMessage = "AlternativeExposureBase_Trustees must be provided in the request and greater than 0 when 'Trustees' specialty is present.";
+                    return false;
+                }
+
+                // safe to assign directly because we've validated raterInputs.AdditionalRiskProfile is non-null and value > 0
+                worksheet.AlternativeExposureBaseRevenue = raterInputs.AdditionalRiskProfile.AlternativeExposureBase_Trustees;
+            }
         }
 
         worksheet.IndustryClassifications = [.. industryClassifications.OrderByDescending(x => x.PercentageExposure).Take(5)];

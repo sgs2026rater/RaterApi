@@ -26,7 +26,7 @@ public record RaterDetails
     public bool UITrigAnEFlag { get; set; }
 
     #endregion Additional UW(Tab4)
-    
+
     #region Coverage(Tab6)
     public string SharedOrSeparatedEAndO { get; set; } = "N/A";
     public string? IncludedCoverageEnhancements { get; set; }
@@ -39,9 +39,32 @@ public record RaterDetails
 
     #endregion Coverage(Tab6)
 
+    #region Accountants specific fields
+    public decimal BookKeepingServicesRevenuePercentage { get; set; }
+    public decimal PersonalTaxAndEnrolledAgentServicesRevenuePercentage { get; set; }
+    public decimal PayrollServicesRevenuePercentage { get; set; }
+    public decimal BusinessTaxServicesRevenuePercentage { get; set; }
+    public decimal AuditingServicesRevenuePercentage { get; set; }
+    public decimal EstateTaxReturnsRevenuePercentage { get; set; }
+    public decimal ForensicAccountingRevenuePercentage { get; set; }
+    public decimal BusinessValuationsOrForecastsRevenuePercentage { get; set; }
+    public decimal LitigationSupportRevenuePercentage { get; set; }
+    public decimal AuditingServices_HighNetWorthClients_10M_assetsRevenuePercentage { get; set; }
+    public decimal AuditingServices_FinancialInstitutionsOrPensionsRevenuePercentage { get; set; }
+    public decimal FinancialPlanningServicesRevenuePercentage { get; set; }
+    public decimal TrusteeServices_PersonalTrusteeRevenuePercentage { get; set; }
+    public decimal TrusteeServices_BankruptcyTrusteeRevenuePercentage { get; set; }
+    public decimal ReviewAndCompilationsRevenuePercentage { get; set; }
+    public decimal OtherRevenuePercentage { get; set; }
+    public bool HighNetWorthClientOrBusinessOver100M { get; set; }
+    #endregion Accountants specific fields
+
+    // Warnings or informational messages generated during rating calculation
+    public List<string>? Warnings { get; set; }
+
     #region RatingFactor
 
-    public decimal? Premium {  get; set; }
+    public decimal? Premium { get; set; }
 
     #endregion RatingFactor
 
@@ -56,4 +79,11 @@ public record RaterDetails
     public decimal? RateChange { get; set; }
 
     #endregion Summary
+
+    #region Industry(Financial Services)
+    public bool AccountantsCheck { get; set; }
+    public bool ClaimsAdjustersCheck { get; set; }
+    public bool InterimManagementCheck { get; set; }
+    public decimal AlternativeExposureBaseRevenue { get; set; }
+    #endregion Industry(Financial Services)
 }
