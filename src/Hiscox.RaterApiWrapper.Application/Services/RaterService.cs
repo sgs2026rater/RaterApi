@@ -995,9 +995,12 @@ public class RaterService : IRaterService
         var premiumBeforeOptionalCoverage = (grandBasePremium + basePremium) / (1 - var_exp_load);
 
         var premium = formFactor * (premiumBeforeOptionalCoverage * (1 + (optionalCoverageFactor / 100)));
-        _raterDetails?.Premium = premium;
 
-        return Math.Round(premium ?? 0, 2, MidpointRounding.AwayFromZero);
+        var minimumPremium = await _industryModifierRepository.GetEOMimimumPremiumBySpecialty(_raterOptions.Version, _raterDetails?.PrimaryIndustryClassification?.SpecialtyName ?? string.Empty);
+
+        _raterDetails?.Premium = premium > minimumPremium ? premium : minimumPremium;
+
+        return Math.Round(_raterDetails?.Premium ?? 0, 2, MidpointRounding.AwayFromZero);
     }
 
     private async Task<decimal?> CalculateBaseRate(decimal revenueOrExposure)

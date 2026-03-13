@@ -32,4 +32,12 @@ public class IndustryModifierRepository : RepositoryBase, IIndustryModifierRepos
             .FirstOrDefaultAsync();
     }
 
+    public async Task<decimal> GetEOMimimumPremiumBySpecialty(string version, string specialty)
+    {
+        return await _context.IndustryModifiers!
+            .Where(_ => _.Version == version && _.Specialty == specialty)
+            .Select(_ => _.EOMinimumPremium)
+            .FirstOrDefaultAsync();
+    }
+
 }

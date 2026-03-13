@@ -12,4 +12,5 @@ public class IndustryModifier
     public int Id { get; set; }
     public string Specialty { get; set; }= string.Empty;
     public decimal NAICSModifier { get; set; }
+    public decimal EOMinimumPremium { get; set; }
 }

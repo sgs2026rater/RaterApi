@@ -8,4 +8,5 @@ public interface IIndustryModifierRepository
 {
     Task<IEnumerable<IndustryModifier>> GetAll(string version);
     Task<decimal> GetNAICSModifierBySpecialty(string version, string specialty);
+    Task<decimal> GetEOMimimumPremiumBySpecialty(string version, string specialty);
 }

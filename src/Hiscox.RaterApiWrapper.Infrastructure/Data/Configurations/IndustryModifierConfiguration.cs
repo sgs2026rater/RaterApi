@@ -31,5 +31,9 @@ public class IndustryModifierConfiguration : IEntityTypeConfiguration<IndustryMo
         builder.Property(_ => _.NAICSModifier)
             .HasColumnType("decimal(18,15)")
             .IsRequired(true);
+
+        builder.Property(_ => _.EOMinimumPremium)
+            .HasColumnType("decimal(18,2)")
+            .IsRequired(true);
     }
 }
