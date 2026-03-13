@@ -863,8 +863,13 @@ public class RaterService : IRaterService
         _raterDetails?.LimitFactor = limitFactor;
 
         //F245 in Calculations excel sheet
-        var industryModifier = await _industryModifierRepository.GetNAICSModifierBySpecialty(_raterOptions.Version, _raterDetails?.PrimaryIndustryClassification?.SpecialtyName ?? string.Empty);
-
+        var industryModifier = 0M;
+        foreach(var industryClassification in _raterDetails?.IndustryClassifications ?? Enumerable.Empty<IndustryClassification>())
+        {
+            var modifierForSpecialty = await _industryModifierRepository.GetNAICSModifierBySpecialty(_raterOptions.Version, industryClassification.SpecialtyName ?? string.Empty);
+            industryModifier += (modifierForSpecialty * industryClassification.PercentageExposure);
+        }
+        
         //F246 in Calculations excel sheet
         var geoGraphicModifier = await _geographicModRepository.GetAE(_raterOptions.Version, _raterDetails?.Profile?.Zip ?? string.Empty);
 
