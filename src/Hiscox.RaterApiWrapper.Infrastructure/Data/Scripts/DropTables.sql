@@ -25,5 +25,6 @@ drop TABLE DataValidations;
 drop TABLE OptionalCoveragesTable2s;
 drop TABLE BusinessSizeDefinition;
 drop TABLE RatingFactorSectionEnability;
+drop TABLE IndustryModifier;
 
 drop TABLE __EFMigrationsHistory;

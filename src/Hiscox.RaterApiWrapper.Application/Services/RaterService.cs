@@ -32,7 +32,7 @@ public class RaterService : IRaterService
     private readonly IRevenueBaseRateRepository _revenueBaseRateRepository;
     private readonly IBusinessSizeDefinitionRepository _businessSizeDefinitionRepository;
     private readonly IRatingFactorSectionEnabilityRepository _ratingFactorSectionEnabilityRepository;
-
+    private readonly IIndustryModifierRepository _industryModifierRepository;
 
     private readonly IIncludedCoverageEnhancementsRepository _includedCoverageEnhancementsRepository;
     private readonly IOptCovTable1Repository _optCovTable1Repository;
@@ -76,7 +76,8 @@ public class RaterService : IRaterService
         IDataValidationRepository dataValidationRepository,
         IOptionalCoveragesTable2Repository optionalCoveragesTable2Repository,
         IBusinessSizeDefinitionRepository businessSizeDefinitionRepository,
-        IRatingFactorSectionEnabilityRepository ratingFactorSectionEnabilityRepository)
+        IRatingFactorSectionEnabilityRepository ratingFactorSectionEnabilityRepository,
+        IIndustryModifierRepository industryModifierRepository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -102,6 +103,7 @@ public class RaterService : IRaterService
         _optionalCoveragesTable2Repository = optionalCoveragesTable2Repository;
         _businessSizeDefinitionRepository = businessSizeDefinitionRepository;
         _ratingFactorSectionEnabilityRepository = ratingFactorSectionEnabilityRepository;
+        _industryModifierRepository = industryModifierRepository;
     }
 
 
@@ -861,7 +863,7 @@ public class RaterService : IRaterService
         _raterDetails?.LimitFactor = limitFactor;
 
         //F245 in Calculations excel sheet
-        var industryModifier = 3.49m;
+        var industryModifier = await _industryModifierRepository.GetNAICSModifierBySpecialty(_raterOptions.Version, _raterDetails?.PrimaryIndustryClassification?.SpecialtyName ?? string.Empty);
 
         //F246 in Calculations excel sheet
         var geoGraphicModifier = await _geographicModRepository.GetAE(_raterOptions.Version, _raterDetails?.Profile?.Zip ?? string.Empty);
@@ -876,28 +878,28 @@ public class RaterService : IRaterService
         //F248 in Calculations excel sheet
         decimal? rscf = 0;
 
-        if (additionalRiskProfile?.ProjectTypes != null)
+        if (additionalRiskProfile?.ProjectTypes != null && _raterDetails?.PrimaryIndustryClassification?.SectorName== "Design Professionals")
         {
             totalRscf += projectTypeFactor
                         .Where(f => additionalRiskProfile.ProjectTypes.Contains(f.ProjectType))
                         .Sum(f => f.Factor);
 
-            var size = await _businessSizeDefinitionRepository.GetByRevenue(_raterOptions.Version, _raterDetails?.Profile?.Revenue ?? 0M);
-            
-            var claimHistoryEnabled = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.ClaimHistory, size?.Size ?? 0);
-            var riskManagement = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.RiskManagement, size?.Size ?? 0);
-            var complexityOfRisk = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.ComplexityOfRisk, size?.Size ?? 0);
-
-            rscf = (totalRscf / additionalRiskProfile?.ProjectTypes?.Count)
-                                                            * (claimHistoryEnabled?.Enabled == true ? _raterDetails?.RatingFactorStep?.ClaimHistoryRatingFactorDetails?.Factor ?? 1 : 1)
-                                                            * (riskManagement?.Enabled == true ? _raterDetails?.RatingFactorStep?.RiskProfileRatingFactorDetails?.Factor ?? 1 : 1)
-                                                            * (complexityOfRisk?.Enabled == true ? _raterDetails?.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor ?? 1 : 1);
+            rscf = (totalRscf / additionalRiskProfile?.ProjectTypes?.Count); 
         }
         else
         {
             rscf = 0.8m;
         }
 
+        var size = await _businessSizeDefinitionRepository.GetByRevenue(_raterOptions.Version, _raterDetails?.Profile?.Revenue ?? 0M);
+        var claimHistoryEnabled = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.ClaimHistory, size?.Size ?? 0);
+        var riskManagement = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.RiskManagement, size?.Size ?? 0);
+        var complexityOfRisk = await _ratingFactorSectionEnabilityRepository.CheckEnabled(_raterOptions.Version, (int)RatingFactorSectionType.ComplexityOfRisk, size?.Size ?? 0);
+
+        rscf = rscf * (claimHistoryEnabled?.Enabled == true ? _raterDetails?.RatingFactorStep?.ClaimHistoryRatingFactorDetails?.Factor ?? 1 : 1)
+                                            * (riskManagement?.Enabled == true ? _raterDetails?.RatingFactorStep?.RiskProfileRatingFactorDetails?.Factor ?? 1 : 1)
+                                            * (complexityOfRisk?.Enabled == true ? _raterDetails?.RatingFactorStep?.ComplexityOfRiskRatingFactorDetails?.Factor ?? 1 : 1);
+       
         //F250 in Calculations excel sheet
         var grandBasePremium = purePremiumSplit * baseRateForChosenExposure * limitFactor * industryModifier * geoGraphicModifier * formFactor * rscf;
 
