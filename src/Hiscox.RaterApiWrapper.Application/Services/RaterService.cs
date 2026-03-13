@@ -32,7 +32,8 @@ public class RaterService : IRaterService
     private readonly IRevenueBaseRateRepository _revenueBaseRateRepository;
     private readonly IBusinessSizeDefinitionRepository _businessSizeDefinitionRepository;
     private readonly IRatingFactorSectionEnabilityRepository _ratingFactorSectionEnabilityRepository;
-    private readonly IIndustryModifierRepository _industryModifierRepository;
+    private readonly IIndustryModifierRepository _industryModifierRepository; 
+    private readonly IOptionalAdditionalCoverageFactorsRepository _optionalAdditionalCoverageFactorsRepository;
 
     private readonly IIncludedCoverageEnhancementsRepository _includedCoverageEnhancementsRepository;
     private readonly IOptCovTable1Repository _optCovTable1Repository;
@@ -77,7 +78,8 @@ public class RaterService : IRaterService
         IOptionalCoveragesTable2Repository optionalCoveragesTable2Repository,
         IBusinessSizeDefinitionRepository businessSizeDefinitionRepository,
         IRatingFactorSectionEnabilityRepository ratingFactorSectionEnabilityRepository,
-        IIndustryModifierRepository industryModifierRepository)
+        IIndustryModifierRepository industryModifierRepository,
+        IOptionalAdditionalCoverageFactorsRepository optionalAdditionalCoverageFactorsRepository)
     {
         _logger = logger;
         _magicPolicyRepository = magicPolicyRepository;
@@ -104,6 +106,7 @@ public class RaterService : IRaterService
         _businessSizeDefinitionRepository = businessSizeDefinitionRepository;
         _ratingFactorSectionEnabilityRepository = ratingFactorSectionEnabilityRepository;
         _industryModifierRepository = industryModifierRepository;
+        _optionalAdditionalCoverageFactorsRepository = optionalAdditionalCoverageFactorsRepository;
     }
 
 
@@ -793,17 +796,43 @@ public class RaterService : IRaterService
         {
             foreach (var oe in optionalEnhancements)
             {
+                var optionalCoverageFactor = 0M;
+
+                string[] coverageValueVariations = { "yes", "minimal", "material" };
+
                 var optionalCoverage = optionalEnhancements?.FirstOrDefault(e => e.OptionalEnhancementName == oe.OptionalEnhancementName)?.OptionalEnhancementValue;
 
-                decimal optionalCoverageValue = optionalCoverage == "Full" ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(optionalCoverage);
+                if (coverageValueVariations.Contains(optionalCoverage?.ToLower() ?? ""))
+                {
+                    var optAddlCovFact = await _optionalAdditionalCoverageFactorsRepository.GetCoverage(_raterOptions.Version, oe.OptionalEnhancementName ?? string.Empty);
+                    
+                    if (optionalCoverage?.ToLower() == "yes")
+                    {
+                        optionalCoverageFactor = optAddlCovFact?.YesFactor ?? 0M;
+                    }
+                    else if (optionalCoverage?.ToLower() == "minimal")
+                    {
+                        optionalCoverageFactor = optAddlCovFact?.MinimalFactor ?? 0M;
+                    }
+                    else if (optionalCoverage?.ToLower() == "material")
+                    {
+                        optionalCoverageFactor = optAddlCovFact?.MaterialFactor ?? 0M;
+                    }
+                }
+                else
+                {
+                    decimal optionalCoverageValue = (optionalCoverage?.ToLower() == "full") ? _raterDetails?.PrimaryCoverage?.OccuranceLimit ?? 0m : Convert.ToDecimal(optionalCoverage);
 
-                var optionalCoverages = await _occLimitFactorRepository.GetByEnhancementName(_raterOptions.Version, oe.OptionalEnhancementName ?? string.Empty);
+                    var optionalCoverages = await _occLimitFactorRepository.GetByEnhancementName(_raterOptions.Version, oe.OptionalEnhancementName ?? string.Empty);
 
-                int percentageOptionalCoverage = (int)Math.Round((optionalCoverageValue / occrLimit * 100), MidpointRounding.AwayFromZero);
+                    int percentageOptionalCoverage = (int)Math.Round((optionalCoverageValue / occrLimit * 100), MidpointRounding.AwayFromZero);
 
-                var forOptionalCoverage = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageOptionalCoverage && x.Type == oe.OptionalEnhancementName).OrderByDescending(x => x.PercentOfOccLimit).FirstOrDefault();
+                    var forOptionalCoverage = optionalCoverages.Where(x => x.PercentOfOccLimit <= percentageOptionalCoverage && x.Type == oe.OptionalEnhancementName).OrderByDescending(x => x.PercentOfOccLimit).FirstOrDefault();
 
-                totalOptionalCoverageFactor += forOptionalCoverage?.Factor ?? 0;
+                    optionalCoverageFactor = forOptionalCoverage?.Factor ?? 0;
+                }
+
+                totalOptionalCoverageFactor += optionalCoverageFactor;
             }
         }
 

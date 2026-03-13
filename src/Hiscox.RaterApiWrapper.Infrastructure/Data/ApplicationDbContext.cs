@@ -41,6 +41,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<RetainedValueFactor>? RetainedValueFactors { get; set; } = null;
     public DbSet<RetainedValueFactorMatrix>? RetainedValueFactorMatrixs { get; set; } = null;
     public DbSet<RevenueBaseRate>? RevenueBaseRates { get; set; } = null;
+    public DbSet<OptionalAdditionalCoverageFactor>? OptionalAdditionalCoverageFactors { get; set; } = null;
+    public DbSet<RatingFactorSectionEnability>? RatingFactorSectionEnabilities { get; set; } = null;
+    public DbSet<IndustryModifier>? IndustryModifiers { get; set; } = null;
 
     #region Coverage (Tab 6)
 
@@ -53,8 +56,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<DataValidation>? DataValidations { get; set; } = null;
     public DbSet<OptionalCoveragesTable2>? OptionalCoveragesTable2s { get; set; } = null;
     public DbSet<BusinessSizeDefinition>? BusinessSizeDefinitions { get; set; } = null;
-    public DbSet<RatingFactorSectionEnability>? RatingFactorSectionEnabilities { get; set; } = null;
-    public DbSet<IndustryModifier>? IndustryModifiers { get; set; } = null;
 
     #endregion Coverage (Tab 6)
 
