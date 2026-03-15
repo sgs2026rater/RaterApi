@@ -1,0 +1,12 @@
+version,id,default_peril,is_switched_on_by_default,default_value_when_switched_on,applicable_to
+v2.0.101,1,Crisis Management,t,"50,000",A&E & Construction Managers
+v2.0.101,2,Media activities,t,Full,A&E & Construction Managers
+v2.0.101,3,Contractors Pollution (Claims Made),f,"1,000,000",A&E & Construction Managers
+v2.0.101,4,Contractors Pollution (Occ),f,-,A&E & Construction Managers
+v2.0.101,5,Defense Outside Limits,f,"1,000,000",GTC
+v2.0.101,6,Rectification Expenses,f,"1,000,000",A&E & Construction Managers
+v2.0.101,7,Aggregate limit endorsement,f,-,GTC
+v2.0.101,8,First Dollar Defense,f,Yes,A&E & Construction Managers
+v2.0.101,9,Waiver of subrogation,f,Yes,A&E & Construction Managers
+v2.0.101,10,Worldwide Coverage Territory,f,Yes,A&E & Construction Managers
+v2.0.101,11,Additional Insured,f,No impact,GTC

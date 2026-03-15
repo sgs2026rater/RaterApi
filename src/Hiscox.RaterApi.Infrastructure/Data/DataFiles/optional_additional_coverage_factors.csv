@@ -1,0 +1,13 @@
+version,id,coverage,yes_factor,minimal_factor,material_factor
+v2.0.101,1,Aggregate limit endorsement,5.0000,0.0000,0.0000
+v2.0.101,2,First Dollar Defense,5.0000,0.0000,0.0000
+v2.0.101,3,Waiver of subrogation,5.0000,0.0000,0.0000
+v2.0.101,4,Delete Defense Coverage,-30.0000,0.0000,0.0000
+v2.0.101,5,Defense Cost Coinsurance,-15.0000,0.0000,0.0000
+v2.0.101,6,Named Peril,-10.0000,0.0000,0.0000
+v2.0.101,7,Merchandising,5.0000,0.0000,0.0000
+v2.0.101,8,Removed Settlement Clause,5.0000,0.0000,0.0000
+v2.0.101,9,Contingent Property Damage Carveback,-5.0000,0.0000,0.0000
+v2.0.101,10,Duty to Pay,-2.5000,0.0000,0.0000
+v2.0.101,11,Worldwide Coverage Territory,5.0000,0.0000,0.0000
+v2.0.101,12,Additional Insured,0.0000,5.0000,10.0000

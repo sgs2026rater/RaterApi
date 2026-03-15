@@ -1,0 +1,8 @@
+version,id,project_type,factor
+v2.0.101,1,CivilOrInfrastructure,1.05
+v2.0.101,2,Commercial,1.00
+v2.0.101,3,Industrial,1.03
+v2.0.101,4,Institutional,0.95
+v2.0.101,5,PowerAndUtilities,1.05
+v2.0.101,6,MultiUnitResidentialCommunities,1.20
+v2.0.101,7,ResidentialAndApartments,1.15

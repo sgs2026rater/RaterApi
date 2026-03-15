@@ -11,7 +11,7 @@ public class OptionalCoverageTable1Configuration : IEntityTypeConfiguration<Opti
     //This table corresponds to Optional_Coverages!(3 columns from range C7 to M65) in the Rater Worksheet   
     public void Configure(EntityTypeBuilder<OptionalCoveragesTable1> builder)
     {
-        builder.ToTable("OptionalCoverageTable1");
+        builder.ToTable("OptionalCoveragesTable1");
         builder.HasKey(_ => new { _.Version, _.Id });
         builder.Property(_ => _.Version).HasColumnType("varchar(10)");
         builder.Property(_ => _.Version).IsRequired(true);

@@ -10,7 +10,7 @@ public class ProjectTypeFactorConfiguration : IEntityTypeConfiguration<ProjectTy
 {
     public void Configure(EntityTypeBuilder<ProjectTypeFactor> builder)
     {
-        builder.ToTable("ProjectTypeFactor");
+        builder.ToTable("ProjectTypeFactors");
 
         // Composite Primary Key
         builder.HasKey(_ => new { _.Version, _.Id });

@@ -1,0 +1,495 @@
+version,id,industry_sub_sector_id,name
+v2.0.101,1,1,Acupuncture
+v2.0.101,2,2,Athletic Trainers
+v2.0.101,3,3,Biofeedback
+v2.0.101,4,4,Chiropractor
+v2.0.101,5,5,Cryotherapy
+v2.0.101,6,6,Doula
+v2.0.101,7,7,Holistic healthcare
+v2.0.101,8,8,Naturopathic Physician
+v2.0.101,9,9,Personal Trainers/ Yoga
+v2.0.101,10,10,Spa: Invasive
+v2.0.101,11,10,Spa: Minimally Invasive - Day Spa
+v2.0.101,12,10,Massage Franchise
+v2.0.101,13,10,Spa: More Invasive
+v2.0.101,14,11,Tattoo/body piercing
+v2.0.101,15,12,Acoustic Consulting
+v2.0.101,16,12,Construction Consulting
+v2.0.101,17,12,Cost Estimation Services
+v2.0.101,18,12,Energy Consulting Services
+v2.0.101,19,12,Fire Protection Consulting
+v2.0.101,20,12,Mining Consultant
+v2.0.101,21,12,Oil and Gas Consulting
+v2.0.101,22,13,Environmental Consulting
+v2.0.101,23,14,Bankruptcy Advisory Services
+v2.0.101,24,14,Employee Benefit Plan / Pension Consulting
+v2.0.101,25,14,"Loan, Lending, Financing Consulting"
+v2.0.101,26,14,Mergers and Acquisitions Consulting
+v2.0.101,27,14,Financial Consulting
+v2.0.101,28,14,Revenue Cycle Management Consulting
+v2.0.101,29,14,Risk Management & Insurance Consulting
+v2.0.101,30,14,Valuations Consultant
+v2.0.101,31,15,Business Consulting
+v2.0.101,32,15,Human Resources Consulting
+v2.0.101,33,15,Leadership Consulting
+v2.0.101,34,15,Management Consulting
+v2.0.101,35,15,Municipal Advisory Services
+v2.0.101,36,15,Product Development Consulting
+v2.0.101,37,15,Public Affairs/Policy Consulting
+v2.0.101,38,16,Media / Branding Consulting
+v2.0.101,39,17,Healthcare Operations Consulting
+v2.0.101,40,17,Independent Medical Exams
+v2.0.101,41,17,Medical Director
+v2.0.101,42,17,Patient Care Consulting
+v2.0.101,43,17,Peer-Review
+v2.0.101,44,17,Physician consultants
+v2.0.101,45,17,Utilization Review
+v2.0.101,46,18,Education Consulting
+v2.0.101,47,18,Energy Efficiency Consulting
+v2.0.101,48,18,Franchise Consulting
+v2.0.101,49,18,Intellectual Property & Licensing Consulting
+v2.0.101,50,18,Lifestyle Consulting
+v2.0.101,51,18,Logistics Management Consulting
+v2.0.101,52,18,Manufacturing Consulting
+v2.0.101,53,18,Other Consulting
+v2.0.101,54,18,Legal Consulting Services
+v2.0.101,55,18,Regulatory Consulting
+v2.0.101,56,18,Relocation Consulting & Coordination
+v2.0.101,57,18,Scientific/Technical Consulting
+v2.0.101,58,18,Vocational Consulting
+v2.0.101,59,19,Cell Tower Acquisition & Leasing Consulting
+v2.0.101,60,19,Real Estate Consulting
+v2.0.101,61,19,Real Estate Development Consulting
+v2.0.101,62,19,Right Of Way Consulting
+v2.0.101,63,20,Safety Consulting
+v2.0.101,64,21,Compliance Certification
+v2.0.101,65,21,Cybersecurity Testing
+v2.0.101,66,21,General IT Consulting
+v2.0.101,67,21,Software Testing
+v2.0.101,68,21,Other Consulting
+v2.0.101,69,21,Training
+v2.0.101,70,22,At Risk Construction Management
+v2.0.101,71,22,Construction and Installation Only
+v2.0.101,72,22,"Manufactured, Prefabricated, Pre-engineered or Modular Builder"
+v2.0.101,73,22,Design-Build Firms
+v2.0.101,74,23,Manufacturer
+v2.0.101,75,24,Demolition and Excavation
+v2.0.101,76,24,Drywall and Insulation Contractors
+v2.0.101,77,24,Electrical Contractors and Other Wiring Installation Contractors - Electricians
+v2.0.101,78,24,Exterior Finishing & Siding
+v2.0.101,79,24,Finish Carpentry Contractors - Finish Carpenter
+v2.0.101,80,24,Fire Systems & Sprinkler Services
+v2.0.101,81,24,Flooring Contractors
+v2.0.101,82,24,Framing Contractors
+v2.0.101,83,24,Glass and Glazing Contractors  - Glaziers
+v2.0.101,84,24,HVAC Contractors
+v2.0.101,85,24,Landscaping Services
+v2.0.101,86,24,Masonry Contractors
+v2.0.101,87,24,Oil and Gas Subcontractor
+v2.0.101,88,24,Painting and Wall Covering Contractors
+v2.0.101,89,24,Paving Contractor
+v2.0.101,90,24,Plumbing Contractors
+v2.0.101,91,24,Poured Concrete Foundation and Structure Contractors
+v2.0.101,92,24,Remediation Contractor
+v2.0.101,93,24,Renovation Contractor
+v2.0.101,94,24,Roofing Contractors
+v2.0.101,95,24,Solar Panel Installation Contractor
+v2.0.101,96,24,Structural Steel and Precast Concrete Contractors
+v2.0.101,97,24,Telecom installation
+v2.0.101,98,24,Tile and Terrazzo Contractors
+v2.0.101,99,24,Underground Utility Locating
+v2.0.101,100,25,Advertising/Creative Agency
+v2.0.101,101,25,Other Creative Services
+v2.0.101,102,26,Graphic Design Services
+v2.0.101,103,27,Direct Marketing
+v2.0.101,104,27,Market Research
+v2.0.101,105,27,Marketing Services
+v2.0.101,106,27,Media Buying Agencies
+v2.0.101,107,27,Promotional Services
+v2.0.101,108,28,Photographer Services
+v2.0.101,109,29,Post Production
+v2.0.101,110,30,Public Relations Services
+v2.0.101,111,31,Agency Construction Management
+v2.0.101,112,32,Architectural Services
+v2.0.101,113,32,Drafting / CAD / BIM
+v2.0.101,114,32,Land Use and Master Planning
+v2.0.101,115,32,Landscape Architects
+v2.0.101,116,33,Aerospace Engineers
+v2.0.101,117,33,Chemical Engineers
+v2.0.101,118,33,Civil Engineers
+v2.0.101,119,33,Control Systems Integration and Automation
+v2.0.101,120,33,Electrical Engineers
+v2.0.101,121,33,Environmental Engineers and Consultants
+v2.0.101,122,33,Geotechnical Engineer
+v2.0.101,123,33,Heating and Cooling Systems Engineer
+v2.0.101,124,33,Industrial Engineers
+v2.0.101,125,33,Marine Engineers and Naval Architects
+v2.0.101,126,33,Mechanical Engineers
+v2.0.101,127,33,Mining Engineer
+v2.0.101,128,33,Nuclear Engineers
+v2.0.101,129,33,Petroleum Engineers
+v2.0.101,130,33,Seismic Engineer
+v2.0.101,131,33,Structural Engineer
+v2.0.101,132,33,Consulting Engineers
+v2.0.101,133,34,Building Code Inspector
+v2.0.101,134,34,Building Commissioning
+v2.0.101,135,34,Building Materials Testing and Engineering
+v2.0.101,136,34,Crane Inspector
+v2.0.101,137,34,Elevator Inspector
+v2.0.101,138,34,Home Inspector
+v2.0.101,139,34,Mechanical / Electrical / Plumbing Inspector
+v2.0.101,140,34,Roofing Inspector
+v2.0.101,141,34,Welding Inspector
+v2.0.101,142,34,Forensic Analysis and Expert Witness
+v2.0.101,143,35,Interior Design Services
+v2.0.101,144,36,Geophysical Surveying and Mapping Services
+v2.0.101,145,36,Surveying and Mapping (except Geophysical) Services - Land Surveyor
+v2.0.101,146,37,Accountants
+v2.0.101,147,37,Other Accounting Services
+v2.0.101,148,37,Payroll Services
+v2.0.101,149,37,Tax Preparation Services
+v2.0.101,150,38,Actuarial services
+v2.0.101,151,39,Debt / Credit Management
+v2.0.101,152,40,Life Settlement Services
+v2.0.101,153,40,Other Financial Activites
+v2.0.101,154,40,Structured Settlement Services
+v2.0.101,155,41,Claims Adjuster
+v2.0.101,156,41,Insurance Related Activities
+v2.0.101,157,41,Public Claims Adjuster
+v2.0.101,158,42,Interim Management Services
+v2.0.101,159,43,Trustees
+v2.0.101,160,44,Assisted Living Facility 
+v2.0.101,161,44,Independent Living Facility
+v2.0.101,162,44,Memory Care Facility
+v2.0.101,163,45,Group Home - Adults
+v2.0.101,164,45,Group Home - Minors 
+v2.0.101,165,46,Hospice (inpatient)
+v2.0.101,166,47,Mental Health - Non-Substance Abuse
+v2.0.101,167,48,Inpatient Substance Abuse: Detox Management
+v2.0.101,168,48,Inpatient Substance Abuse: Halfway House
+v2.0.101,169,48,Inpatient Substance Abuse: Medication Management
+v2.0.101,170,49,Administrative and Support Services
+v2.0.101,171,49,Association Management
+v2.0.101,172,49,Background Checks / Screening Services
+v2.0.101,173,49,Grant Administration and Monitoring Services
+v2.0.101,174,49,Permit Processing and Expediting Services
+v2.0.101,175,49,Writing Services for Hire (No Authors)
+v2.0.101,176,50,Agents and Managers for Public Figures
+v2.0.101,177,51,Analytical Testing Lab Services: Food
+v2.0.101,178,51,Analytical Testing Lab Services: Medical/Forensic
+v2.0.101,179,51,Analytical Testing Lab Services: Non-Destructive Materials
+v2.0.101,180,51,Analytical Testing Lab Services: Other
+v2.0.101,181,51,Analytical Testing Lab Services: Soil
+v2.0.101,182,52,Associations
+v2.0.101,183,53,Collection Agent Services: Owned/factored debt
+v2.0.101,184,53,Collection Agent Services: Third party debt
+v2.0.101,185,53,Medical Billing Services
+v2.0.101,186,53,Other Billing Services
+v2.0.101,187,54,Business Broker Services
+v2.0.101,188,55,Business Management
+v2.0.101,189,55,Full Service Management of Third Party Business
+v2.0.101,190,55,Hotel Management
+v2.0.101,191,55,Medical Practice Management Services
+v2.0.101,192,56,Court Reporting Services
+v2.0.101,193,57,Instructional & Training Activities
+v2.0.101,194,57,"Educational Test Development, Scoring and Proctoring Services"
+v2.0.101,195,57,Exam Preparation and Tutoring
+v2.0.101,196,57,Foreign Exchange Student & Homestay Services
+v2.0.101,197,57,Vocational Training & Consulting
+v2.0.101,198,58,Franchisor Services 
+v2.0.101,199,59,Landman
+v2.0.101,200,60,Aircraft/Jet Broker
+v2.0.101,201,60,Appraisal of ods
+v2.0.101,202,60,Auctioneering of ods and Services
+v2.0.101,203,60,Bail Agent
+v2.0.101,204,60,Broker of Other ods and Services
+v2.0.101,205,60,Event Planning Services
+v2.0.101,206,60,Extermination and Pest Control Services
+v2.0.101,207,60,Janitorial Services
+v2.0.101,208,60,Other Services
+v2.0.101,209,60,Skip Tracing Services
+v2.0.101,210,60,Telephone Call Center Services: Inbound
+v2.0.101,211,60,Telephone Call Center Services: Outbound
+v2.0.101,212,60,Translation Services
+v2.0.101,213,60,Repossession Services
+v2.0.101,214,60,Yacht/Ship/Boat Broker
+v2.0.101,215,61,Printing Services
+v2.0.101,216,62,Private Investigation Services
+v2.0.101,217,63,Accreditation Services
+v2.0.101,218,63,"Other Professional, Scientific, and Technical Services"
+v2.0.101,219,63,Business Process Operator/Outsourcer
+v2.0.101,220,63,Dispute Resolution Services
+v2.0.101,221,63,Energy Broker
+v2.0.101,222,63,Executive Coaching and Mentoring
+v2.0.101,223,63,Expert Witness
+v2.0.101,224,63,Guardianship services
+v2.0.101,225,63,Lobbying
+v2.0.101,226,63,Notaries
+v2.0.101,227,63,"Inspection, Repair, Calibration, Maintenance Services"
+v2.0.101,228,63,Process Server
+v2.0.101,229,64,Referral Services
+v2.0.101,230,65,Security/Defense/Military Contractor Services
+v2.0.101,231,66,Permanent Employment Services
+v2.0.101,232,66,Professional Employer Organization Services
+v2.0.101,233,66,Temporary & Permanent Employment Services
+v2.0.101,234,66,Temporary Employment Services
+v2.0.101,235,67,Third Party Administration: Employee benefits
+v2.0.101,236,67,Third Party Administration: Non-employee benefits
+v2.0.101,237,68,"Couriers, Messengers, and Delivery Services"
+v2.0.101,238,68,Custom House/Freight Forwarder Services
+v2.0.101,239,68,Marine Surveying Services
+v2.0.101,240,68,Transportation Related Activities
+v2.0.101,241,68,Pilot Car Services
+v2.0.101,242,68,Traffic Control and Management Services
+v2.0.101,243,68,"Warehousing, Storage, and Fulfillment"
+v2.0.101,244,69,Other Travel Services
+v2.0.101,245,69,Tour Operator Services
+v2.0.101,246,69,Travel Agency Services
+v2.0.101,247,70,Adult Day Care
+v2.0.101,248,71,Audiologists
+v2.0.101,249,72,Blood and Organ Banks: Blood
+v2.0.101,250,72,Blood and Organ Banks: Milk
+v2.0.101,251,72,Blood and Organ Banks: Organs
+v2.0.101,252,72,Blood and Organ Banks: Reproductive
+v2.0.101,253,72,Blood and Organ Banks: Tissue
+v2.0.101,254,73,Case Management
+v2.0.101,255,73,Medical Guardianship
+v2.0.101,256,74,General Medical Clinic
+v2.0.101,257,74,Methadone Clinic
+v2.0.101,258,74,Pain Management Clinic
+v2.0.101,259,74,Physical Medicine Clinic
+v2.0.101,260,74,Pregnancy education/testing
+v2.0.101,261,74,Sleep Clinic
+v2.0.101,262,74,Weight Loss Clinic
+v2.0.101,263,75,Clinical Research/ Trials
+v2.0.101,264,76,Behavioral Counseling
+v2.0.101,265,76,Egg Donor or Surrogate Matching Services
+v2.0.101,266,76,Marriage and Family Counseling
+v2.0.101,267,76,Pastoral counseling
+v2.0.101,268,76,PHP / IOP
+v2.0.101,269,76,Substance Abuse: Counseling
+v2.0.101,270,77,Dental assistant or hygenist
+v2.0.101,271,77,Dental labs
+v2.0.101,272,77,Dentist: Non-Specialist - Non-Surgery
+v2.0.101,273,77,Dentist: Non-Specialist - Surgery
+v2.0.101,274,77,Dentist: Specialist - Non-Surgery
+v2.0.101,275,77,Dentist: Specialist - Surgery
+v2.0.101,276,78,Dialysis
+v2.0.101,277,79,Health Screening
+v2.0.101,278,79,Wellness Counseling
+v2.0.101,279,80,Healthcare Staffing: Correctional Facility - Skilled
+v2.0.101,280,80,Healthcare Staffing: Hospital - ICU
+v2.0.101,281,80,Healthcare Staffing: Hospital - Non-ICU
+v2.0.101,282,80,Healthcare Staffing: Nursing Home / ALF
+v2.0.101,283,80,Healthcare Staffing: Other Healthcare
+v2.0.101,284,81,Home Healthcare: Developmentally Disabled
+v2.0.101,285,81,Home Healthcare: Remote Patient Monitoring
+v2.0.101,286,81,Home Healthcare: Skilled - Hospice (outpatient)
+v2.0.101,287,81,Home Healthcare: Skilled - non-pediatrics
+v2.0.101,288,81,Home Healthcare: Skilled - pediatrics
+v2.0.101,289,81,Home Healthcare: Unskilled
+v2.0.101,290,82,Drug / Alcohol Testing - Other
+v2.0.101,291,82,Drug / Alcohol Testing - Substance Abuse Testing
+v2.0.101,292,82,Medical Imaging: Inpatient (Hospital)
+v2.0.101,293,82,Medical Imaging: Mobile
+v2.0.101,294,82,Medical Imaging: Outpatient
+v2.0.101,295,82,Phlebotomy
+v2.0.101,296,82,Testing laboratory: Fertility
+v2.0.101,297,82,Testing laboratory: Genetics (non-diagnostic)
+v2.0.101,298,82,Testing laboratory: Medical/diagnostic
+v2.0.101,299,82,Testing laboratory: Reference
+v2.0.101,300,83,Certified Nursing Assistant
+v2.0.101,301,83,Licensed Vocational Nurse
+v2.0.101,302,83,Nurse Practitioner
+v2.0.101,303,83,Physician Assistant
+v2.0.101,304,83,Registered Nurse
+v2.0.101,305,84,Transportation: Emergency Air
+v2.0.101,306,84,Transportation: Emergency Ground
+v2.0.101,307,84,Transportation: Non-Emergency Air
+v2.0.101,308,84,Transportation: Non-Emergency Ground
+v2.0.101,309,84,Transportation: Special Needs
+v2.0.101,310,85,Facility Dietician
+v2.0.101,311,85,Nutrition/ Dietician
+v2.0.101,312,86,Optometrists/opticians
+v2.0.101,313,87,Orthotic/prosthetic fitting
+v2.0.101,314,88,Pharmacy: Compounding
+v2.0.101,315,88,Pharmacy: Non-Compounding
+v2.0.101,316,89,Post Mortem Services
+v2.0.101,317,90,Prescribed Pediatric Extended Care (PPEC)
+v2.0.101,318,91,Adoption Agency 
+v2.0.101,319,91,Food bank
+v2.0.101,320,91,Foster Care Agency 
+v2.0.101,321,91,Homeless shelter
+v2.0.101,322,91,Social Services - High/Multi-Disciplinary
+v2.0.101,323,91,Social Services - Job Training
+v2.0.101,324,91,Social Services - Supervised Visitation
+v2.0.101,325,92,Surgery Centers: Highly Complex Services
+v2.0.101,326,92,Surgery Centers: Low Complexity Services
+v2.0.101,327,92,Surgery Centers: Moderately Complex Services
+v2.0.101,328,93,Applied Behavior Analysis (ABA)
+v2.0.101,329,93,Durable Medical Equipment (DME)
+v2.0.101,330,93,Facility Therapy
+v2.0.101,331,93,Hyperbaric Oxygen Therapy (HBOT)
+v2.0.101,332,93,Occupational Therapy
+v2.0.101,333,93,Physical Therapy
+v2.0.101,334,93,Respiratory Therapy
+v2.0.101,335,93,Speech Therapy
+v2.0.101,336,94,CPR/ First Aid Training
+v2.0.101,337,94,Medical Arts School: Chiropractor/Pharmacy/Mental Health
+v2.0.101,338,94,Medical Arts School: Dental
+v2.0.101,339,94,Medical Arts School: First Response
+v2.0.101,340,94,Medical Arts School: Nurses
+v2.0.101,341,94,Medical Arts School: Radiology
+v2.0.101,342,94,Medical Arts School: Spa
+v2.0.101,343,94,Medical Arts School: Surgical
+v2.0.101,344,95,Veterinary - Domestic Pets
+v2.0.101,345,95,Veterinary - Non-Domestic Pets
+v2.0.101,346,96,1031 Exchange Agent
+v2.0.101,347,96,Auctioneering of real property
+v2.0.101,348,96,Mortgage Field and Property Preservation Services
+v2.0.101,349,96,Other Activities Related to Real Estate
+v2.0.101,350,97,Real Estate Appraisers
+v2.0.101,351,98,Real Estate Developers - Homebuilders
+v2.0.101,352,98,Real Estate Developers - Project Specific
+v2.0.101,353,98,Real Estate Developers - Residential / Commercial
+v2.0.101,354,98,Real Estate Developers - Sale / Property Management Services only
+v2.0.101,355,99,Property Management - Standalone
+v2.0.101,356,99,Property Management & Real Estate Sales
+v2.0.101,357,99,Real Estate Agent/Broker - Standalone
+v2.0.101,358,100,Security Guards
+v2.0.101,359,101,Accounting
+v2.0.101,360,101,Autonomous AI
+v2.0.101,361,101,Biometric
+v2.0.101,362,101,Broadcasting
+v2.0.101,363,101,Business Analytics
+v2.0.101,364,101,Cloud Storage
+v2.0.101,365,101,Communications
+v2.0.101,366,101,Computer-aided Design (CAD)
+v2.0.101,367,101,Computer-aided Manufacturing (CAM)
+v2.0.101,368,101,Control Systems
+v2.0.101,369,101,Crowdfunding
+v2.0.101,370,101,Cryptocurrency
+v2.0.101,371,101,Customer Engagement / CRM
+v2.0.101,372,101,Customer Rewards
+v2.0.101,373,101,Cybersecurity
+v2.0.101,374,101,Data Mining / Aggregation
+v2.0.101,375,101,Digital Marketing
+v2.0.101,376,101,E-Commerce
+v2.0.101,377,101,E-Discovery
+v2.0.101,378,101,Emergency Notification
+v2.0.101,379,101,Enterprise Resource Planning (ERP)
+v2.0.101,380,101,Financial Trading
+v2.0.101,381,101,Gambling
+v2.0.101,382,101,Geographic Information Systems (GIS)
+v2.0.101,383,101,Health and Wellness
+v2.0.101,384,101,Human Resources
+v2.0.101,385,101,Identity and Fraud Protection
+v2.0.101,386,101,Internet of Things (IoT)
+v2.0.101,387,101,Banking - Investment
+v2.0.101,388,101,IT Analytics
+v2.0.101,389,101,Learning Management
+v2.0.101,390,101,Medical Diagnostic
+v2.0.101,391,101,Password Management
+v2.0.101,392,101,Payment Processing
+v2.0.101,393,101,Point of Sale (POS)
+v2.0.101,394,101,Practice Management
+v2.0.101,395,101,Banking - Retail
+v2.0.101,396,101,Risk Management
+v2.0.101,397,101,Sharing Economy
+v2.0.101,398,101,Social Media
+v2.0.101,399,101,Supply Chain Management
+v2.0.101,400,101,Telematics
+v2.0.101,401,101,Video Game
+v2.0.101,402,101,Other
+v2.0.101,403,102,Cloud Computing
+v2.0.101,404,102,Content Delivery Network (CDN)
+v2.0.101,405,102,Data Center / Colocation
+v2.0.101,406,102,Virtual Private Network (VPN)
+v2.0.101,407,103,Electronic Repair
+v2.0.101,408,103,E-Recycling & Data Destruction
+v2.0.101,409,103,Hardware Design / Manufacturing
+v2.0.101,410,103,Hardware Installation / Integration
+v2.0.101,411,104,Agriculture
+v2.0.101,412,104,Cannabis
+v2.0.101,413,104,Construction
+v2.0.101,414,104,Education
+v2.0.101,415,104,Electronic Health Records (EHR)
+v2.0.101,416,104,Enterprise Resource Planning (ERP)
+v2.0.101,417,104,Finance and Insurance
+v2.0.101,418,104,vernment / Military
+v2.0.101,419,104,Healthcare and Social Assistance
+v2.0.101,420,104,Hospitality
+v2.0.101,421,104,Banking - Investment
+v2.0.101,422,104,Legal
+v2.0.101,423,104,Manufacturing
+v2.0.101,424,104,Media
+v2.0.101,425,104,Payment Processing
+v2.0.101,426,104,Real Estate
+v2.0.101,427,104,Retail
+v2.0.101,428,104,Banking - Retail
+v2.0.101,429,104,Supply Chain Management
+v2.0.101,430,104,Transportation
+v2.0.101,431,104,Utilities
+v2.0.101,432,104,General
+v2.0.101,433,105,Digital Marketing Agency
+v2.0.101,434,106,Document and Data Conversion
+v2.0.101,435,107,Internet Service Provider
+v2.0.101,436,108,Managed Cybersecurity Services
+v2.0.101,437,108,Managed IT Services
+v2.0.101,438,109,IT Staffing
+v2.0.101,439,110,Accounting
+v2.0.101,440,110,Autonomous AI
+v2.0.101,441,110,Biometric
+v2.0.101,442,110,Broadcasting
+v2.0.101,443,110,Business Analytics
+v2.0.101,444,110,Cloud Storage
+v2.0.101,445,110,Communications
+v2.0.101,446,110,Computer-aided Design (CAD)
+v2.0.101,447,110,Computer-aided Manufacturing (CAM)
+v2.0.101,448,110,Control Systems
+v2.0.101,449,110,Crowdfunding
+v2.0.101,450,110,Cryptocurrency
+v2.0.101,451,110,Customer Engagement / CRM
+v2.0.101,452,110,Customer Rewards
+v2.0.101,453,110,Cybersecurity
+v2.0.101,454,110,Data Mining / Aggregation
+v2.0.101,455,110,Digital Marketing
+v2.0.101,456,110,E-Commerce
+v2.0.101,457,110,E-Discovery
+v2.0.101,458,110,Emergency Notification
+v2.0.101,459,110,Enterprise Resource Planning (ERP)
+v2.0.101,460,110,Financial Trading
+v2.0.101,461,110,Gambling
+v2.0.101,462,110,Geographic Information Systems (GIS)
+v2.0.101,463,110,Health and Wellness
+v2.0.101,464,110,Human Resources
+v2.0.101,465,110,Identity and Fraud Protection
+v2.0.101,466,110,Internet of Things (IoT)
+v2.0.101,467,110,Banking - Investment
+v2.0.101,468,110,IT Analytics
+v2.0.101,469,110,Learning Management
+v2.0.101,470,110,Medical Diagnostic
+v2.0.101,471,110,Password Management
+v2.0.101,472,110,Payment Processing
+v2.0.101,473,110,Point of Sale (POS)
+v2.0.101,474,110,Practice Management
+v2.0.101,475,110,Banking - Retail
+v2.0.101,476,110,Risk Management
+v2.0.101,477,110,Sharing Economy
+v2.0.101,478,110,Social Media
+v2.0.101,479,110,Supply Chain Management
+v2.0.101,480,110,Telematics
+v2.0.101,481,110,Video Game
+v2.0.101,482,110,Other
+v2.0.101,483,111,Telecommunications
+v2.0.101,484,112,Product Sales
+v2.0.101,485,112,Product Sales & Implementation
+v2.0.101,486,112,Product Sales & Implementation - Electronic Health Records (EHR)
+v2.0.101,487,112,Product Sales & Implementation - Enterprise Resource Planning (ERP)
+v2.0.101,488,112,Product Sales & Implementation - Banking - Investment
+v2.0.101,489,112,Product Sales & Implementation - Payment Systems
+v2.0.101,490,112,Product Sales & Implementation - Banking - Retail
+v2.0.101,491,112,Product Sales & Implementation - Supply Chain Management
+v2.0.101,492,113,Web Development
+v2.0.101,493,113,Web Development and Hosting
+v2.0.101,494,114,Web Hosting & Domains

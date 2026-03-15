@@ -10,7 +10,7 @@ public class OptionalCoveragesTable2Configuration : IEntityTypeConfiguration<Opt
 {
     public void Configure(EntityTypeBuilder<OptionalCoveragesTable2> builder)
     {
-        builder.ToTable("OptionalCoveragesTable2s");
+        builder.ToTable("OptionalCoveragesTable2");
         builder.HasKey(_ => new { _.Version, _.Id });
         builder.Property(_ => _.Version).HasColumnType("varchar(10)");
         builder.Property(_ => _.Version).IsRequired(true);

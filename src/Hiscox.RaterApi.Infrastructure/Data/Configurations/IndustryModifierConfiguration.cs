@@ -10,7 +10,7 @@ public class IndustryModifierConfiguration : IEntityTypeConfiguration<IndustryMo
 {
     public void Configure(EntityTypeBuilder<IndustryModifier> builder)
     {
-        builder.ToTable("IndustryModifier");
+        builder.ToTable("IndustryModifiers");
 
         builder.HasKey(_ => new { _.Version, _.Id });
 

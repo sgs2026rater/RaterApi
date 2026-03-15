@@ -10,7 +10,7 @@ public class IndustrySectorConfiguration : IEntityTypeConfiguration<IndustrySect
 {
     public void Configure(EntityTypeBuilder<IndustrySector> builder)
     {
-        builder.ToTable("IndustrySector");
+        builder.ToTable("IndustrySectors");
         builder.HasKey(_ => new { _.Version, _.Id });
 
         builder.Property(_ => _.Version).HasColumnType("varchar(10)");

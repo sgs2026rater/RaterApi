@@ -10,7 +10,7 @@ public class BusinessSizeDefinitionConfiguration : IEntityTypeConfiguration<Busi
 {
     public void Configure(EntityTypeBuilder<BusinessSizeDefinition> builder)
     {
-        builder.ToTable("BusinessSizeDefinition");
+        builder.ToTable("BusinessSizeDefinitions");
 
         builder.HasKey(_ => new { _.Version, _.Id });
 

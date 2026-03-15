@@ -10,7 +10,7 @@ public class PolicyDetailsConfiguration : IEntityTypeConfiguration<PolicyDetails
 {
     public void Configure(EntityTypeBuilder<PolicyDetails> builder)
     {
-        builder.ToTable("PolicyDetails");
+        builder.ToTable("Policies");
         builder.HasKey(_ => new { _.Version, _.Id });
 
         builder.Property(_ => _.Version)
@@ -32,11 +32,11 @@ public class PolicyDetailsConfiguration : IEntityTypeConfiguration<PolicyDetails
             .IsRequired(false);
 
         builder.Property(_ => _.TimestampEffectivePolicy)
-            .HasColumnType("datetime2")
+            .HasColumnType("timestamp")
             .IsRequired(true);
 
         builder.Property(_ => _.TimestampExpirationPolicy)
-            .HasColumnType("datetime2")
+            .HasColumnType("timestamp")
             .IsRequired(true);
 
         builder.Property(_ => _.Zip)

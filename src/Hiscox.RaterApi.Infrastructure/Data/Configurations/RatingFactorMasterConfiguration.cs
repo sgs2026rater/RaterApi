@@ -29,7 +29,7 @@ public class RatingFactorMasterConfiguration : IEntityTypeConfiguration<RatingFa
                .IsRequired(true);
 
         builder.Property(_ => _.Answer)
-               .HasColumnType("bit")
+               //.HasColumnType("bit")
                .HasDefaultValue(true)
                .IsRequired(true);
 

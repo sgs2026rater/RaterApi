@@ -1,0 +1,495 @@
+version,id,specialty,naics_modifier,eo_minimum_premium
+v2.0.101,1,Acupuncture,0.490000009536743,850.00
+v2.0.101,2,Athletic Trainers,0.762000024318695,10000.00
+v2.0.101,3,Biofeedback,0.326000005006790,1250.00
+v2.0.101,4,Chiropractor,0.754000008106232,2000.00
+v2.0.101,5,Cryotherapy,0.679000020027161,4000.00
+v2.0.101,6,Doula,0.432000011205673,1250.00
+v2.0.101,7,Holistic healthcare,0.381000012159348,1500.00
+v2.0.101,8,Naturopathic Physician,0.381000012159348,3500.00
+v2.0.101,9,Personal Trainers/ Yoga,0.544000029563904,850.00
+v2.0.101,10,Massage Franchise,2.099999904632568,10000.00
+v2.0.101,11,Spa: Invasive,1.541000008583069,4000.00
+v2.0.101,12,Spa: Minimally Invasive - Day Spa,0.649999976158142,1000.00
+v2.0.101,13,Spa: More Invasive,3.081000089645386,5000.00
+v2.0.101,14,Tattoo/body piercing,0.679000020027161,2000.00
+v2.0.101,15,Acoustic Consulting,1.281000018119812,850.00
+v2.0.101,16,Construction Consulting,1.281000018119812,850.00
+v2.0.101,17,Cost Estimation Services,1.281000018119812,850.00
+v2.0.101,18,Energy Consulting Services,2.566999912261963,500.00
+v2.0.101,19,Fire Protection Consulting,1.281000018119812,850.00
+v2.0.101,20,Mining Consultant,2.566999912261963,850.00
+v2.0.101,21,Oil and Gas Consulting,2.566999912261963,850.00
+v2.0.101,22,Environmental Consulting,1.057999968528748,850.00
+v2.0.101,23,Bankruptcy Advisory Services,3.174999952316284,850.00
+v2.0.101,24,Employee Benefit Plan / Pension Consulting,2.545000076293945,850.00
+v2.0.101,25,"Loan, Lending, Financing Consulting",2.545000076293945,850.00
+v2.0.101,26,Mergers and Acquisitions Consulting,3.174999952316284,850.00
+v2.0.101,27,Financial Consulting,1.481999993324280,850.00
+v2.0.101,28,Revenue Cycle Management Consulting,1.481999993324280,850.00
+v2.0.101,29,Risk Management & Insurance Consulting,1.481999993324280,850.00
+v2.0.101,30,Valuations Consultant,3.174999952316284,850.00
+v2.0.101,31,Business Consulting,0.740999996662140,850.00
+v2.0.101,32,Human Resources Consulting,1.057999968528748,850.00
+v2.0.101,33,Leadership Consulting,0.528999984264374,850.00
+v2.0.101,34,Management Consulting,0.740999996662140,850.00
+v2.0.101,35,Municipal Advisory Services,1.481999993324280,850.00
+v2.0.101,36,Product Development Consulting,1.057999968528748,850.00
+v2.0.101,37,Public Affairs/Policy Consulting,0.528999984264374,850.00
+v2.0.101,38,Media / Branding Consulting,0.740999996662140,850.00
+v2.0.101,39,Healthcare Operations Consulting,1.481999993324280,850.00
+v2.0.101,40,Independent Medical Exams,0.617999970912933,3000.00
+v2.0.101,41,Medical Director,0.493999987840652,3000.00
+v2.0.101,42,Patient Care Consulting,0.555999994277954,1000.00
+v2.0.101,43,Peer-Review,0.432000011205673,3000.00
+v2.0.101,44,Physician consultants,0.555999994277954,3000.00
+v2.0.101,45,Utilization Review,0.432000011205673,3000.00
+v2.0.101,46,Education Consulting,0.740999996662140,850.00
+v2.0.101,47,Energy Efficiency Consulting,0.740999996662140,850.00
+v2.0.101,48,Franchise Consulting,2.545000076293945,850.00
+v2.0.101,49,Intellectual Property & Licensing Consulting,2.545000076293945,850.00
+v2.0.101,50,Lifestyle Consulting,0.528999984264374,850.00
+v2.0.101,51,Logistics Management Consulting,0.740999996662140,850.00
+v2.0.101,52,Manufacturing Consulting,1.481999993324280,850.00
+v2.0.101,53,Other Consulting,1.057999968528748,850.00
+v2.0.101,54,Legal Consulting Services,1.057999968528748,850.00
+v2.0.101,55,Regulatory Consulting,1.057999968528748,850.00
+v2.0.101,56,Relocation Consulting & Coordination,0.740999996662140,850.00
+v2.0.101,57,Scientific/Technical Consulting,1.481999993324280,850.00
+v2.0.101,58,Vocational Consulting,0.740999996662140,850.00
+v2.0.101,59,Cell Tower Acquisition & Leasing Consulting,1.481999993324280,850.00
+v2.0.101,60,Real Estate Consulting,1.481999993324280,850.00
+v2.0.101,61,Real Estate Development Consulting,2.545000076293945,850.00
+v2.0.101,62,Right Of Way Consulting,1.481999993324280,850.00
+v2.0.101,63,Safety Consulting,2.200000047683716,2500.00
+v2.0.101,64,Compliance Certification,0.458999991416931,500.00
+v2.0.101,65,General IT Consulting,0.166999995708466,500.00
+v2.0.101,66,Other Consulting,0.382999986410141,500.00
+v2.0.101,67,Cybersecurity Testing,0.382999986410141,500.00
+v2.0.101,68,Software Testing,0.166999995708466,500.00
+v2.0.101,69,Training,0.166999995708466,500.00
+v2.0.101,70,At Risk Construction Management,3.500000000000000,500.00
+v2.0.101,71,Construction and Installation Only,2.000000000000000,500.00
+v2.0.101,72,"Manufactured, Prefabricated, Pre-engineered or Modular Builder",3.519999980926514,500.00
+v2.0.101,73,Design-Build Firms,3.519999980926514,500.00
+v2.0.101,74,Manufacturer,7.123000144958496,500.00
+v2.0.101,75,Demolition and Excavation,6.500000000000000,500.00
+v2.0.101,76,Drywall and Insulation Contractors,2.285000085830689,500.00
+v2.0.101,77,Electrical Contractors and Other Wiring Installation Contractors - Electricians,3.519999980926514,500.00
+v2.0.101,78,Exterior Finishing & Siding,6.500000000000000,500.00
+v2.0.101,79,Finish Carpentry Contractors - Finish Carpenter,2.285000085830689,500.00
+v2.0.101,80,Fire Systems & Sprinkler Services,2.285000085830689,500.00
+v2.0.101,81,Flooring Contractors,2.285000085830689,500.00
+v2.0.101,82,Framing Contractors,2.285000085830689,500.00
+v2.0.101,83,Glass and Glazing Contractors - Glaziers,6.500000000000000,500.00
+v2.0.101,84,HVAC Contractors,3.519999980926514,850.00
+v2.0.101,85,Landscaping Services,2.285000085830689,850.00
+v2.0.101,86,Masonry Contractors,2.285000085830689,500.00
+v2.0.101,87,Painting and Wall Covering Contractors,2.285000085830689,850.00
+v2.0.101,88,Paving Contractor,2.285000085830689,500.00
+v2.0.101,89,Oil and Gas Subcontractor,6.500000000000000,500.00
+v2.0.101,90,Plumbing Contractors,3.519999980926514,500.00
+v2.0.101,91,Poured Concrete Foundation and Structure Contractors,6.500000000000000,500.00
+v2.0.101,92,Remediation Contractor,6.500000000000000,500.00
+v2.0.101,93,Renovation Contractor,2.285000085830689,500.00
+v2.0.101,94,Roofing Contractors,6.500000000000000,500.00
+v2.0.101,95,Solar Panel Installation Contractor,2.285000085830689,500.00
+v2.0.101,96,Structural Steel and Precast Concrete Contractors,6.500000000000000,500.00
+v2.0.101,97,Telecom installation,2.720000028610230,500.00
+v2.0.101,98,Tile and Terrazzo Contractors,2.285000085830689,500.00
+v2.0.101,99,Underground Utility Locating,6.500000000000000,500.00
+v2.0.101,100,Advertising/Creative Agency,0.740999996662140,850.00
+v2.0.101,101,Direct Marketing,1.481999993324280,750.00
+v2.0.101,102,Market Research,0.740999996662140,750.00
+v2.0.101,103,Marketing Services,0.740999996662140,750.00
+v2.0.101,104,Other Creative Services,0.740999996662140,750.00
+v2.0.101,105,Promotional Services,1.481999993324280,750.00
+v2.0.101,106,Graphic Design Services,0.740999996662140,750.00
+v2.0.101,107,Media Buying Agencies,0.740999996662140,750.00
+v2.0.101,108,Photographer Services,0.528999984264374,750.00
+v2.0.101,109,Post Production,1.481999993324280,500.00
+v2.0.101,110,Public Relations Services,0.740999996662140,750.00
+v2.0.101,111,Agency Construction Management,1.500000000000000,500.00
+v2.0.101,112,Architectural Services,3.490000009536743,2500.00
+v2.0.101,113,Land Use and Master Planning,1.481999993324280,2500.00
+v2.0.101,114,Drafting / CAD / BIM,1.750000000000000,850.00
+v2.0.101,115,Landscape Architects,1.600000023841858,850.00
+v2.0.101,116,Building Code Inspector,2.049999952316284,850.00
+v2.0.101,117,Mechanical / Electrical / Plumbing Inspector,2.049999952316284,850.00
+v2.0.101,118,Building Commissioning,2.369999885559082,850.00
+v2.0.101,119,Elevator Inspector,2.579999923706055,850.00
+v2.0.101,120,Crane Inspector,2.579999923706055,850.00
+v2.0.101,121,Welding Inspector,2.579999923706055,850.00
+v2.0.101,122,Roofing Inspector,3.490000009536743,850.00
+v2.0.101,123,Home Inspector,3.200000047683716,850.00
+v2.0.101,124,Forensic Analysis and Expert Witness,1.750000000000000,850.00
+v2.0.101,125,Aerospace Engineers,9.307999610900879,500.00
+v2.0.101,126,Chemical Engineers,7.151351451873779,500.00
+v2.0.101,127,Civil Engineers,3.490000009536743,500.00
+v2.0.101,128,Control Systems Integration and Automation,6.300000190734863,500.00
+v2.0.101,129,Electrical Engineers,1.500000000000000,500.00
+v2.0.101,130,Environmental Engineers and Consultants,3.410000085830689,500.00
+v2.0.101,131,Building Materials Testing and Engineering,3.410000085830689,500.00
+v2.0.101,132,Geotechnical Engineer,9.000000000000000,15000.00
+v2.0.101,133,Heating and Cooling Systems Engineer,3.410000085830689,500.00
+v2.0.101,134,Industrial Engineers,7.151351451873779,500.00
+v2.0.101,135,Marine Engineers and Naval Architects,9.307999610900879,500.00
+v2.0.101,136,Mechanical Engineers,3.490000009536743,500.00
+v2.0.101,137,Mining Engineer,9.307999610900879,500.00
+v2.0.101,138,Nuclear Engineers,9.307999610900879,500.00
+v2.0.101,139,Petroleum Engineers,9.307999610900879,500.00
+v2.0.101,140,Seismic Engineer,9.307999610900879,15000.00
+v2.0.101,141,Structural Engineer,8.000000000000000,7500.00
+v2.0.101,142,Consulting Engineers,2.329999923706055,500.00
+v2.0.101,143,Interior Design Services,0.800000011920929,850.00
+v2.0.101,144,Geophysical Surveying and Mapping Services,1.750000000000000,500.00
+v2.0.101,145,Surveying and Mapping (except Geophysical) Services - Land Surveyor,6.500000000000000,850.00
+v2.0.101,146,Accountants,1.682000041007996,850.00
+v2.0.101,147,Other Accounting Services,1.481999993324280,850.00
+v2.0.101,148,Tax Preparation Services,1.273000001907349,850.00
+v2.0.101,149,Actuarial services,3.174999952316284,850.00
+v2.0.101,150,Debt / Credit Management,2.545000076293945,850.00
+v2.0.101,151,Other Financial Activites,2.545000076293945,850.00
+v2.0.101,152,Structured Settlement Services,3.174999952316284,850.00
+v2.0.101,153,Claims Adjuster,1.416000008583069,850.00
+v2.0.101,154,Insurance Related Activities,1.481999993324280,850.00
+v2.0.101,155,Public Claims Adjuster,1.981999993324280,850.00
+v2.0.101,156,Interim Management Services,2.545000076293945,850.00
+v2.0.101,157,Life Settlement Services,3.174999952316284,850.00
+v2.0.101,158,Trustees,2.746000051498413,3500.00
+v2.0.101,159,Assisted Living Facility,0.762000024318695,1500.00
+v2.0.101,160,Independent Living Facility,0.272000014781952,1500.00
+v2.0.101,161,Memory Care Facility,1.143000006675720,1500.00
+v2.0.101,162,Group Home - Adults,0.828999996185303,10000.00
+v2.0.101,163,Group Home - Minors,1.174999952316284,15000.00
+v2.0.101,164,Hospice (inpatient),0.435000002384186,1500.00
+v2.0.101,165,Mental Health - Non-Substance Abuse,2.903000116348267,20000.00
+v2.0.101,166,Prescribed Pediatric Extended Care (PPEC),0.802999973297119,5000.00
+v2.0.101,167,Inpatient Substance Abuse: Detox Management,2.635999917984009,2500.00
+v2.0.101,168,Inpatient Substance Abuse: Halfway House,1.812000036239624,2500.00
+v2.0.101,169,Inpatient Substance Abuse: Medication Management,2.471999883651733,2500.00
+v2.0.101,170,Administrative and Support Services,1.057999968528748,850.00
+v2.0.101,171,Association Management,1.481999993324280,850.00
+v2.0.101,172,Background Checks / Screening Services,1.481999993324280,850.00
+v2.0.101,173,Grant Administration and Monitoring Services,1.057999968528748,850.00
+v2.0.101,174,Permit Processing and Expediting Services,1.481999993324280,850.00
+v2.0.101,175,Writing Services for Hire (No Authors),1.057999968528748,850.00
+v2.0.101,176,Agents and Managers for Public Figures,2.545000076293945,850.00
+v2.0.101,177,Analytical Testing Lab Services: Food,3.174999952316284,850.00
+v2.0.101,178,Analytical Testing Lab Services: Medical/Forensic,1.481999993324280,850.00
+v2.0.101,179,Analytical Testing Lab Services: Non-Destructive Materials,2.545000076293945,850.00
+v2.0.101,180,Analytical Testing Lab Services: Other,2.545000076293945,850.00
+v2.0.101,181,Analytical Testing Lab Services: Soil,3.174999952316284,850.00
+v2.0.101,182,Associations,0.740999996662140,850.00
+v2.0.101,183,Collection Agent Services: Owned/factored debt,4.032999992370606,850.00
+v2.0.101,184,Collection Agent Services: Third party debt,3.233000040054321,850.00
+v2.0.101,185,Medical Billing Services,1.881999969482422,850.00
+v2.0.101,186,Other Billing Services,1.881999969482422,850.00
+v2.0.101,187,Business Broker Services,1.481999993324280,850.00
+v2.0.101,188,Business Management,2.545000076293945,850.00
+v2.0.101,189,Full Service Management of Third Party Business,3.174999952316284,850.00
+v2.0.101,190,Hotel Management,3.174999952316284,850.00
+v2.0.101,191,Medical Practice Management Services,2.545000076293945,850.00
+v2.0.101,192,Court Reporting Services,0.740999996662140,850.00
+v2.0.101,193,Instructional & Training Activities,0.740999996662140,850.00
+v2.0.101,194,"Educational Test Development, Scoring and Proctoring Services",0.740999996662140,850.00
+v2.0.101,195,Exam Preparation and Tutoring,0.528999984264374,850.00
+v2.0.101,196,Foreign Exchange Student & Homestay Services,1.481999993324280,850.00
+v2.0.101,197,Vocational Training & Consulting,0.528999984264374,850.00
+v2.0.101,198,Franchisor Services,3.174999952316284,850.00
+v2.0.101,199,Landman,3.174999952316284,850.00
+v2.0.101,200,Aircraft/Jet Broker,1.057999968528748,850.00
+v2.0.101,201,Appraisal of Goods,1.057999968528748,850.00
+v2.0.101,202,Auctioneering of Goods and Services,1.057999968528748,850.00
+v2.0.101,203,Bail Agent,1.481999993324280,850.00
+v2.0.101,204,Broker of Other Goods and Services,1.057999968528748,850.00
+v2.0.101,205,Event Planning Services,0.740999996662140,850.00
+v2.0.101,206,Extermination and Pest Control Services,0.740999996662140,850.00
+v2.0.101,207,Janitorial Services,1.057999968528748,850.00
+v2.0.101,208,Other Services,1.057999968528748,850.00
+v2.0.101,209,Skip Tracing Services,2.545000076293945,850.00
+v2.0.101,210,Telephone Call Center Services: Inbound,0.740999996662140,850.00
+v2.0.101,211,Telephone Call Center Services: Outbound,1.481999993324280,850.00
+v2.0.101,212,Translation Services,1.057999968528748,850.00
+v2.0.101,213,Repossession Services,2.545000076293945,850.00
+v2.0.101,214,Yacht/Ship/Boat Broker,1.057999968528748,850.00
+v2.0.101,215,Payroll Services,2.545000076293945,850.00
+v2.0.101,216,Printing Services,1.057999968528748,850.00
+v2.0.101,217,Private Investigation Services,1.057999968528748,850.00
+v2.0.101,218,Accreditation Services,1.481999993324280,850.00
+v2.0.101,219,"Other Professional, Scientific, and Technical Services",1.057999968528748,850.00
+v2.0.101,220,Business Process Operator/Outsourcer,1.481999993324280,850.00
+v2.0.101,221,Dispute Resolution Services,1.057999968528748,850.00
+v2.0.101,222,Energy Broker,1.057999968528748,850.00
+v2.0.101,223,Executive Coaching and Mentoring,0.528999984264374,850.00
+v2.0.101,224,Expert Witness,1.057999968528748,850.00
+v2.0.101,225,Guardianship services,2.545000076293945,850.00
+v2.0.101,226,Lobbying,1.057999968528748,850.00
+v2.0.101,227,Notaries,0.740999996662140,850.00
+v2.0.101,228,"Inspection, Repair, Calibration, Maintenance Services",1.057999968528748,850.00
+v2.0.101,229,Process Server,0.740999996662140,850.00
+v2.0.101,230,Referral Services,1.057999968528748,850.00
+v2.0.101,231,Permanent Employment Services,0.640999972820282,850.00
+v2.0.101,232,Professional Employer Organization Services,1.281000018119812,850.00
+v2.0.101,233,Temporary & Permanent Employment Services,0.640999972820282,850.00
+v2.0.101,234,Temporary Employment Services,0.640999972820282,850.00
+v2.0.101,235,Third Party Administration: Employee benefits,3.604000091552734,850.00
+v2.0.101,236,Third Party Administration: Non-employee benefits,2.888999938964844,850.00
+v2.0.101,237,"Couriers, Messengers, and Delivery Services",0.528999984264374,850.00
+v2.0.101,238,Custom House/Freight Forwarder Services,1.057999968528748,850.00
+v2.0.101,239,Marine Surveying Services,1.057999968528748,850.00
+v2.0.101,240,Transportation Related Activities,1.057999968528748,850.00
+v2.0.101,241,Pilot Car Services,1.481999993324280,850.00
+v2.0.101,242,Traffic Control and Management Services,2.545000076293945,850.00
+v2.0.101,243,"Warehousing, Storage, and Fulfillment",1.057999968528748,850.00
+v2.0.101,244,Other Travel Services,0.528999984264374,850.00
+v2.0.101,245,Tour Operator Services,1.057999968528748,850.00
+v2.0.101,246,Travel Agency Services,0.528999984264374,850.00
+v2.0.101,247,Adult Day Care,0.862999975681305,1000.00
+v2.0.101,248,Audiologists,0.432000011205673,850.00
+v2.0.101,249,Blood and Organ Banks: Blood,1.174000024795532,20000.00
+v2.0.101,250,Blood and Organ Banks: Milk,1.006000041961670,10000.00
+v2.0.101,251,Blood and Organ Banks: Organs,1.340999960899353,20000.00
+v2.0.101,252,Blood and Organ Banks: Reproductive,1.174000024795532,20000.00
+v2.0.101,253,Blood and Organ Banks: Tissue,1.174000024795532,20000.00
+v2.0.101,254,Case Management,0.628000020980835,2500.00
+v2.0.101,255,Medical Guardianship,1.442000031471252,5000.00
+v2.0.101,256,General Medical Clinic,0.837999999523163,2000.00
+v2.0.101,257,Methadone Clinic,0.802999973297119,2000.00
+v2.0.101,258,Pain Management Clinic,2.012000083923340,4000.00
+v2.0.101,259,Physical Medicine Clinic,1.968999981880188,5000.00
+v2.0.101,260,Pregnancy education/testing,0.671000003814697,3500.00
+v2.0.101,261,Sleep Clinic,0.671000003814697,2000.00
+v2.0.101,262,Weight Loss Clinic,0.805000007152557,2500.00
+v2.0.101,263,Clinical Research/ Trials,0.658999979496002,2000.00
+v2.0.101,264,Behavioral Counseling,0.488999992609024,850.00
+v2.0.101,265,Egg Donor or Surrogate Matching Services,0.746999979019165,3500.00
+v2.0.101,266,Marriage and Family Counseling,0.428000003099442,850.00
+v2.0.101,267,Pastoral counseling,0.746999979019165,1000.00
+v2.0.101,268,PHP / IOP,1.419000029563904,3500.00
+v2.0.101,269,Substance Abuse: Counseling,0.679000020027161,1500.00
+v2.0.101,270,Dental assistant or hygenist,0.837999999523163,1250.00
+v2.0.101,271,Dental labs,0.493999987840652,2000.00
+v2.0.101,272,Dentist: Non-Specialist - Non-Surgery,0.837000012397766,5000.00
+v2.0.101,273,Dentist: Non-Specialist - Surgery,1.088999986648560,5000.00
+v2.0.101,274,Dentist: Specialist - Non-Surgery,0.837000012397766,5000.00
+v2.0.101,275,Dentist: Specialist - Surgery,1.088999986648560,5000.00
+v2.0.101,276,Dialysis,0.837999999523163,3500.00
+v2.0.101,277,Health Screening,0.754000008106232,1500.00
+v2.0.101,278,Wellness Counseling,0.483999997377396,1500.00
+v2.0.101,279,Healthcare Staffing: Correctional Facility - Skilled,3.063999891281128,25000.00
+v2.0.101,280,Healthcare Staffing: Hospital - ICU,2.845000028610230,5000.00
+v2.0.101,281,Healthcare Staffing: Hospital - Non-ICU,2.188999891281128,5000.00
+v2.0.101,282,Healthcare Staffing: Nursing Home / ALF,2.625999927520752,5000.00
+v2.0.101,283,Healthcare Staffing: Other Healthcare,2.188999891281128,5000.00
+v2.0.101,284,Home Healthcare: Skilled - Hospice (outpatient),0.578000009059906,1000.00
+v2.0.101,285,Home Healthcare: Skilled - non-pediatrics,0.771000027656555,3500.00
+v2.0.101,286,Home Healthcare: Skilled - pediatrics,1.253000020980835,3500.00
+v2.0.101,287,Home Healthcare: Unskilled,0.660000026226044,1000.00
+v2.0.101,288,Home Healthcare: Developmentally Disabled,1.062999963760376,2500.00
+v2.0.101,289,Home Healthcare: Remote Patient Monitoring,0.703999996185303,3500.00
+v2.0.101,290,Drug / Alcohol Testing - Other,0.619000017642975,2000.00
+v2.0.101,291,Drug / Alcohol Testing - Substance Abuse Testing,0.834999978542328,2000.00
+v2.0.101,292,Medical Imaging: Inpatient (Hospital),0.700999975204468,1500.00
+v2.0.101,293,Medical Imaging: Mobile,0.630999982357025,1500.00
+v2.0.101,294,Medical Imaging: Outpatient,0.630999982357025,1500.00
+v2.0.101,295,Phlebotomy,0.555999994277954,850.00
+v2.0.101,296,Testing laboratory: Fertility,0.740999996662140,1500.00
+v2.0.101,297,Testing laboratory: Genetics (non-diagnostic),0.493999987840652,1500.00
+v2.0.101,298,Testing laboratory: Medical/diagnostic,0.740999996662140,1500.00
+v2.0.101,299,Testing laboratory: Reference,0.555999994277954,1500.00
+v2.0.101,300,Certified Nursing Assistant,0.308999985456467,1250.00
+v2.0.101,301,Licensed Vocational Nurse,0.493999987840652,1250.00
+v2.0.101,302,Nurse Practitioner,0.865000009536743,3500.00
+v2.0.101,303,Physician Assistant,0.802999973297119,3500.00
+v2.0.101,304,Registered Nurse,0.740999996662140,2000.00
+v2.0.101,305,Transportation: Emergency Air,2.719000101089478,25000.00
+v2.0.101,306,Transportation: Emergency Ground,2.470999956130981,5000.00
+v2.0.101,307,Transportation: Non-Emergency Air,2.470999956130981,25000.00
+v2.0.101,308,Transportation: Non-Emergency Ground,1.853999972343445,3000.00
+v2.0.101,309,Transportation: Special Needs,2.099999904632568,5000.00
+v2.0.101,310,Facility Dietician,1.333999991416931,5000.00
+v2.0.101,311,Nutrition/ Dietician,0.407000005245209,1000.00
+v2.0.101,312,Optometrists/opticians,0.987999975681305,1500.00
+v2.0.101,313,Orthotic/prosthetic fitting,0.802999973297119,2000.00
+v2.0.101,314,Pharmacy: Compounding,0.870999991893768,3000.00
+v2.0.101,315,Pharmacy: Non-Compounding,0.437000006437302,1250.00
+v2.0.101,316,Post Mortem Services,0.865000009536743,3000.00
+v2.0.101,317,Adoption Agency,0.967999994754791,20000.00
+v2.0.101,318,Food bank,0.483999997377396,1000.00
+v2.0.101,319,Foster Care Agency,1.036999940872192,20000.00
+v2.0.101,320,Homeless shelter,0.552999973297119,1000.00
+v2.0.101,321,Social Services - High/Multi-Disciplinary,0.967999994754791,25000.00
+v2.0.101,322,Social Services - Job Training,0.552999973297119,1000.00
+v2.0.101,323,Social Services - Supervised Visitation,0.552999973297119,1000.00
+v2.0.101,324,Surgery Centers: Highly Complex Services,1.332000017166138,12500.00
+v2.0.101,325,Surgery Centers: Low Complexity Services,0.952000021934509,7500.00
+v2.0.101,326,Surgery Centers: Moderately Complex Services,1.141999959945679,10000.00
+v2.0.101,327,Applied Behavior Analysis (ABA),1.000000000000000,1500.00
+v2.0.101,328,Durable Medical Equipment (DME),0.493999987840652,2000.00
+v2.0.101,329,Facility Therapy,1.419000029563904,5000.00
+v2.0.101,330,Hyperbaric Oxygen Therapy (HBOT),0.617999970912933,2000.00
+v2.0.101,331,Occupational Therapy,0.555999994277954,1500.00
+v2.0.101,332,Physical Therapy,0.679000020027161,1500.00
+v2.0.101,333,Respiratory Therapy,0.493999987840652,1500.00
+v2.0.101,334,Speech Therapy,0.432000011205673,1500.00
+v2.0.101,335,CPR/ First Aid Training,0.308999985456467,850.00
+v2.0.101,336,Medical Arts School: Chiropractor/Pharmacy/Mental Health,0.555999994277954,1500.00
+v2.0.101,337,Medical Arts School: Dental,0.617999970912933,1000.00
+v2.0.101,338,Medical Arts School: First Response,0.370999991893768,1000.00
+v2.0.101,339,Medical Arts School: Nurses,0.617999970912933,1500.00
+v2.0.101,340,Medical Arts School: Radiology,0.555999994277954,1500.00
+v2.0.101,341,Medical Arts School: Spa,0.679000020027161,1000.00
+v2.0.101,342,Medical Arts School: Surgical,0.802999973297119,1500.00
+v2.0.101,343,Veterinary - Domestic Pets,0.716000020503998,850.00
+v2.0.101,344,Veterinary - Non-Domestic Pets,0.894999980926514,5000.00
+v2.0.101,345,1031 Exchange Agent,2.545000076293945,850.00
+v2.0.101,346,Auctioneering of real property,1.481999993324280,850.00
+v2.0.101,347,Mortgage Field and Property Preservation Services,1.481999993324280,850.00
+v2.0.101,348,Other Activities Related to Real Estate,1.481999993324280,850.00
+v2.0.101,349,Real Estate Appraisers,1.481999993324280,850.00
+v2.0.101,350,Real Estate Developers - Homebuilders,6.159999847412109,10000.00
+v2.0.101,351,Real Estate Developers - Project Specific,2.566999912261963,10000.00
+v2.0.101,352,Real Estate Developers - Residential / Commercial,1.750000000000000,7000.00
+v2.0.101,353,Real Estate Developers - Sale / Property Management Services only,3.174999952316284,850.00
+v2.0.101,354,Property Management - Standalone,1.481999993324280,850.00
+v2.0.101,355,Property Management & Real Estate Sales,1.481999993324280,850.00
+v2.0.101,356,Real Estate Agent/Broker - Standalone,1.481999993324280,850.00
+v2.0.101,357,Security Guards,3.174999952316284,3750.00
+v2.0.101,358,Security/Defense/Military Contractor Services,2.545000076293945,850.00
+v2.0.101,359,Accounting,0.342000007629395,500.00
+v2.0.101,360,Autonomous AI,0.728999972343445,500.00
+v2.0.101,361,Banking - Investment,0.523999989032745,500.00
+v2.0.101,362,Banking - Retail,0.592999994754791,500.00
+v2.0.101,363,Biometric,0.592999994754791,500.00
+v2.0.101,364,Broadcasting,0.456000000238419,500.00
+v2.0.101,365,Business Analytics,0.228000000119209,500.00
+v2.0.101,366,Cloud Storage,0.456000000238419,500.00
+v2.0.101,367,Communications,0.228000000119209,500.00
+v2.0.101,368,Computer-aided Design (CAD),0.228000000119209,500.00
+v2.0.101,369,Computer-aided Manufacturing (CAM),0.728999972343445,500.00
+v2.0.101,370,Control Systems,0.728999972343445,500.00
+v2.0.101,371,Crowdfunding,0.523999989032745,500.00
+v2.0.101,372,Cryptocurrency,0.728999972343445,500.00
+v2.0.101,373,Customer Engagement / CRM,0.541999995708466,500.00
+v2.0.101,374,Customer Rewards,0.456000000238419,500.00
+v2.0.101,375,Cybersecurity,0.342000007629395,500.00
+v2.0.101,376,Data Mining / Aggregation,0.728999972343445,500.00
+v2.0.101,377,Digital Marketing,0.342000007629395,500.00
+v2.0.101,378,E-Commerce,0.523999989032745,500.00
+v2.0.101,379,E-Discovery,0.456000000238419,500.00
+v2.0.101,380,Emergency Notification,0.456000000238419,500.00
+v2.0.101,381,Enterprise Resource Planning (ERP),0.708000004291534,500.00
+v2.0.101,382,Financial Trading,0.728999972343445,500.00
+v2.0.101,383,Gambling,0.728999972343445,500.00
+v2.0.101,384,Geographic Information Systems (GIS),0.342000007629395,500.00
+v2.0.101,385,Health and Wellness,0.342000007629395,500.00
+v2.0.101,386,Human Resources,0.456000000238419,500.00
+v2.0.101,387,Identity and Fraud Protection,0.592999994754791,500.00
+v2.0.101,388,Internet of Things (IoT),0.456000000238419,500.00
+v2.0.101,389,IT Analytics,0.228000000119209,500.00
+v2.0.101,390,Learning Management,0.228000000119209,500.00
+v2.0.101,391,Medical Diagnostic,0.728999972343445,500.00
+v2.0.101,392,Other,0.456000000238419,500.00
+v2.0.101,393,Password Management,0.728999972343445,500.00
+v2.0.101,394,Payment Processing,0.728999972343445,500.00
+v2.0.101,395,Point of Sale (POS),0.523999989032745,500.00
+v2.0.101,396,Practice Management,0.456000000238419,500.00
+v2.0.101,397,Risk Management,0.456000000238419,500.00
+v2.0.101,398,Sharing Economy,0.342000007629395,500.00
+v2.0.101,399,Social Media,0.592999994754791,500.00
+v2.0.101,400,Supply Chain Management,0.523999989032745,500.00
+v2.0.101,401,Telematics,0.228000000119209,500.00
+v2.0.101,402,Video Game,0.728999972343445,500.00
+v2.0.101,403,Cloud Computing,0.546000003814697,500.00
+v2.0.101,404,Content Delivery Network (CDN),0.728999972343445,500.00
+v2.0.101,405,Data Center / Colocation,0.546000003814697,500.00
+v2.0.101,406,Virtual Private Network (VPN),0.638000011444092,500.00
+v2.0.101,407,Electronic Repair,0.275000005960464,500.00
+v2.0.101,408,E-Recycling & Data Destruction,0.731999993324280,500.00
+v2.0.101,409,Hardware Design / Manufacturing,0.611999988555908,500.00
+v2.0.101,410,Hardware Installation / Integration,0.224999994039536,500.00
+v2.0.101,411,Agriculture,0.375000000000000,500.00
+v2.0.101,412,Banking - Investment,0.430999994277954,500.00
+v2.0.101,413,Banking - Retail,0.488000005483627,500.00
+v2.0.101,414,Cannabis,0.375000000000000,500.00
+v2.0.101,415,Construction,0.375000000000000,500.00
+v2.0.101,416,Education,0.375000000000000,500.00
+v2.0.101,417,Electronic Health Records (EHR),0.430999994277954,500.00
+v2.0.101,418,Enterprise Resource Planning (ERP),0.750000000000000,500.00
+v2.0.101,419,Finance and Insurance,0.449999988079071,500.00
+v2.0.101,420,General,0.375000000000000,500.00
+v2.0.101,421,Government / Military,0.375000000000000,500.00
+v2.0.101,422,Healthcare and Social Assistance,0.449999988079071,500.00
+v2.0.101,423,Hospitality,0.449999988079071,500.00
+v2.0.101,424,Legal,0.375000000000000,500.00
+v2.0.101,425,Manufacturing,0.449999988079071,500.00
+v2.0.101,426,Media,0.375000000000000,500.00
+v2.0.101,427,Payment Processing,0.600000023841858,500.00
+v2.0.101,428,Real Estate,0.449999988079071,500.00
+v2.0.101,429,Retail,0.449999988079071,500.00
+v2.0.101,430,Supply Chain Management,0.430999994277954,500.00
+v2.0.101,431,Transportation,0.375000000000000,500.00
+v2.0.101,432,Utilities,0.375000000000000,500.00
+v2.0.101,433,Digital Marketing Agency,0.275000005960464,500.00
+v2.0.101,434,Document and Data Conversion,0.456000000238419,500.00
+v2.0.101,435,Internet Service Provider,0.224999994039536,500.00
+v2.0.101,436,Managed IT Services,0.291999995708466,500.00
+v2.0.101,437,Managed Cybersecurity Services,0.319999992847443,500.00
+v2.0.101,438,IT Staffing,0.166999995708466,500.00
+v2.0.101,439,Accounting,0.256000012159348,500.00
+v2.0.101,440,Autonomous AI,0.546000003814697,500.00
+v2.0.101,441,Banking - Investment,0.393000006675720,500.00
+v2.0.101,442,Banking - Retail,0.444000005722046,500.00
+v2.0.101,443,Biometric,0.444000005722046,500.00
+v2.0.101,444,Broadcasting,0.342000007629395,500.00
+v2.0.101,445,Business Analytics,0.171000003814697,500.00
+v2.0.101,446,Cloud Storage,0.342000007629395,500.00
+v2.0.101,447,Communications,0.171000003814697,500.00
+v2.0.101,448,Computer-aided Design (CAD),0.171000003814697,500.00
+v2.0.101,449,Computer-aided Manufacturing (CAM),0.546000003814697,500.00
+v2.0.101,450,Control Systems,0.546000003814697,500.00
+v2.0.101,451,Crowdfunding,0.393000006675720,500.00
+v2.0.101,452,Cryptocurrency,0.546000003814697,500.00
+v2.0.101,453,Customer Engagement / CRM,0.393000006675720,500.00
+v2.0.101,454,Customer Rewards,0.342000007629395,500.00
+v2.0.101,455,Cybersecurity,0.256000012159348,500.00
+v2.0.101,456,Data Mining / Aggregation,0.546000003814697,500.00
+v2.0.101,457,Digital Marketing,0.256000012159348,500.00
+v2.0.101,458,E-Commerce,0.393000006675720,500.00
+v2.0.101,459,E-Discovery,0.342000007629395,500.00
+v2.0.101,460,Emergency Notification,0.342000007629395,500.00
+v2.0.101,461,Enterprise Resource Planning (ERP),0.583000004291534,500.00
+v2.0.101,462,Financial Trading,0.546000003814697,500.00
+v2.0.101,463,Gambling,0.546000003814697,500.00
+v2.0.101,464,Geographic Information Systems (GIS),0.256000012159348,500.00
+v2.0.101,465,Health and Wellness,0.256000012159348,500.00
+v2.0.101,466,Human Resources,0.342000007629395,500.00
+v2.0.101,467,Identity and Fraud Protection,0.444000005722046,500.00
+v2.0.101,468,Internet of Things (IoT),0.342000007629395,500.00
+v2.0.101,469,IT Analytics,0.171000003814697,500.00
+v2.0.101,470,Learning Management,0.171000003814697,500.00
+v2.0.101,471,Medical Diagnostic,0.546000003814697,500.00
+v2.0.101,472,Other,0.342000007629395,500.00
+v2.0.101,473,Password Management,0.546000003814697,500.00
+v2.0.101,474,Payment Processing,0.546000003814697,500.00
+v2.0.101,475,Point of Sale (POS),0.393000006675720,500.00
+v2.0.101,476,Practice Management,0.342000007629395,500.00
+v2.0.101,477,Risk Management,0.342000007629395,500.00
+v2.0.101,478,Sharing Economy,0.256000012159348,500.00
+v2.0.101,479,Social Media,0.444000005722046,500.00
+v2.0.101,480,Supply Chain Management,0.393000006675720,500.00
+v2.0.101,481,Telematics,0.171000003814697,500.00
+v2.0.101,482,Video Game,0.546000003814697,500.00
+v2.0.101,483,Telecommunications,0.224999994039536,500.00
+v2.0.101,484,Product Sales,0.275000005960464,500.00
+v2.0.101,485,Product Sales & Implementation,0.437000006437302,500.00
+v2.0.101,486,Product Sales & Implementation - Banking - Investment,0.503000020980835,500.00
+v2.0.101,487,Product Sales & Implementation - Banking - Retail,0.568000018596649,500.00
+v2.0.101,488,Product Sales & Implementation - Electronic Health Records (EHR),0.503000020980835,500.00
+v2.0.101,489,Product Sales & Implementation - Enterprise Resource Planning (ERP),0.634000003337860,500.00
+v2.0.101,490,Product Sales & Implementation - Payment Systems,0.699999988079071,500.00
+v2.0.101,491,Product Sales & Implementation - Supply Chain Management,0.503000020980835,500.00
+v2.0.101,492,Web Development,0.275000005960464,500.00
+v2.0.101,493,Web Development and Hosting,0.662999987602234,500.00
+v2.0.101,494,Web Hosting & Domains,0.638000011444092,500.00

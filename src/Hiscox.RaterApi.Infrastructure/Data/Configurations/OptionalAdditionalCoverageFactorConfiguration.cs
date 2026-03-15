@@ -10,7 +10,7 @@ public class OptionalAdditionalCoverageFactorConfiguration : IEntityTypeConfigur
 {
     public void Configure(EntityTypeBuilder<OptionalAdditionalCoverageFactor> builder)
     {
-        builder.ToTable("OptionalAdditionalCoverageFactor");
+        builder.ToTable("OptionalAdditionalCoverageFactors");
 
         builder.HasKey(_ => new { _.Version, _.Id });
 

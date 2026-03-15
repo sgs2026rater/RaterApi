@@ -19,12 +19,28 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer();
+        optionsBuilder.UseNpgsql();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        base.OnModelCreating(modelBuilder);
+        // Apply snake_case globally
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            entity.SetTableName(ToSnakeCase(entity.GetTableName()));
+            foreach (var property in entity.GetProperties())
+                property.SetColumnName(ToSnakeCase(property.GetColumnName()));
+            foreach (var key in entity.GetKeys())
+                key.SetName(ToSnakeCase(key.GetName()));
+            foreach (var fk in entity.GetForeignKeys())
+                fk.SetConstraintName(ToSnakeCase(fk.GetConstraintName()));
+            foreach (var index in entity.GetIndexes())
+                index.SetDatabaseName(ToSnakeCase(index.GetDatabaseName()));
+        }
+
     }
 
     public DbSet<IndustrySector>? IndustrySectors { get; set; } = null;
@@ -58,5 +74,28 @@ public class ApplicationDbContext : DbContext
     public DbSet<BusinessSizeDefinition>? BusinessSizeDefinitions { get; set; } = null;
 
     #endregion Coverage (Tab 6)
+
+
+    private static string ToSnakeCase(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+        var result = new System.Text.StringBuilder();
+        result.Append(char.ToLowerInvariant(input[0]));
+        for (int i = 1; i < input.Length; i++)
+        {
+            char c = input[i];
+            if (char.IsUpper(c))
+            {
+                if (char.IsLower(input[i - 1]) || (i < input.Length - 1 && char.IsLower(input[i + 1])))
+                    result.Append('_');
+                result.Append(char.ToLowerInvariant(c));
+            }
+            else
+            {
+                result.Append(c);
+            }
+        }
+        return result.ToString();
+    }
 
 }

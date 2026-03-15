@@ -20,7 +20,7 @@ public class DisplayedDefaultPerilConfiguration : IEntityTypeConfiguration<Displ
         builder.Property(_ => _.DefaultPeril).HasColumnType("varchar(55)");
         builder.Property(_ => _.DefaultPeril).IsRequired(true);
 
-        builder.Property(_ => _.IsSwitchedOnByDefault).HasColumnType("bit");
+        //builder.Property(_ => _.IsSwitchedOnByDefault).HasColumnType("bit");
         builder.Property(_ => _.IsSwitchedOnByDefault).IsRequired(true);
 
         builder.Property(_ => _.DefaultValueWhenSwitchedOn).HasColumnType("varchar(55)");

@@ -10,7 +10,7 @@ public class RatingFactorSectionEnabilityConfiguration : IEntityTypeConfiguratio
 {
     public void Configure(EntityTypeBuilder<RatingFactorSectionEnability> builder)
     {
-        builder.ToTable("RatingFactorSectionEnability");
+        builder.ToTable("RatingFactorSectionEnabilities");
 
         builder.HasKey(x => new { x.Version, x.Id });
 

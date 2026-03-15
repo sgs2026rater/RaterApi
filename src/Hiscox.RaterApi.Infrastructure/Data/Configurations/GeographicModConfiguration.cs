@@ -9,7 +9,7 @@ internal class GeographicModConfiguration : IEntityTypeConfiguration<GeographicM
 {
     public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<GeographicMod> builder)
     {
-        builder.ToTable("GeographicMod");
+        builder.ToTable("GeographicMods");
         builder.HasKey(_ => new { _.Version, _.Id });
 
         builder.Property(_ => _.Version).HasColumnType("varchar(10)");

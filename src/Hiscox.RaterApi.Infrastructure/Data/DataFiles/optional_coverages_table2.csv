@@ -1,0 +1,53 @@
+version,id,coverage,differential
+v2.0.101,1,Bodily Injury,0% / $0
+v2.0.101,2,Property Damage,0% / $0
+v2.0.101,3,Breach of Contract,-8% / -$182
+v2.0.101,4,Personal & Advertising Injury,-16% / -$364
+v2.0.101,5,Intellectual Property Infringement,0% / $0
+v2.0.101,6,Third Party Discriminatio,-8% / -$182
+v2.0.101,7,Optional core coverage factor,-32% / $0
+v2.0.101,8,Billing Errors Coverage,0% / $0
+v2.0.101,9,Class Action Sublimit,0% / $0
+v2.0.101,10,Contractors Pollution (Claims Made),-10% / -$224
+v2.0.101,11,Contractors Pollution (Occ),0% / $0
+v2.0.101,12,Crisis Management,0% / $0
+v2.0.101,13,Defense Only TCPA,0% / $0
+v2.0.101,14,Defense Outside Limits,-16% / -$364
+v2.0.101,15,Evacuation Expenses,0% / $0
+v2.0.101,16,Faulty Workmanship,0% / $0
+v2.0.101,17,Games of Chance / Over-Redemptio,0% / $0
+v2.0.101,18,HIPAA Violations,0% / $0
+v2.0.101,19,Open House Claim Sublimit,0% / $0
+v2.0.101,20,Protective Indemnity,0% / $0
+v2.0.101,21,Rectification Expenses,-6% / -$131
+v2.0.101,22,Sexual Abuse & Misconduct,0% / $0
+v2.0.101,23,Mold,0% / $0
+v2.0.101,24,Pollutants in Transit,0% / $0
+v2.0.101,25,Non-Owned Disposal Site,0% / $0
+v2.0.101,26,Bodily injury / property damage,0% / $0
+v2.0.101,27,Antitrust sublimit,0% / $0
+v2.0.101,28,Failure to disclose pollutants,0% / $0
+v2.0.101,29,FCRA defense only sublimit,0% / $0
+v2.0.101,30,Pollution liability,-10% / -$228
+v2.0.101,31,Technology Coverage Extensio,0% / $0
+v2.0.101,32,Network security & privacy,-6% / -$131
+v2.0.101,33,Bodily Inury (Emotional Distress),-10% / -$228
+v2.0.101,34,Defamation Exclusion and Sublimit,0% / $0
+v2.0.101,35,Invasion of Privacy Exclusion & Sublimit,0% / $0
+v2.0.101,36,Media activities,0% / $0
+v2.0.101,38,Aggregate limit endorsement,0% / $0
+v2.0.101,39,First Dollar Defense,-5% / -$115
+v2.0.101,40,Waiver of subrogatio,-5% / -$115
+v2.0.101,41,Worldwide Coverage Territory,-5% / -$115
+v2.0.101,42,Delete Defense Coverage,0% / $0
+v2.0.101,43,Defense Cost Coinsurance,0% / $0
+v2.0.101,44,Named Peril,0% / $0
+v2.0.101,45,Merchandising,0% / $0
+v2.0.101,46,Removed Settlement Clause,0% / $0
+v2.0.101,47,Contingent Property Damage Carveback,0% / $0
+v2.0.101,48,Duty to Pay,0% / $0
+v2.0.101,49,Additional Insured,0% / $0
+v2.0.101,50,Add Coverage for Dentists,0% / $0
+v2.0.101,51,Add Named Physicia,0% / $0
+v2.0.101,52,Add Named Surgeo,0% / $0
+v2.0.101,53,Add Supervising Physicia,0% / $0

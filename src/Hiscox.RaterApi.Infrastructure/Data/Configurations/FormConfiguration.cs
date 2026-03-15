@@ -10,7 +10,7 @@ public class FormConfiguration : IEntityTypeConfiguration<Form>
 {
     public void Configure(EntityTypeBuilder<Form> builder)
     {
-        builder.ToTable("Form");
+        builder.ToTable("Forms");
         builder.HasKey(_ => new { _.Version, _.Id });
 
         builder.Property(_ => _.Version).HasColumnType("varchar(10)");

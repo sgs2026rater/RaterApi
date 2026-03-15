@@ -10,7 +10,7 @@ public class FormEligibilityConfiguration : IEntityTypeConfiguration<FormEligibi
 {
     public void Configure(EntityTypeBuilder<FormEligibility> builder)
     {
-        builder.ToTable("FormEligibility");
+        builder.ToTable("FormEligibilities");
         builder.HasKey(_ => new { _.Version, _.IndustrySpecialtyId, _.FormId });
 
         builder.Property(_ => _.Version).HasColumnType("varchar(10)");

@@ -1,0 +1,3 @@
+version,id,puid,policy_no,name_descr,zip,timestamp_effective_policy,timestamp_expiration_policy,exposure_base,eo_gwp,eo__retention,eo__occ_limit,eo__agg_limit,eo_2_gwp,eo_2__retention,eo_2__occ_limit,eo_2__agg_limit,gl_gwp,gl__retention,gl__occ_limit,gl__agg_limit,cyb_gwp,cyb__retention,cyb__occ_limit,cyb__agg_limit
+v2.0.101,1,6135471_MUP_5,5064044,"Ryan W Lemon, ARCHITECT",84319,2025-11-02 00:00:00,2026-10-02 00:00:00,54569.00,1822.00,2500.00,1000000.00,3000000.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+v2.0.101,2,6884151_MUP_2,5406437,CM-PM Consulting LLC,07757,2025-01-24 00:00:00,2026-01-23 00:00:00,100000.00,2046.00,2500.00,1000000.00,1000000.00,0.00,0.00,0.00,0.00,761.00,2500.00,1000000.00,2000000.00,0.00,0.00,0.00,0.00

@@ -10,7 +10,7 @@ public class RetainedValueFactorConfiguration : IEntityTypeConfiguration<Retaine
 {
     public void Configure(EntityTypeBuilder<RetainedValueFactor> builder)
     {
-        builder.ToTable("RetainedValueFactor");
+        builder.ToTable("RetainedValueFactors");
 
         builder.HasKey(_ => new { _.Version, _.Id });
 

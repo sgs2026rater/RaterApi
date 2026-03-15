@@ -10,7 +10,7 @@ public class RevenueBaseRateConfiguration : IEntityTypeConfiguration<RevenueBase
 {
     public void Configure(EntityTypeBuilder<RevenueBaseRate> builder)
     {
-        builder.ToTable("RevenueBaseRate");
+        builder.ToTable("RevenueBaseRates");
 
         builder.HasKey(_ => new { _.Version, _.Id });
 

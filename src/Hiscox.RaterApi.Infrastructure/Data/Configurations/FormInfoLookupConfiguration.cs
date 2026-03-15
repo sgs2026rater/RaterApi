@@ -10,7 +10,7 @@ public class FormInfoLookupConfiguration : IEntityTypeConfiguration<FormInfoLook
 {
     public void Configure(EntityTypeBuilder<FormInfoLookup> builder)
     {
-        builder.ToTable("FormInfoLookup");
+        builder.ToTable("FormInfoLookups");
 
         builder.HasKey(_ => _.Id);
 
@@ -31,7 +31,7 @@ public class FormInfoLookupConfiguration : IEntityTypeConfiguration<FormInfoLook
             .IsRequired();
 
         builder.Property(_ => _.CoverageEnhancements)
-            .HasColumnType("nvarchar(max)")
+            .HasColumnType("varchar(1000)")
             .IsRequired();
     }
 }

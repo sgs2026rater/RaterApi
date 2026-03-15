@@ -10,7 +10,7 @@ public class LimitRetentionFactorConfiguration : IEntityTypeConfiguration<LimitR
 {
     public void Configure(EntityTypeBuilder<LimitRetentionFactor> builder)
     {
-        builder.ToTable("LimitRetentionFactor");
+        builder.ToTable("LimitRetentionFactors");
 
         builder.HasKey(_ => new { _.Version, _.Id });
 
