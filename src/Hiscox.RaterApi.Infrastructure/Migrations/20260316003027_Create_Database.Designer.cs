@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hiscox.RaterApi.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260315190551_Create_Database")]
+    [Migration("20260316003027_Create_Database")]
     partial class Create_Database
     {
         /// <inheritdoc />

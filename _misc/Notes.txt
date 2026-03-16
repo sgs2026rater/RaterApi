@@ -2,7 +2,12 @@
 
 
 Add-Migration Create_Database
-dotnet ef database update --project Hiscox.RaterApi.Infrastructure.csproj --connection "Host=localhost;Database=rater_api;Username=postgres;Password=Postgres@123"
+dotnet ef database update --project Hiscox.RaterApi.Infrastructure.csproj --connection "Host=localhost;Database=rater_api;Username=postgres;Password=XXX"
+
+
+secrets:
+"ConnectionStrings:DefaultConnection": "Host=localhost;Database=rater_api;Username=postgres;Password=xxx"
+
 
 
 
